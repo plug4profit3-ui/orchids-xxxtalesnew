@@ -1,0 +1,8 @@
+{
+  "name": "XXX-Tales ",
+  "description": "An uncensored, AI-powered erotic story generator and roleplay companion.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

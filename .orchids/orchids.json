@@ -1,0 +1,9 @@
+{
+  "projectId": "8fddff7f-3007-4d4a-b1ed-5fbd141110e3",
+  "createdAt": 1770750768292,
+  "version": "1.0",
+  "startupCommands": [
+    "bun install; bun run dev"
+  ],
+  "templateId": "vite"
+}
