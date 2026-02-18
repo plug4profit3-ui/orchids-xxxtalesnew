@@ -146,9 +146,22 @@ const AudioStoriesInterface: React.FC<AudioStoriesInterfaceProps> = ({ user, lan
                     <div key={story.id} className={`group relative bg-zinc-900/60 rounded-[2.5rem] overflow-hidden border-2 transition-all duration-700 ${activeStory?.id === story.id ? 'border-gold-500 shadow-[0_0_50px_rgba(255,215,0,0.3)] scale-[1.02]' : 'border-white/5 hover:border-gold-500/20'}`}>
                         <div className="aspect-[16/10] relative overflow-hidden">
                             {story.isVideo ? (
-                                <video src={story.image} autoPlay loop muted playsInline className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform duration-[2s]" />
+                                <video
+                                  src={story.image}
+                                  autoPlay
+                                  loop
+                                  muted
+                                  playsInline
+                                  className="w-full h-full object-cover opacity-70 group-hover:scale-105 transition-transform"
+                                  style={{ transitionDuration: '2s' }}
+                                />
                             ) : (
-                                <img src={story.image} className="w-full h-full object-cover opacity-70 group-hover:scale-110 transition-transform duration-[2s]" alt={story.title} />
+                                <img
+                                  src={story.image}
+                                  className="w-full h-full object-cover opacity-70 group-hover:scale-110 transition-transform"
+                                  style={{ transitionDuration: '2s' }}
+                                  alt={story.title}
+                                />
                             )}
                             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
                             

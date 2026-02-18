@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
-import { supabaseAdmin } from './_supabase';
+import { supabaseAdmin, requireAuth } from './_supabase';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2026-01-28.clover',
@@ -19,8 +19,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const userId = await requireAuth(req, res);
+  if (!userId) return;
+
   try {
-    const { productKey, userId } = req.body;
+    const { productKey } = req.body || {};
     const product = PRICE_MAP[productKey];
     if (!product) {
       return res.status(400).json({ error: 'Invalid product' });
@@ -38,16 +41,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
 
     // Log payment intent to Supabase
-    if (userId) {
-      await supabaseAdmin.from('payments').insert({
-        user_id: userId,
-        stripe_payment_intent_id: paymentIntent.id,
-        product_key: productKey,
-        amount_eur: product.amount,
-        credits_granted: product.credits,
-        status: 'pending',
-      }).catch(() => {});
-    }
+    await supabaseAdmin.from('payments').insert({
+      user_id: userId,
+      stripe_payment_intent_id: paymentIntent.id,
+      product_key: productKey,
+      amount_eur: product.amount,
+      credits_granted: product.credits,
+      status: 'pending',
+    }).catch(() => {});
 
     return res.status(200).json({
       clientSecret: paymentIntent.client_secret,

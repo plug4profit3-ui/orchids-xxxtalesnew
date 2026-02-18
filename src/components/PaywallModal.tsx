@@ -5,6 +5,7 @@ import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-
 import Icons from './Icon';
 import { getTexts } from '../constants';
 import { Language } from '../types';
+import { getAccessToken } from '../services/supabaseData';
 
 // Lazy-load Stripe only when needed to prevent the floating badge from overlapping mobile UI
 let stripePromiseCache: ReturnType<typeof loadStripe> | null = null;
@@ -70,9 +71,27 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ productKey, onSuccess, onBa
       }
 
       if (paymentIntent && paymentIntent.status === 'succeeded') {
+        const token = await getAccessToken();
+        const verifyHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
+        if (token) verifyHeaders.Authorization = `Bearer ${token}`;
+
+        const verifyRes = await fetch('/api/verify-payment', {
+          method: 'POST',
+          headers: verifyHeaders,
+          body: JSON.stringify({ paymentIntentId: paymentIntent.id }),
+        });
+
+        const verifyData = await verifyRes.json().catch(() => ({}));
+        if (!verifyRes.ok || !verifyData.verified) {
+          throw new Error(verifyData?.error || 'Betaling kon niet worden geverifieerd');
+        }
+
+        const grantedCredits = typeof verifyData.credits === 'number' ? verifyData.credits : creditsMap[productKey];
+        const grantedIsSub = typeof verifyData.isSub === 'boolean' ? verifyData.isSub : isSub;
+
         setSucceeded(true);
         setTimeout(() => {
-          onSuccess(creditsMap[productKey], isSub);
+          onSuccess(grantedCredits, grantedIsSub);
         }, 1500);
       }
     } catch (err: any) {
@@ -158,10 +177,14 @@ const PaywallModal: React.FC<PaywallModalProps> = ({ isOpen, onClose, onPurchase
     setIsLoadingIntent(true);
 
     try {
+      const token = await getAccessToken();
+      const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+      if (token) headers.Authorization = `Bearer ${token}`;
+
       const res = await fetch('/api/create-payment-intent', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productKey, userId: userId || 'local_user' }),
+        headers,
+        body: JSON.stringify({ productKey }),
       });
 
       const data = await res.json();

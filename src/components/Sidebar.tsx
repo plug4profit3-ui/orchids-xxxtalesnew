@@ -61,6 +61,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: AppMode.CHAT,       icon: Icons.MessageSquare, label: t.chat },
     { id: AppMode.STORY,      icon: Icons.BookOpenCheck,  label: t.story },
     { id: AppMode.IMAGINE,    icon: Icons.Sparkles,       label: t.visualizer },
+    { id: AppMode.LAB,        icon: Icons.Zap,            label: 'Lab' },
     { id: AppMode.LIVE,       icon: Icons.Video,          label: t.live_call },
     { id: AppMode.SOLO_COACH, icon: Icons.Zap,            label: t.solo_coach },
   ];
