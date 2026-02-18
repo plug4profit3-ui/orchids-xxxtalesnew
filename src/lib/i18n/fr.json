@@ -1,0 +1,35 @@
+{
+  "sidebar": {
+    "credits": "CR", "vip_member": "MEMBRE VIP", "start_trial": "ESSAI 3 JOURS", "audio": "AUDIO", "live_call": "APPEL LIVE", "visualizer": "VISUALISEUR", "find_video": "TROUVER VIDÉO", "chats": "CHATS", "no_chats": "Pas encore de chats...", "stories": "VOS HISTOIRES", "no_stories": "Pas encore d'histoires...", "discover": "DÉCOUVRIR", "chat": "CHAT", "story": "HISTOIRE", "offers": "OFFRES DE LUXE", "solo_coach": "SOLO COACH"
+  },
+  "gallery": {
+    "title": "Galerie Partenaires", "subtitle": "Choisissez vos compagnes", "online": "EN LIGNE", "own_creation": "CRÉATION PROPRE", "connect": "CONNECTER", "start_group": "GROUPE"
+  },
+  "chat": {
+    "type_message": "Écrivez votre message...", "listening": "Écoute...", "gift_sent": "CADEAU ENVOYÉ", "lust": "DÉSIR", "settings": { "title": "PARAMÈTRES CHAT", "tone": "TON ÉMOTIONNEL", "voice_mod": "MODIFICATION VOIX", "speed": "Vitesse", "pitch": "Hauteur", "deep": "Grave", "high": "Aigu", "intensity": "INTENSITÉ" }, "dice": "LANCER DÉS (1 CR)"
+  },
+  "story": {
+    "title": "ATELIER SCÉNARIO", "subtitle": "NOUVELLE AVENTURE", "step1": "ÉTAPE 1: AMBIANCE", "step2": "ÉTAPE 2: LIEU & PARTENAIRES", "step3": "ÉTAPE 3: JOUETS", "solo_mode": "MODE SOLO: Pas de partenaires.", "next_step": "CHOISIR KINKS", "back": "RETOUR", "quick_pick": "CHOIX RAPIDE", "specific_wishes": "DÉSIRS SPÉCIFIQUES", "placeholder": "Décrivez votre fantasme...", "start_adventure": "LANCER AVENTURE", "generating": "L'HISTOIRE S'ÉCRIT...", "what_next": "QUE FAIT L'HOMME ?", "save": "SAUVER", "saved": "OK", "new": "NOUVEAU", "intensity_label": "INTENSITÉ"
+  },
+  "live": {
+    "vip_label": "CONNEXION VIDÉO VIP (FEMME)", "start_call": "LANCER APPEL", "connecting": "CONNEXION...", "hd_conn": "CONNEXION HD"
+  },
+  "coach": {
+    "title": "SOLO COACH NOVA", "subtitle": "GUIDANCE INTIME", "start": "DÉMARRER", "connecting": "CONNEXION...", "active": "ÉCOUTE...", "desc": "Nova est votre guide personnel. Elle donne des instructions en temps réel."
+  },
+  "imagine": {
+    "title": "VISUALISATION", "subtitle": "IMAGES POUR VOS MOTS", "placeholder": "Décrivez votre désir...", "generate": "GÉNÉRER (5 CR)", "visualizing": "VISUALISATION...", "no_images": "AUCUNE IMAGE"
+  },
+  "creator": {
+    "title": "CRÉATEUR PARTENAIRE", "subtitle": "MANIFESTEZ VOTRE IDÉAL", "name_label": "NOM", "name_placeholder": "Nom...", "base_label": "BASE", "desc_placeholder": "Décrivez ses désirs...", "manifest": "MANIFESTER (10 CR)", "synthesizing": "SYNTHÈSE...", "continue": "CONTINUER"
+  },
+  "video": {
+    "title": "CHERCHEUR VIDÉO", "subtitle": "TROUVEZ VOTRE PASSION", "placeholder": "Mots-clés...", "search_btn": "CHERCHER VIDÉOS"
+  },
+  "paywall": {
+    "premium_access": "ACCÈS PREMIUM", "hook": "Plongez dans votre", "fantasy": "Fantasme", "default_reason": "Débloquez l'expérience complète...", "benefit1": "Chat & Roleplay illimités", "benefit2": "Photos érotiques générées", "benefit3": "Appels Vidéo en Temps Réel", "choose_access": "CHOISISSEZ VOTRE ACCÈS", "most_popular": "POPULAIRE", "vip_sub": "MEMBRE VIP", "per_month": "/ mois", "vip_desc": "Accès complet, messages illimités, 500 crédits image.", "start_trial": "ESSAI GRATUIT (3 JOURS)", "credits": "Crédits", "footer": "DISCRET • ANNULABLE À TOUT MOMENT • 18+ UNIQUEMENT"
+  },
+  "intensity": {
+    "normal": "NORMAL", "high": "ÉLEVÉ", "extreme": "EXTRÊME"
+  }
+}

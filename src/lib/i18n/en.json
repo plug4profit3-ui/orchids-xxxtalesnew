@@ -1,0 +1,35 @@
+{
+  "sidebar": {
+    "credits": "CR", "vip_member": "VIP MEMBER", "start_trial": "START 3 DAY TRIAL", "audio": "AUDIO", "live_call": "LIVE CALL", "visualizer": "VISUALIZER", "find_video": "FIND VIDEO", "chats": "CHATS", "no_chats": "No chats yet...", "stories": "YOUR STORIES", "no_stories": "No stories yet...", "discover": "DISCOVER", "chat": "CHAT", "story": "STORY", "offers": "LUXURY OFFERS", "solo_coach": "SOLO COACH"
+  },
+  "gallery": {
+    "title": "Partner Gallery", "subtitle": "Select your companion(s)", "online": "ONLINE", "own_creation": "OWN CREATION", "connect": "CONNECT", "start_group": "START GROUP CHAT"
+  },
+  "chat": {
+    "type_message": "Type your message...", "listening": "Listening...", "gift_sent": "GIFT SENT", "lust": "LUST", "settings": { "title": "CHAT SETTINGS", "tone": "EMOTIONAL TONE", "voice_mod": "VOICE MODIFICATION", "speed": "Speed", "pitch": "Pitch", "deep": "Deep", "high": "High", "intensity": "INTENSITY" }, "dice": "ROLL THE DICE (1 CR)"
+  },
+  "story": {
+    "title": "SCENARIO ATELIER", "subtitle": "START NEW ADVENTURE", "step1": "STEP 1: CHOOSE A VIBE", "step2": "STEP 2: LOCATION & PARTNERS", "step3": "STEP 3: TOYS", "solo_mode": "SOLO MODE ACTIVE: No partners, pure self-pleasure.", "next_step": "CHOOSE KINKS", "back": "BACK", "quick_pick": "QUICK PICK", "specific_wishes": "SPECIFIC WISHES", "placeholder": "Type your specific fantasy, items, or scenario here...", "start_adventure": "START ADVENTURE", "generating": "THE LUST IS BEING WRITTEN...", "what_next": "WHAT DOES THE MAN DO NOW?", "save": "SAVE", "saved": "OK", "new": "NEW", "intensity_label": "INTENSITY"
+  },
+  "live": {
+    "vip_label": "VIP VIDEO CONNECTION (FEMALE)", "start_call": "START LIVE CALL", "connecting": "CONNECTING...", "hd_conn": "HD CONNECTION"
+  },
+  "coach": {
+    "title": "SOLO COACH NOVA", "subtitle": "INTIMATE GUIDANCE & ADVICE", "start": "START SESSION", "connecting": "CONNECTING TO NOVA...", "active": "LISTENING...", "desc": "Nova is your personal guide. She learns what you like and gives real-time instructions to intensify your solo sessions."
+  },
+  "imagine": {
+    "title": "VISUALIZATION", "subtitle": "IMAGES FOR YOUR NAUGHTIEST WORDS", "placeholder": "Describe your desire...", "generate": "GENERATE (5 CR)", "visualizing": "VISUALIZING...", "no_images": "NO IMAGES GENERATED YET"
+  },
+  "creator": {
+    "title": "PARTNER ATELIER", "subtitle": "MANIFEST YOUR IDEAL COMPANION", "name_label": "NAME", "name_placeholder": "Name...", "base_label": "CHOOSE BASE", "desc_placeholder": "Describe her desires...", "manifest": "MANIFEST (10 CR)", "synthesizing": "SYNTHESIZING...", "continue": "CONTINUE"
+  },
+  "video": {
+    "title": "VIDEO FINDER", "subtitle": "FIND YOUR ULTIMATE PASSION", "placeholder": "Type keywords...", "search_btn": "SEARCH VIDEOS"
+  },
+  "paywall": {
+    "premium_access": "PREMIUM ACCESS", "hook": "Go deeper into your", "fantasy": "Fantasy", "default_reason": "Unlock the full experience...", "benefit1": "Unlimited Chat & Roleplay", "benefit2": "Receive & Generate Erotic Photos", "benefit3": "Real-time Live Video Calls", "choose_access": "CHOOSE YOUR ACCESS", "most_popular": "MOST POPULAR", "vip_sub": "VIP MEMBERSHIP", "per_month": "/ month", "vip_desc": "Full access, unlimited messages, 500 image credits p/m.", "start_trial": "START FREE TRIAL (3 DAYS)", "credits": "Credits", "footer": "DISCREET • CANCEL ANYTIME • 18+ ONLY"
+  },
+  "intensity": {
+    "normal": "NORMAL", "high": "HIGH", "extreme": "EXTREME"
+  }
+}

@@ -18,7 +18,7 @@ export default async function handler(req: any, res: any) {
   };
 
   if (action === 'register') {
-    // Create user via admin API — no confirmation email sent
+    // Step 1: Create user via admin API with password
     const createResp = await fetch(`${supabaseUrl}/auth/v1/admin/users`, {
       method: 'POST',
       headers,
@@ -38,30 +38,37 @@ export default async function handler(req: any, res: any) {
       return res.status(createResp.status).json({ error: err.msg || 'Registration failed' });
     }
 
-    const user = await createResp.json();
+    const userData = await createResp.json();
+    const userId = userData.id;
 
-    // Create profile and credit account
+    // Step 2: Force-update the password via admin API (ensures correct hash)
+    await fetch(`${supabaseUrl}/auth/v1/admin/users/${userId}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({ password }),
+    });
+
+    // Step 3: Create profile and credit account
     await supabaseAdmin.from('profiles').upsert({
-      id: user.id,
+      id: userId,
       name: name || email.split('@')[0],
       email,
     });
 
     await supabaseAdmin.from('credit_accounts').upsert({
-      user_id: user.id,
+      user_id: userId,
       balance: 50,
       daily_messages_left: 10,
     });
 
-    // Log initial credits as transaction
     await supabaseAdmin.from('credit_transactions').insert({
-      user_id: user.id,
+      user_id: userId,
       amount: 50,
       type: 'signup_bonus',
       metadata: { source: 'registration' },
     });
 
-    // Generate a session token for the new user
+    // Step 4: Login to get session
     const tokenResp = await fetch(`${supabaseUrl}/auth/v1/token?grant_type=password`, {
       method: 'POST',
       headers: {
@@ -72,11 +79,12 @@ export default async function handler(req: any, res: any) {
     });
 
     if (!tokenResp.ok) {
-      return res.status(200).json({ user, session: null });
+      // Return user without session - frontend will handle login
+      return res.status(200).json({ user: userData, session: null });
     }
 
     const session = await tokenResp.json();
-    return res.status(200).json({ user, session });
+    return res.status(200).json({ user: userData, session });
   }
 
   // Default: login

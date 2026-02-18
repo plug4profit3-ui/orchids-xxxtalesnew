@@ -191,7 +191,25 @@ const PaywallModal: React.FC<PaywallModalProps> = ({ isOpen, onClose, onPurchase
               <Icons.X size={20} />
           </button>
 
-        {selectedProduct && clientSecret ? (
+          {/* ── TRIAL HERO CTA (always visible at top when not in checkout) ── */}
+          {!selectedProduct && onStartTrial && (
+            <div className="w-full px-6 pt-8 pb-0 md:hidden">
+              <button
+                onClick={() => { onStartTrial(); onClose(); }}
+                className="w-full py-5 bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-white font-black uppercase text-sm tracking-widest rounded-2xl transition-all shadow-[0_0_30px_rgba(16,185,129,0.4)] flex flex-col items-center gap-1"
+              >
+                <span className="text-lg">{t.start_trial}</span>
+                <span className="text-[10px] font-normal opacity-80 normal-case">3 {language === 'nl' ? 'dagen gratis · Geen creditcard vereist' : language === 'de' ? 'Tage gratis · Keine Kreditkarte nötig' : language === 'fr' ? 'jours gratuits · Sans carte bancaire' : language === 'es' ? 'días gratis · Sin tarjeta de crédito' : language === 'it' ? 'giorni gratis · Senza carta di credito' : 'days free · No credit card required'}</span>
+              </button>
+              <div className="flex items-center gap-3 my-5">
+                <div className="flex-1 h-px bg-zinc-800" />
+                <span className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest">of</span>
+                <div className="flex-1 h-px bg-zinc-800" />
+              </div>
+            </div>
+          )}
+
+          {selectedProduct && clientSecret ? (
           <div className="w-full p-6 pb-10 md:p-10">
               <Elements
                 stripe={getStripePromise()}
@@ -233,53 +251,65 @@ const PaywallModal: React.FC<PaywallModalProps> = ({ isOpen, onClose, onPurchase
           </div>
         ) : (
           <>
-            {/* LEFT SIDE: Context & VIP */}
-            <div className="w-full md:w-[45%] bg-[#151518] p-8 md:p-10 flex flex-col border-b md:border-b-0 md:border-r border-zinc-800 relative overflow-hidden shrink-0">
-               <div className="absolute inset-0 z-0 opacity-20">
-                   <img src="https://storage.googleapis.com/foto1982/claudia.jpg" className="w-full h-full object-cover grayscale" />
-                   <div className="absolute inset-0 bg-gradient-to-t from-[#151518] via-[#151518]/80 to-transparent" />
-               </div>
+             {/* LEFT SIDE: Context & VIP */}
+             <div className="w-full md:w-[45%] bg-[#151518] p-8 md:p-10 flex flex-col border-b md:border-b-0 md:border-r border-zinc-800 relative overflow-hidden shrink-0">
+                <div className="absolute inset-0 z-0 opacity-20">
+                    <img src="https://storage.googleapis.com/foto1982/claudia.jpg" className="w-full h-full object-cover grayscale" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#151518] via-[#151518]/80 to-transparent" />
+                </div>
 
-               <div className="relative z-10">
-                   <div className="inline-block px-3 py-1 rounded-full bg-gold-500 text-black text-[10px] font-black uppercase tracking-widest mb-6">Premium Toegang</div>
-                   <h1 className="text-3xl md:text-4xl font-headline font-black text-white mb-4 leading-[1.1]">Ga dieper in je <span className="text-gold-500 text-shine">fantasie</span></h1>
-                   <p className="text-zinc-400 text-sm leading-relaxed mb-8">
-                     "{reason || "Toegang tot exclusieve interactie, roleplay en digitale beleving. Discreet en veilig."}"
-                   </p>
+                <div className="relative z-10 flex flex-col h-full">
 
-                   <ul className="space-y-3 mb-8">
-                      <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Onbeperkt chatten & roleplay</span></li>
-                      <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Exclusieve premium interacties</span></li>
-                      <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Real-time Live Video Calls</span></li>
-                      <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Elk moment opzegbaar</span></li>
-                   </ul>
+                    {/* ── TRIAL CTA: FIRST + BIGGEST on desktop ── */}
+                    {onStartTrial && (
+                      <div className="mb-6">
+                        <button
+                          onClick={() => { onStartTrial(); onClose(); }}
+                          className="w-full py-5 bg-emerald-500 hover:bg-emerald-400 active:scale-[0.98] text-white font-black uppercase text-sm tracking-widest rounded-2xl transition-all shadow-[0_0_30px_rgba(16,185,129,0.5)] flex flex-col items-center gap-0.5 touch-manipulation"
+                        >
+                          <span>{t.start_trial}</span>
+                          <span className="text-[10px] font-normal opacity-80 normal-case">
+                            {language === 'nl' ? '3 dagen gratis · Geen creditcard vereist' : language === 'de' ? '3 Tage gratis · Ohne Kreditkarte' : language === 'fr' ? '3 jours gratuits · Sans carte bancaire' : language === 'es' ? '3 días gratis · Sin tarjeta de crédito' : language === 'it' ? '3 giorni gratis · Senza carta di credito' : '3 days free · No credit card required'}
+                          </span>
+                        </button>
 
-                    {/* VIP CARD */}
-                     <div className="mt-auto bg-black/40 border-2 border-gold-500 rounded-2xl p-6 relative overflow-hidden group hover:bg-black/60 transition-colors">
-                         <div className="absolute top-0 right-0 bg-gold-500 text-black text-[9px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-widest">{t.most_popular}</div>
-                         <h2 className="text-xl font-bold text-white mb-1">{t.vip_sub}</h2>
-                         <div className="flex items-baseline gap-2 mb-2">
-                             <span className="text-3xl font-black text-white">€17,99</span>
-                             <span className="text-sm text-zinc-500">{t.per_month}</span>
-                         </div>
-                         <p className="text-xs text-zinc-400 mb-4">{t.vip_desc}</p>
-                         
-                         {onStartTrial && (
-                           <button 
-                             onClick={() => { onStartTrial(); onClose(); }}
-                             className="relative z-20 w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-black uppercase text-xs tracking-widest rounded-xl transition-all active:scale-95 shadow-[0_0_20px_rgba(16,185,129,0.3)] touch-manipulation mb-3"
-                           >
-                             {t.start_trial}
-                           </button>
-                         )}
-                         
-                         <button onClick={() => handleSelectProduct('vip')} className="relative z-20 w-full py-4 bg-gold-500 hover:bg-gold-400 text-black font-black uppercase text-xs tracking-widest rounded-xl transition-all active:scale-95 shadow-[0_0_20px_rgba(255,215,0,0.3)] touch-manipulation">
-                             {t.vip_sub} · €17,99{t.per_month}
-                         </button>
-                         <p className="text-[9px] text-zinc-600 text-center mt-3 uppercase font-bold tracking-wider">Geen verplichtingen · Discreet</p>
-                     </div>
-               </div>
-            </div>
+                        <div className="flex items-center gap-3 mt-5 mb-2">
+                          <div className="flex-1 h-px bg-zinc-700/50" />
+                          <span className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest">{language === 'nl' ? 'of koop credits' : language === 'de' ? 'oder Credits kaufen' : language === 'fr' ? 'ou achetez des crédits' : language === 'es' ? 'o compra créditos' : language === 'it' ? 'o acquista crediti' : 'or buy credits'}</span>
+                          <div className="flex-1 h-px bg-zinc-700/50" />
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="inline-block px-3 py-1 rounded-full bg-gold-500 text-black text-[10px] font-black uppercase tracking-widest mb-4 self-start">Premium Toegang</div>
+                    <h1 className="text-2xl md:text-3xl font-headline font-black text-white mb-3 leading-[1.1]">Ga dieper in je <span className="text-gold-500 text-shine">fantasie</span></h1>
+                    <p className="text-zinc-400 text-sm leading-relaxed mb-6">
+                      "{reason || "Toegang tot exclusieve interactie, roleplay en digitale beleving. Discreet en veilig."}"
+                    </p>
+
+                    <ul className="space-y-2.5 mb-6">
+                       <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Onbeperkt chatten & roleplay</span></li>
+                       <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Exclusieve premium interacties</span></li>
+                       <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Real-time Live Video Calls</span></li>
+                       <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Elk moment opzegbaar</span></li>
+                    </ul>
+
+                    {/* VIP subscription card (secondary) */}
+                    <div className="mt-auto bg-black/40 border border-gold-500/60 rounded-2xl p-5 relative overflow-hidden group hover:bg-black/60 transition-colors">
+                        <div className="absolute top-0 right-0 bg-gold-500 text-black text-[9px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-widest">{t.most_popular}</div>
+                        <h2 className="text-base font-bold text-white mb-1">{t.vip_sub}</h2>
+                        <div className="flex items-baseline gap-2 mb-1">
+                            <span className="text-2xl font-black text-white">€17,99</span>
+                            <span className="text-sm text-zinc-500">{t.per_month}</span>
+                        </div>
+                        <p className="text-xs text-zinc-400 mb-4">{t.vip_desc}</p>
+                        <button onClick={() => handleSelectProduct('vip')} className="relative z-20 w-full py-3 bg-gold-500 hover:bg-gold-400 text-black font-black uppercase text-xs tracking-widest rounded-xl transition-all active:scale-95 shadow-[0_0_20px_rgba(255,215,0,0.3)] touch-manipulation">
+                            {t.vip_sub} · €17,99{t.per_month}
+                        </button>
+                        <p className="text-[9px] text-zinc-600 text-center mt-2 uppercase font-bold tracking-wider">Geen verplichtingen · Discreet</p>
+                    </div>
+                </div>
+             </div>
 
             {/* RIGHT SIDE: Credits */}
             <div className="flex-1 p-8 md:p-10 bg-[#0b0b0c] flex flex-col">

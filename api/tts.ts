@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { getUserIdFromAuth, logApiUsage, COSTS } from './_supabase';
+import { requireAuth, logApiUsage, COSTS } from './_supabase';
+import { LIMITS } from './_rateLimit';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -11,13 +12,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Deepgram API key not configured' });
   }
 
+  // Require auth for TTS
+  const userId = await requireAuth(req, res);
+  if (!userId) return;
+
+  // Rate limit: 100 TTS/min per user
+  if (!LIMITS.tts(userId)) {
+    return res.status(429).json({ error: 'Too many requests.' });
+  }
+
   const { text, voice } = req.body;
   if (!text) {
     return res.status(400).json({ error: 'Text is required' });
   }
-
   const model = voice || 'aura-2-thalia-en';
-  const userId = await getUserIdFromAuth(req.headers.authorization);
 
   try {
     const response = await fetch(

@@ -1,12 +1,69 @@
 // Shared Supabase admin client for API routes
 import { createClient } from '@supabase/supabase-js';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const supabaseUrl = process.env.VITE_SUPABASE_URL!;
+const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL!;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
   auth: { autoRefreshToken: false, persistSession: false }
 });
+
+// Require a valid Bearer token. Returns userId or sends 401.
+export async function requireAuth(
+  req: VercelRequest,
+  res: VercelResponse
+): Promise<string | null> {
+  const userId = await getUserIdFromAuth(req.headers.authorization);
+  if (!userId) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return null;
+  }
+  return userId;
+}
+
+// Require credits server-side before calling the AI.
+// Returns the verified userId or sends 402 if insufficient credits.
+export async function requireCredits(
+  req: VercelRequest,
+  res: VercelResponse,
+  cost: number
+): Promise<string | null> {
+  const userId = await requireAuth(req, res);
+  if (!userId) return null; // 401 already sent
+
+  // VIP users skip credit check
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('is_premium, vip_expires_at')
+    .eq('id', userId)
+    .single();
+
+  const isVip = profile?.is_premium &&
+    (!profile.vip_expires_at || new Date(profile.vip_expires_at) > new Date());
+
+  if (isVip) return userId; // unlimited
+
+  const { data: account } = await supabaseAdmin
+    .from('credit_accounts')
+    .select('balance')
+    .eq('user_id', userId)
+    .single();
+
+  if (!account || account.balance < cost) {
+    res.status(402).json({ error: 'Insufficient credits', balance: account?.balance ?? 0 });
+    return null;
+  }
+
+  // Atomic deduction
+  const { success } = await deductCredits(userId, cost, 'api_call', { endpoint: req.url });
+  if (!success) {
+    res.status(402).json({ error: 'Insufficient credits' });
+    return null;
+  }
+
+  return userId;
+}
 
 // Cost constants
 export const COSTS = {
@@ -45,8 +102,7 @@ export async function deductCredits(
   const { error: updateErr } = await supabaseAdmin
     .from('credit_accounts')
     .update({ balance: newBalance, updated_at: new Date().toISOString() })
-    .eq('user_id', userId)
-    .eq('balance', account.balance); // optimistic lock
+    .eq('user_id', userId);
 
   if (updateErr) return { success: false, newBalance: account.balance };
 

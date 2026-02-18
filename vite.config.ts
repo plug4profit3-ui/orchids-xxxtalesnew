@@ -32,25 +32,50 @@ const vercelApiPlugin = () => ({
           query: Object.fromEntries(new URL(req.url, 'http://localhost').searchParams),
         };
 
-        const fakeRes = {
-          statusCode: 200,
-          _headers: {} as Record<string, string>,
-          _body: null as any,
-          status(code: number) { this.statusCode = code; return this; },
-          json(data: any) {
-            this._body = JSON.stringify(data);
-            this._headers['content-type'] = 'application/json';
-            res.writeHead(this.statusCode, this._headers);
-            res.end(this._body);
-            return this;
-          },
-          setHeader(key: string, value: string) { this._headers[key] = value; return this; },
-          send(data: any) {
-            res.writeHead(this.statusCode, this._headers);
-            res.end(typeof data === 'string' ? data : JSON.stringify(data));
-            return this;
-          },
-        };
+          let headersWritten = false;
+          const fakeRes = {
+            statusCode: 200,
+            _headers: {} as Record<string, string>,
+            _body: null as any,
+            status(code: number) { this.statusCode = code; return this; },
+            json(data: any) {
+              this._body = JSON.stringify(data);
+              this._headers['content-type'] = 'application/json';
+              res.writeHead(this.statusCode, this._headers);
+              res.end(this._body);
+              return this;
+            },
+            setHeader(key: string, value: string) { this._headers[key] = value; return this; },
+            send(data: any) {
+              res.writeHead(this.statusCode, this._headers);
+              res.end(typeof data === 'string' ? data : JSON.stringify(data));
+              return this;
+            },
+            // Streaming support for SSE routes (chat with stream:true)
+            write(chunk: any) {
+              if (!headersWritten) {
+                headersWritten = true;
+                res.writeHead(this.statusCode, this._headers);
+              }
+              res.write(chunk);
+              return true;
+            },
+            end(chunk?: any) {
+              if (!headersWritten) {
+                headersWritten = true;
+                res.writeHead(this.statusCode, this._headers);
+              }
+              res.end(chunk);
+              return this;
+            },
+            // Required by some Vercel handlers
+            flushHeaders() {
+              if (!headersWritten) {
+                headersWritten = true;
+                res.writeHead(this.statusCode, this._headers);
+              }
+            },
+          };
 
         await handler(fakeReq, fakeRes);
       } catch (e: any) {
@@ -138,4 +163,4 @@ export default defineConfig(({ mode }) => ({
     mode === 'development' && componentTaggerPlugin(),
   ]
 }));
-// Orchids restart: 1771012879812
+// Orchids restart: 1771432046528

@@ -8,14 +8,14 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 0 0% 2%;
+    --foreground: 0 0% 95%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: 0 0% 2%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 2%;
+    --popover-foreground: 0 0% 95%;
 
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
@@ -112,10 +112,33 @@ body > div:last-of-type:not(#root) {
 
 /* Force-hide any Stripe badge that sits outside our app root */
 body > :not(#root):not(script):not(link):not(style):not(meta) {
-  position: absolute !important;
-  bottom: -9999px !important;
-  pointer-events: none !important;
-  opacity: 0 !important;
-  height: 0 !important;
-  overflow: hidden !important;
+  display: none !important;
+}
+
+/* Custom range slider for character creator */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 8px;
+  border-radius: 9999px;
+  outline: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.5), 0 2px 6px rgba(0,0,0,0.3);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: white;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.5), 0 2px 6px rgba(0,0,0,0.3);
 }

@@ -1,0 +1,35 @@
+{
+  "sidebar": {
+    "credits": "CR", "vip_member": "VIP MEMBER", "start_trial": "START 3 DAGEN TRIAL", "audio": "AUDIO", "live_call": "LIVE CALL", "visualizer": "VISUALIZER", "find_video": "VIND VIDEO", "chats": "CHATS", "no_chats": "Nog geen chats...", "stories": "JOUW VERHALEN", "no_stories": "Nog geen verhalen...", "discover": "ONTDEK", "chat": "CHAT", "story": "VERHAAL", "offers": "LUXE AANBIEDINGEN", "solo_coach": "SOLO COACH"
+  },
+  "gallery": {
+    "title": "Partner Galerij", "subtitle": "Selecteer je metgezel(len)", "online": "ONLINE", "own_creation": "EIGEN CREATIE", "connect": "MAAK CONTACT", "start_group": "START GROEPSCHAT"
+  },
+  "chat": {
+    "type_message": "Typ je bericht...", "listening": "Luisteren...", "gift_sent": "CADEAU VERSTUURD", "lust": "LUST", "settings": { "title": "CHAT INSTELLINGEN", "tone": "EMOTIONELE TOON", "voice_mod": "STEM MODIFICATIE", "speed": "Snelheid", "pitch": "Toonhoogte", "deep": "Diep", "high": "Hoog", "intensity": "INTENSITEIT" }, "dice": "ROL DE DOBBELSTEEN (1 CR)"
+  },
+  "story": {
+    "title": "SCENARIO ATELIER", "subtitle": "NIEUW AVONTUUR STARTEN", "step1": "STAP 1: KIES EEN SFEER", "step2": "STAP 2: LOCATIE & PARTNERS", "step3": "STAP 3: HULPMIDDELEN", "solo_mode": "SOLO MODUS ACTIEF: Geen partners, puur eigen genot.", "next_step": "KIES JE KINKS", "back": "TERUG", "quick_pick": "SNELKIEZEN", "specific_wishes": "SPECIFIEKE WENSEN", "placeholder": "Typ hier jouw specifieke fantasie, items, of scenario...", "start_adventure": "START HET AVONTUUR", "generating": "DE LUST WORDT GESCHREVEN...", "what_next": "WAT DOET DE MAN NU?", "save": "OPSLAAN", "saved": "OK", "new": "NIEUW", "intensity_label": "INTENSITEIT"
+  },
+  "live": {
+    "vip_label": "VIP VIDEO VERBINDING (VROUWELIJK)", "start_call": "START LIVE CALL", "connecting": "BEZIG MET VERBINDEN...", "hd_conn": "HD VERBINDING"
+  },
+  "coach": {
+    "title": "SOLO COACH NOVA", "subtitle": "INTIEME BEGELEIDING & ADVIES", "start": "START SESSIE", "connecting": "VERBINDING MAKEN MET NOVA...", "active": "LUISTEREN...", "desc": "Nova is jouw persoonlijke gids. Ze leert wat jij lekker vindt en geeft real-time instructies om je solo-sessies intenser te maken."
+  },
+  "imagine": {
+    "title": "VISUALISATIE", "subtitle": "BEELDEN BIJ JE STOUTSTE WOORDEN", "placeholder": "Beschrijf je verlangen...", "generate": "GENEREER (5 CR)", "visualizing": "VISUALISEREN...", "no_images": "NOG GEEN BEELDEN GEGENEREERD"
+  },
+  "creator": {
+    "title": "PARTNER ATELIER", "subtitle": "MANIFESTEER JE IDEALE METGEZEL", "name_label": "NAAM", "name_placeholder": "Naam...", "base_label": "KIES BASIS", "desc_placeholder": "Beschrijf haar verlangens...", "manifest": "MANIFESTEER (10 CR)", "synthesizing": "SYNTHETISEREN...", "continue": "GA DOOR"
+  },
+  "video": {
+    "title": "VIDEO FINDER", "subtitle": "VIND JE ULTIEME PASSIE", "placeholder": "Typ keywords...", "search_btn": "ZOEK VIDEOS"
+  },
+  "paywall": {
+    "premium_access": "PREMIUM TOEGANG", "hook": "Ga dieper in je", "fantasy": "Fantasie", "default_reason": "Ontgrendel de volledige ervaring...", "benefit1": "Onbeperkt Chatten & Roleplay", "benefit2": "Ontvang & Genereer Erotische Fotos", "benefit3": "Real-time Live Video Calls", "choose_access": "KIES JE TOEGANG", "most_popular": "MEEST GEKOZEN", "vip_sub": "VIP MEMBERSHIP", "per_month": "/ maand", "vip_desc": "Volledige toegang, onbeperkt berichten, 500 beeld credits p/m.", "start_trial": "START GRATIS TRIAL (3 DAGEN)", "credits": "Credits", "footer": "DISCREET • OP ELK MOMENT OPZEGBAAR • 18+ ONLY"
+  },
+  "intensity": {
+    "normal": "NORMAAL", "high": "HOOG", "extreme": "EXTREEM"
+  }
+}

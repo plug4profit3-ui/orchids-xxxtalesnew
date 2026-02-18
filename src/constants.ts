@@ -1,5 +1,6 @@
 
 import { Character, Gift, Language, VoiceStyle, IntensityLevel, ModelConfig, LegalContent } from "./types";
+import { getLocale } from './lib/i18n/index';
 
 export const DEFAULT_VIDEO = "https://storage.googleapis.com/foto1982/claudia.mp4";
 const BASE_URL = 'https://storage.googleapis.com/foto1982/';
@@ -382,8 +383,11 @@ export const LEGAL_CONTENT: Record<string, LegalContent> = {
 
 // Helper to get texts with fallback
 export const getTexts = (lang: string) => {
-    const code = lang.split('-')[0];
-    return TEXTS[code] || TEXTS['en'];
+  const code = lang.split('-')[0] as Language;
+  // Use JSON locale cache (populated on app start via loadLocale)
+  const locale = getLocale(code);
+  if (locale) return locale;
+  return TEXTS[code] || TEXTS['en'];
 };
 
 export const getLegalTexts = (lang: string): LegalContent => {

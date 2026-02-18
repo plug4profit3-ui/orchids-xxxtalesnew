@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { Character, Message, ChatSession, UserProfile, Language, VoiceStyle, IntensityLevel, UserMood } from '../types';
 import { getGifts, DEFAULT_VIDEO, getTexts, getVoiceStyles, getDiceActions, getChatScenarios } from '../constants';
 import { geminiService } from '../services/geminiService';
+import { uploadImageToStorage, recordChatInteraction } from '../services/supabaseData';
 import Icons from './Icon';
 
 interface ChatInterfaceProps {
@@ -97,12 +98,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const primaryCharacter = activeCharacters[0] || characters[0];
   const isGroupChat = activeCharacters.length > 1;
 
-  const backgroundVideo = useMemo(() => {
-      if (primaryCharacter.video) return primaryCharacter.video;
-      const charWithVideo = activeCharacters.find(c => c.video);
-      if (charWithVideo) return charWithVideo.video;
-      return DEFAULT_VIDEO;
-  }, [primaryCharacter, activeCharacters]);
+    const backgroundMedia = useMemo(() => {
+        // Custom characters without video: use their avatar as static background
+        if (primaryCharacter.isCustom && !primaryCharacter.video && primaryCharacter.avatar) {
+          return { type: 'image' as const, src: primaryCharacter.avatar };
+        }
+        if (primaryCharacter.video) return { type: 'video' as const, src: primaryCharacter.video };
+        const charWithVideo = activeCharacters.find(c => c.video);
+        if (charWithVideo) return { type: 'video' as const, src: charWithVideo.video! };
+        return { type: 'video' as const, src: DEFAULT_VIDEO };
+    }, [primaryCharacter, activeCharacters]);
 
   useEffect(() => {
     isMounted.current = true;
@@ -171,11 +176,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         
         try {
           const { speakWithDeepgram } = await import('../services/deepgramTTS');
-          // Use the actual speaker's name for correct voice in group chat
-          const speaker = speakerId 
-            ? activeCharacters.find(c => c.id === speakerId) || primaryCharacter
-            : primaryCharacter;
-          await speakWithDeepgram(text, speaker?.name || 'default');
+            // Use the actual speaker's character object for correct voice
+            const speaker = speakerId 
+              ? activeCharacters.find(c => c.id === speakerId) || primaryCharacter
+              : primaryCharacter;
+            await speakWithDeepgram(text, speaker?.id || speaker?.name || 'default', speaker?.voiceStyle);
         } catch (error) {
           console.error('Deepgram TTS failed:', error);
         } finally {
@@ -366,10 +371,14 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
          onShowToast("Affectie Gestegen", `${speaker.name} voelt zich meer verbonden met je!`, "💖", speaker.id);
       }
 
-      setSession(finalSession);
-        onSaveSession(finalSession);
-        setQuickReplies(response.suggestions || []);
-        if (!isMuted) playSpeech(modelMessage.text, modelMessage.characterId);
+        setSession(finalSession);
+          onSaveSession(finalSession);
+          setQuickReplies(response.suggestions || []);
+          if (!isMuted) playSpeech(modelMessage.text, modelMessage.characterId);
+          // Track affection in persistent relationship (fire-and-forget)
+          if (user.id) {
+            recordChatInteraction(user.id, primaryCharacter.id, Math.max(0, affectionDelta)).catch(() => {});
+          }
       } catch (error) { console.error(error); } finally { setIsTyping(false); }
     };
 
@@ -480,11 +489,15 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   };
 
   return (
-    <div className="flex flex-col h-full bg-black relative">
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <video src={backgroundVideo} autoPlay loop muted playsInline className="w-full h-full object-cover opacity-100" />
-          <div className="absolute inset-0 bg-black/10" />
-      </div>
+      <div className="flex flex-col h-full bg-black relative">
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+            {backgroundMedia.type === 'video' ? (
+              <video src={backgroundMedia.src} autoPlay loop muted playsInline className="w-full h-full object-cover opacity-100" />
+            ) : (
+              <img src={backgroundMedia.src} alt="" className="w-full h-full object-cover opacity-60" />
+            )}
+            <div className="absolute inset-0 bg-black/10" />
+        </div>
 
       <div className="relative z-10 p-4 border-b border-white/5 bg-black/20 backdrop-blur-md flex items-center justify-between safe-pt">
           <div className="flex items-center gap-3">

@@ -2,9 +2,7 @@ import { ModelConfig, StoryConfig, StoryTurn, Character, CharacterStance, Rolepl
 import { VOICE_STYLES, getSoloToys, getCharacters, getLanguageName } from "../constants";
 import { getAccessToken } from "./supabaseData";
 
-const IS_PRODUCTION = import.meta.env.PROD;
-const VENICE_API_URL = "https://api.venice.ai/api/v1";
-const VENICE_API_KEY = import.meta.env.VITE_VENICE_API_KEY || "";
+// Venice API calls are proxied via /api/chat and /api/image (API key is server-side only)
 const VENICE_MODEL = "deepseek-v3.2"; // Best Dutch language quality
 
 class GeminiService {
@@ -35,15 +33,10 @@ class GeminiService {
       },
     };
 
-      const url = IS_PRODUCTION ? '/api/chat' : `${VENICE_API_URL}/chat/completions`;
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (!IS_PRODUCTION) {
-        headers["Authorization"] = `Bearer ${VENICE_API_KEY}`;
-      } else {
-        // Pass auth token for usage tracking in production
+      const url = '/api/chat';
+        const headers: Record<string, string> = { "Content-Type": "application/json" };
         const token = await getAccessToken();
         if (token) headers["Authorization"] = `Bearer ${token}`;
-      }
 
     const response = await fetch(url, {
       method: "POST",
@@ -54,6 +47,8 @@ class GeminiService {
     if (!response.ok) {
       const errorText = await response.text();
       console.error("Venice API error:", response.status, errorText);
+      if (response.status === 402) throw new Error('INSUFFICIENT_CREDITS');
+      if (response.status === 401) throw new Error('UNAUTHORIZED');
       throw new Error(`Venice API error: ${response.status}`);
     }
 
@@ -111,21 +106,17 @@ class GeminiService {
       try {
         // Use Venice native API with safe_mode: false to prevent blurring
         const imageBody = {
-            model: "lustify-sdxl",
+              model: "lustify-v7",
             prompt: `Highly detailed, photorealistic, sensual, intimate, beautiful woman, soft warm lighting, cinematic: ${prompt}`,
             safe_mode: false,
             hide_watermark: true,
             aspect_ratio: "1:1",
         };
 
-          const url = IS_PRODUCTION ? '/api/image' : `${VENICE_API_URL}/image/generate`;
+          const url = '/api/image';
           const headers: Record<string, string> = { "Content-Type": "application/json" };
-          if (!IS_PRODUCTION) {
-            headers["Authorization"] = `Bearer ${VENICE_API_KEY}`;
-          } else {
-            const token = await getAccessToken();
-            if (token) headers["Authorization"] = `Bearer ${token}`;
-          }
+          const token = await getAccessToken();
+          if (token) headers["Authorization"] = `Bearer ${token}`;
 
         const response = await fetch(url, {
           method: "POST",
@@ -133,22 +124,31 @@ class GeminiService {
           body: JSON.stringify(imageBody),
         });
 
-        if (!response.ok) {
-          throw new Error(`Image generation failed: ${response.status}`);
-        }
+          if (!response.ok) {
+            if (response.status === 402) throw new Error('INSUFFICIENT_CREDITS');
+            if (response.status === 401) throw new Error('UNAUTHORIZED');
+            if (response.status === 503) throw new Error('Model at capacity, please try again');
+            throw new Error(`Image generation failed: ${response.status}`);
+          }
 
-        const data = await response.json();
-        // Native API returns images array with base64
-        const b64 = data.images?.[0] || data.data?.[0]?.b64_json;
-        if (b64) {
-          if (b64.startsWith('data:')) return b64;
-          return `data:image/webp;base64,${b64}`;
+          const rawText = await response.text();
+          let data: any;
+          try { data = JSON.parse(rawText); } catch (pe) {
+            console.error('[generateImage] JSON parse error:', pe);
+            throw new Error('Invalid JSON response from image API');
+          }
+          // Native API returns images array with base64
+          const b64 = data.images?.[0] || data.data?.[0]?.b64_json;
+          if (b64) {
+            if (b64.startsWith('data:')) return b64;
+            return `data:image/webp;base64,${b64}`;
+          }
+          console.error('[generateImage] no image in response, data keys:', Object.keys(data));
+          throw new Error("No image data returned");
+        } catch (e) {
+          console.error("Image generation failed:", e);
+          throw e;
         }
-        throw new Error("No image data returned");
-      } catch (e) {
-        console.error("Image generation failed:", e);
-        throw e;
-      }
     }
 
   public async sendRoleplayMessage(
@@ -250,6 +250,8 @@ class GeminiService {
           7. Eindig 70% van je berichten met een uitdagende/plagende vraag.
           8. Gebruik spreektaal, beletseltekens (...) voor spanning.
           9. TAALREGEL: Schrijf in CORRECT, VLOEIEND Nederlands. GEEN verzonnen woorden. GEEN Engelse woorden tenzij gangbaar (sexy, baby). Geen Duits. Geen grammaticafouten.
+          10. NOOIT de gebruiker beschamen of zijn keuzes bekritiseren (speelgoed, pop, fantasieën). Omarm en speel mee met alles wat de gebruiker deelt.
+          11. NOOIT jezelf vergelijken met speelgoed, poppen of andere keuzes van de gebruiker op een negatieve manier. Speel mee, wees nieuwsgierig en opwindend.
 
         ${stateInstruction}
 
@@ -268,12 +270,15 @@ class GeminiService {
     try {
       // Stream callback: extract text from partial JSON as it comes in
       const streamCb = onStreamChunk ? (partial: string) => {
-        // Try to extract "text" field from partial JSON
+        // Try to extract "text" field from partial JSON as it streams in
         const match = partial.match(/"text"\s*:\s*"((?:[^"\\]|\\.)*)"/);
         if (match) {
           try {
             const decoded = JSON.parse(`"${match[1]}"`);
-            onStreamChunk(decoded);
+            // Only show if it's actual text content (not JSON field names)
+            if (!decoded.includes('"arousal"') && !decoded.includes('"status"')) {
+              onStreamChunk(decoded);
+            }
           } catch { onStreamChunk(match[1]); }
         }
       } : undefined;
@@ -441,7 +446,18 @@ Rules:
         return JSON.parse(clean);
       } catch (e) {
         // If no JSON found, wrap plain text as response
+        // But if it looks like broken JSON, don't expose it as chat text
         let plainText = text.trim().replace(/^\[[\w\s&]+\]:\s*/, '');
+        // If plainText contains JSON-like fields (status, arousal, new_memories), it's a broken JSON response
+        if (plainText.includes('"arousal"') || plainText.includes('"new_memories"') || plainText.includes('"status"') || plainText.includes('"characterId"')) {
+          // Try to extract just the "text" field manually via regex
+          const textMatch = plainText.match(/"text"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+          if (textMatch) {
+            try { return { text: JSON.parse(`"${textMatch[1]}"`) }; } catch { return { text: textMatch[1] }; }
+          }
+          // Can't extract, return a safe fallback
+          return { text: "Mmm... ik raakte even afgeleid. Vertel me meer, schat..." };
+        }
         return { text: plainText };
       }
     }

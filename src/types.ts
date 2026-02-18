@@ -43,6 +43,7 @@ export interface UserProfile {
   picture: string;
   isPremium: boolean;
   vipExpiresAt?: string;
+  trialUsed?: boolean;
   credits: number;
   dailyMessagesLeft: number;
   lastLoginDate?: string; 

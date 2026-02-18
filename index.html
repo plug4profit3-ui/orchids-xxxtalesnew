@@ -2,7 +2,7 @@
 <html lang="nl" prefix="og: http://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-visual" />
     
     <!-- CRITICAL: Social Media Preview Images (Must be first) -->
     <!-- Added ?v=4 to force social media platforms to re-scrape the image -->
@@ -130,13 +130,12 @@
         }
 
         #root {
-          width: 100%;
-          height: 100%;
-          height: 100dvh;
-          display: flex;
-          flex-direction: column;
-          overflow: hidden;
-        }
+            position: fixed;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+          }
 
       .text-shine {
         background: var(--gold-metallic);

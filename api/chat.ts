@@ -1,5 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabaseAdmin, getUserIdFromAuth, logApiUsage, COSTS } from './_supabase';
+import { supabaseAdmin, requireAuth, getUserIdFromAuth, logApiUsage, COSTS } from './_supabase';
+import { LIMITS } from './_rateLimit';
 
 const VENICE_API_URL = "https://api.venice.ai/api/v1";
 
@@ -13,7 +14,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Server configuration error' });
   }
 
-  const userId = await getUserIdFromAuth(req.headers.authorization);
+  // Require valid auth on all chat requests
+  const userId = await requireAuth(req, res);
+  if (!userId) return; // 401 already sent
+
+  // Rate limit: 60 messages/min per user
+  if (!LIMITS.chat(userId)) {
+    return res.status(429).json({ error: 'Too many requests. Please slow down.' });
+  }
+
   const isStream = req.body?.stream === true;
 
   try {

@@ -4,7 +4,7 @@ import { getCharacters, getLanguageName, getTexts } from '../constants';
 import { speakWithDeepgram, stopSpeaking } from '../services/deepgramTTS';
 import Icons from './Icon';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { ModelConfig, Language, UserProfile } from '../types';
+import { Character, ModelConfig, Language, UserProfile } from '../types';
 
 interface LiveInterfaceProps {
   config: ModelConfig;
@@ -12,10 +12,11 @@ interface LiveInterfaceProps {
   language: Language;
   onConsumeCredit: (amount: number) => boolean;
   user: UserProfile;
+  allCharacters?: Character[];
 }
 
-const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, isActive, language, onConsumeCredit, user }) => {
-  const characters = getCharacters(language).filter(c => !c.isDoll);
+const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, isActive, language, onConsumeCredit, user, allCharacters }) => {
+  const characters = allCharacters?.length ? allCharacters.filter(c => !c.isDoll) : getCharacters(language).filter(c => !c.isDoll);
   const [connectionState, setConnectionState] = useState<'idle' | 'calling' | 'connected'>('idle');
   const [isMicOn, setIsMicOn] = useState(true);
   const [isCameraOn, setIsCameraOn] = useState(false);

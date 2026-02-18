@@ -53,25 +53,27 @@ const CharacterSelector: React.FC<CharacterSelectorProps> = ({ isOpen, onClose, 
     }
   };
 
-    if (!isOpen) return null;
+      if (!isOpen) return null;
 
-    // Sort: favorites first, then filter by search
-    const sortedCharacters = useMemo(() => {
-      let filtered = characters;
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = characters.filter(c => 
-          c.name.toLowerCase().includes(q) || 
-          c.desc?.toLowerCase().includes(q) || 
-          c.personality?.toLowerCase().includes(q) ||
-          c.voiceStyle?.toLowerCase().includes(q)
-        );
-      }
-      if (favoriteIds.length === 0) return filtered;
-      const favs = filtered.filter(c => favoriteIds.includes(c.id));
-      const rest = filtered.filter(c => !favoriteIds.includes(c.id));
-      return [...favs, ...rest];
-    }, [characters, favoriteIds, searchQuery]);
+      // Sort: favorites first, then filter by search
+      const sortedCharacters = useMemo(() => {
+        let filtered = characters;
+        if (searchQuery.trim()) {
+          const q = searchQuery.toLowerCase();
+            filtered = characters.filter(c => 
+              c.name.toLowerCase().includes(q) || 
+              c.desc?.toLowerCase().includes(q) || 
+              (Array.isArray(c.personality) ? c.personality.join(' ').toLowerCase().includes(q) : c.personality?.toLowerCase().includes(q)) ||
+              c.voiceStyle?.toLowerCase().includes(q)
+            );
+        }
+        if (favoriteIds.length === 0) return filtered;
+        const favs = filtered.filter(c => favoriteIds.includes(c.id));
+        const rest = filtered.filter(c => !favoriteIds.includes(c.id));
+        return [...favs, ...rest];
+      }, [characters, favoriteIds, searchQuery]);
+
+      const isLoading = characters.length === 0;
 
   return (
     <div className="relative w-full h-full flex flex-col overflow-hidden bg-black">
@@ -121,20 +123,33 @@ const CharacterSelector: React.FC<CharacterSelectorProps> = ({ isOpen, onClose, 
 
       <div ref={containerRef} className="flex-1 scroll-container no-scrollbar h-full z-10 relative">
           <div className="max-w-md mx-auto px-4 space-y-12 py-8 pb-48">
-              {sortedCharacters.map((char) => (
-                  <MemoizedCharacterCard 
-                    key={char.id} 
-                    char={char} 
-                    isSelected={selectedCharacterId === char.id || selectedIds.includes(char.id)} 
-                    onSelect={() => handleCardClick(char)}
-                    selectionMode={isMultiSelect}
-                    connectText={t.connect}
-                    onlineText={t.online}
-                    ownText={t.own_creation}
-                    isFavorite={favoriteIds.includes(char.id)}
-                    onToggleFavorite={onToggleFavorite}
-                  />
-              ))}
+              {isLoading
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="relative w-full aspect-[3/4] rounded-[3rem] overflow-hidden bg-zinc-900 animate-pulse">
+                      <div className="absolute inset-0 bg-gradient-to-t from-zinc-800 via-zinc-900 to-zinc-800" />
+                      <div className="absolute bottom-8 left-8 right-8 space-y-3">
+                        <div className="h-2 w-16 rounded-full bg-zinc-700" />
+                        <div className="h-8 w-40 rounded-xl bg-zinc-700" />
+                        <div className="h-3 w-full rounded-full bg-zinc-800" />
+                        <div className="h-3 w-3/4 rounded-full bg-zinc-800" />
+                      </div>
+                    </div>
+                  ))
+                : sortedCharacters.map((char) => (
+                    <MemoizedCharacterCard 
+                      key={char.id} 
+                      char={char} 
+                      isSelected={selectedCharacterId === char.id || selectedIds.includes(char.id)} 
+                      onSelect={() => handleCardClick(char)}
+                      selectionMode={isMultiSelect}
+                      connectText={t.connect}
+                      onlineText={t.online}
+                      ownText={t.own_creation}
+                      isFavorite={favoriteIds.includes(char.id)}
+                      onToggleFavorite={onToggleFavorite}
+                    />
+                  ))
+              }
           </div>
       </div>
 
