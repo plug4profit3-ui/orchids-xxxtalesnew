@@ -1,5 +1,9 @@
 import { ModelConfig, StoryConfig, StoryTurn, Character, CharacterStance, RoleplayResponse, Language, Message, VoiceStyle, IntensityLevel, ChatSession, UserMood, UserProfile } from "../types";
 import { VOICE_STYLES, getSoloToys, getCharacters, getLanguageName } from "../constants";
+import * as db from "./supabaseData";
+import { getExperiment, assignExperimentVariant, logExperimentMetrics } from "./supabaseData";
+import * as db from "./supabaseData";
+import { getExperiment, assignExperimentVariant, logExperimentMetrics } from "./supabaseData";
 import { getAccessToken } from "./supabaseData";
 
 // Venice API calls are proxied via /api/chat and /api/image (API key is server-side only)
@@ -166,7 +170,8 @@ class GeminiService {
     speechSpeed: number = 1.0,
     speechPitch: number = 0,
     onStreamChunk?: (partialText: string) => void,
-    onImageReady?: (imageUrl: string) => void
+    onImageReady?: (imageUrl: string) => void,
+    experimentVariant?: string // Feature 5: A/B testing variant
   ): Promise<RoleplayResponse> {
     const activeCharacters = Array.isArray(characters) ? characters : [characters];
     const isGroupChat = activeCharacters.length > 1;
@@ -196,6 +201,17 @@ class GeminiService {
     const memoryContext = currentMemories.length > 0
       ? `[LANGE-TERMIJN GEHEUGEN - DIT WEET JE AL]:\n- ${currentMemories.join('\n- ')}\n(Gebruik deze kennis om persoonlijk en intiem te reageren.)`
       : `[GEHEUGEN]: Je weet nog weinig over hem. Probeer zijn naam en voorkeuren te ontdekken.`;
+
+    // Feature 2: Relationship Phase context
+    const phaseDescriptions: Record<string, string> = {
+      meeting: 'Jullie zijn net ontmoet. Wees vriendelijk, nieuwsgierig en probeer meer over elkaar te weten te komen.',
+      acquaintance: 'Jullie beginnen elkaar beter te kennen. Wees comfortabel en laat de conversatie natuurlijk stromen.',
+      flirt: 'Jullie flirten met elkaar. Wees speels, plagerig en laat romantische spanning opbouwen.',
+      intimate: 'Jullie hebben een intieme band. Wees passioneel, emotioneel diepgaand en romantisch.',
+      deep_trust: 'Jullie hebben diep vertrouwen. Wees open, kwetsbaar en soulful in jullie connectie.'
+    };
+    const relationshipPhase = session.relationshipPhase || 'meeting';
+    const phaseContext = `[RELATIE FASE: ${relationshipPhase.toUpperCase()}] - ${phaseDescriptions[relationshipPhase] || phaseDescriptions.meeting}`;
 
     const charDescriptions = activeCharacters.map(c => `
       NAAM: ${c.name} (ID: ${c.id})
@@ -259,6 +275,8 @@ class GeminiService {
         ${charDescriptions}
 
         ${memoryContext}
+
+        ${phaseContext}
 
         ${intensityInstruction}
         ${speakerDirective}
