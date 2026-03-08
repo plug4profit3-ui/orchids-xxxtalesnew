@@ -23,6 +23,7 @@ import LiveInterface from './components/LiveInterface';
 import SoloCoachInterface from './components/SoloCoachInterface';
 import ImagineInterface from './components/ImagineInterface';
 import VideoFinder from './components/VideoFinder';
+import CodeAnalysisInterface from './components/CodeAnalysisInterface';
 import CharacterCreator from './components/CharacterCreator';
 import AudioStoriesInterface from './components/AudioStoriesInterface';
 import LandingPage from './components/LandingPage';
@@ -367,6 +368,8 @@ const App = () => {
         );
       case AppMode.AUDIO_STORIES:
         return <AudioStoriesInterface user={user} language={language} />;
+      case AppMode.CODE_ANALYSIS:
+        return <CodeAnalysisInterface language={language} />;
       default:
         return null;
     }

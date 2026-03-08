@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ModelConfig, AppMode, ChatSession, UserProfile, Language, SavedStory } from '../types';
 import { AFFILIATE_BANNERS, SUPPORTED_LANGUAGES, getLanguageFlag, getTexts, getAffiliateLinks } from '../constants';
@@ -63,6 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: AppMode.IMAGINE,    icon: Icons.Sparkles,       label: t.visualizer },
     { id: AppMode.LIVE,       icon: Icons.Video,          label: t.live_call },
     { id: AppMode.SOLO_COACH, icon: Icons.Zap,            label: t.solo_coach },
+    { id: AppMode.CODE_ANALYSIS, icon: Icons.Code,       label: t.code_analysis },
   ];
 
   const handleNav = (m: AppMode) => {

@@ -55,7 +55,8 @@ import {
   Users,
   MessageCircle,
   Quote,
-  HelpCircle
+  HelpCircle,
+  Code
 } from 'lucide-react';
 
 export const Icons = {
@@ -114,7 +115,8 @@ export const Icons = {
     Users,
     MessageCircle,
     Quote,
-    HelpCircle
+    HelpCircle,
+    Code
 };
 
 export default Icons;
