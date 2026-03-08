@@ -5,6 +5,7 @@ import { getGifts, DEFAULT_VIDEO, getTexts, getVoiceStyles, getDiceActions, getC
 import { geminiService } from '../services/geminiService';
 import { uploadImageToStorage, recordChatInteraction } from '../services/supabaseData';
 import { memoryService, evolutionService, feedbackService } from '../services/memoryService';
+import CreditDisplay from './CreditDisplay';
 import Icons from './Icon';
 import TypingIndicator from './TypingIndicator';
 import MemoryIndicator from './MemoryIndicator';
@@ -180,7 +181,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         intimate: 'Intiem',
         deep_trust: 'Diep Vertrouwen'
       };
-      onShowToast?.('Relatie verdiept!', `Jullie relatie is nu: ${phaseNames[nextPhase]}, '💕');
+      onShowToast?.('Relatie verdiept!', `Jullie relatie is nu: ${phaseNames[nextPhase]}`, '💕');
     }
   }, [interactionCount, relationshipPhase]);
 
@@ -589,6 +590,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               </div>
           </div>
           <div className="flex items-center gap-2">
+              <CreditDisplay credits={user.credits} isPremium={user.isPremium} onOpenPaywall={() => onShowPaywall('Credits')} compact />
               <button onClick={() => setIsMuted(!isMuted)} className={`p-2 rounded-full border transition-all ${isMuted ? 'border-red-500 text-red-500 bg-red-500/10' : 'border-gold-500/20 text-gold-500 bg-black/30'}`}>{isMuted ? <Icons.VolumeX size={18} /> : <Icons.Volume2 size={18} />}</button>
               <button onClick={() => setShowDice(!showDice)} className="p-2 text-gold-500 bg-black/30 rounded-full hover:bg-black/50 transition-colors border border-transparent"><Icons.Dices size={20} /></button>
               <button onClick={() => setShowSettings(!showSettings)} className="p-2 text-zinc-300 hover:text-white transition-colors"><Icons.Settings size={20} /></button>
@@ -820,6 +822,13 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       )}
 
         <div className="p-3 md:p-4 bg-black/40 border-t border-white/5 relative z-20 safe-pb backdrop-blur-md">
+            {/* Low balance warning */}
+            {!user.isPremium && user.credits < 10 && (
+              <div className={`mb-2 mx-auto max-w-4xl flex items-center justify-between gap-2 px-3 py-2 rounded-xl text-xs font-bold ${user.credits < 5 ? 'bg-red-500/15 border border-red-500/30 text-red-300' : 'bg-amber-500/10 border border-amber-500/20 text-amber-300'}`}>
+                <span>{user.credits < 5 ? `⚠️ Kritiek laag saldo: ${Math.floor(user.credits)} credits` : `⚡ Laag saldo: ${Math.floor(user.credits)} credits over`}</span>
+                <button onClick={() => onShowPaywall('Koop meer credits')} className="underline underline-offset-2 whitespace-nowrap">Kopen →</button>
+              </div>
+            )}
             {nextSpeakerId && isGroupChat && <div className="absolute -top-10 left-0 right-0 flex justify-center animate-in slide-in-from-bottom-2 fade-in"><div className="bg-gold-500 text-black px-4 py-1.5 rounded-full text-[10px] font-bold shadow-lg flex items-center gap-2"><Icons.MessageSquare size={12} /><span>Volgende: {activeCharacters.find(c => c.id === nextSpeakerId)?.name}</span><button onClick={() => setNextSpeakerId(null)} className="ml-2 hover:text-white"><Icons.X size={12} /></button></div></div>}
             {quickReplies.length > 0 && !isTyping && (
               <div className="max-w-4xl mx-auto flex gap-2 mb-2 overflow-x-auto no-scrollbar pb-1">

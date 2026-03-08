@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabaseAdmin, requireAuth, getUserIdFromAuth, logApiUsage, COSTS } from './_supabase';
+import { supabaseAdmin, requireAuth, getUserIdFromAuth, logApiUsage, COSTS, CREDIT_COSTS, deductCredits } from './_supabase';
 import { LIMITS } from './_rateLimit';
 
 const VENICE_API_URL = "https://api.venice.ai/api/v1";
@@ -23,16 +23,78 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(429).json({ error: 'Too many requests. Please slow down.' });
   }
 
+  // --- CREDIT CHECK ---
+  // Check if user is VIP (unlimited usage)
+  const { data: profile } = await supabaseAdmin
+    .from('profiles')
+    .select('is_premium, vip_expires_at')
+    .eq('id', userId)
+    .single();
+
+  const isVip =
+    profile?.is_premium &&
+    (!profile.vip_expires_at || new Date(profile.vip_expires_at) > new Date());
+
+  if (!isVip) {
+    // Determine cost based on intensity passed in request
+    const intensity = req.body?.intensity || 'normal';
+    let creditCost = CREDIT_COSTS.CHAT_NORMAL;
+    if (intensity === 'high') creditCost = CREDIT_COSTS.CHAT_HIGH;
+    if (intensity === 'extreme') creditCost = CREDIT_COSTS.CHAT_EXTREME;
+
+    const idempotencyKey = req.body?.idempotency_key || null;
+
+    // Quick balance pre-check (avoid lock contention on obvious failures)
+    const { data: account } = await supabaseAdmin
+      .from('credit_accounts')
+      .select('balance')
+      .eq('user_id', userId)
+      .single();
+
+    if (!account || Number(account.balance) < creditCost) {
+      return res.status(402).json({
+        error: 'Insufficient credits',
+        balance: Number(account?.balance ?? 0),
+        required: creditCost,
+      });
+    }
+
+    // Atomic deduction before calling AI
+    const messageId = req.body?.message_id || null;
+    const { success, newBalance } = await deductCredits(
+      userId,
+      creditCost,
+      'consumption',
+      {
+        description: `Chat message${messageId ? ` ${messageId}` : ''} – intensity: ${intensity}`,
+        reference_id: messageId,
+        intensity,
+      },
+      idempotencyKey
+    );
+
+    if (!success) {
+      return res.status(402).json({ error: 'Insufficient credits', balance: newBalance });
+    }
+  }
+  // --------------------
+
   const isStream = req.body?.stream === true;
 
   try {
+    // Strip internal credit-system fields before forwarding to Venice
+    const veniceBody = { ...req.body };
+    delete veniceBody.intensity;
+    delete veniceBody.idempotency_key;
+    delete veniceBody.message_id;
+
     const response = await fetch(`${VENICE_API_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${apiKey}`,
       },
-      body: JSON.stringify(req.body),
+      body: JSON.stringify(veniceBody),
     });
 
     if (!response.ok) {

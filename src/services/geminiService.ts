@@ -1,10 +1,7 @@
 import { ModelConfig, StoryConfig, StoryTurn, Character, CharacterStance, RoleplayResponse, Language, Message, VoiceStyle, IntensityLevel, ChatSession, UserMood, UserProfile } from "../types";
 import { VOICE_STYLES, getSoloToys, getCharacters, getLanguageName } from "../constants";
 import * as db from "./supabaseData";
-import { getExperiment, assignExperimentVariant, logExperimentMetrics } from "./supabaseData";
-import * as db from "./supabaseData";
-import { getExperiment, assignExperimentVariant, logExperimentMetrics } from "./supabaseData";
-import { getAccessToken } from "./supabaseData";
+import { getExperiment, assignExperimentVariant, logExperimentMetrics, getAccessToken } from "./supabaseData";
 
 // Venice API calls are proxied via /api/chat and /api/image (API key is server-side only)
 const VENICE_MODEL = "deepseek-v3.2"; // Best Dutch language quality

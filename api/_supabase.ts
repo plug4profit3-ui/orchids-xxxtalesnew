@@ -65,12 +65,22 @@ export async function requireCredits(
   return userId;
 }
 
-// Cost constants
+// Cost constants (USD per unit)
 export const COSTS = {
   VENICE_CHAT_INPUT_PER_M: 0.40,   // $/M tokens
   VENICE_CHAT_OUTPUT_PER_M: 1.00,  // $/M tokens
   VENICE_IMAGE: 0.01,              // $ per image
   DEEPGRAM_TTS_PER_K_CHARS: 0.03, // $ per 1000 chars
+};
+
+// Credit costs per action (in user credits)
+export const CREDIT_COSTS = {
+  CHAT_NORMAL: 1,    // 1 credit per normal chat message
+  CHAT_HIGH: 5,      // 5 credits for high intensity
+  CHAT_EXTREME: 10,  // 10 credits for extreme intensity
+  IMAGE: 5,          // 5 credits per image generation
+  TTS: 1,            // 1 credit per TTS request
+  IMAGE_UPLOAD: 2,   // 2 credits for image upload in chat
 };
 
 // Extract user ID from Authorization header (Bearer token)
@@ -81,14 +91,46 @@ export async function getUserIdFromAuth(authHeader: string | undefined): Promise
   return data.user?.id || null;
 }
 
-// Deduct credits atomically
+// Deduct credits atomically using the database RPC to prevent race conditions
 export async function deductCredits(
+  userId: string,
+  amount: number,
+  type: string,
+  metadata: Record<string, any> = {},
+  idempotencyKey?: string
+): Promise<{ success: boolean; newBalance: number; errorCode?: string }> {
+  const { data, error } = await supabaseAdmin.rpc('deduct_credits', {
+    p_user_id: userId,
+    p_amount: amount,
+    p_type: type,
+    p_description: metadata.description || null,
+    p_reference_id: metadata.reference_id || null,
+    p_idempotency_key: idempotencyKey || null,
+    p_metadata: metadata,
+  });
+
+  if (error) {
+    console.error('deduct_credits RPC error:', error);
+    // Fallback: try direct update if RPC not yet deployed
+    return deductCreditsFallback(userId, amount, type, metadata);
+  }
+
+  const result = Array.isArray(data) ? data[0] : data;
+  return {
+    success: result?.success ?? false,
+    newBalance: Number(result?.new_balance ?? 0),
+    errorCode: result?.error_code ?? undefined,
+  };
+}
+
+// Fallback deduction for environments where the RPC is not yet available
+async function deductCreditsFallback(
   userId: string,
   amount: number,
   type: string,
   metadata: Record<string, any> = {}
 ): Promise<{ success: boolean; newBalance: number }> {
-  // Atomic update with check
+  // Use select-then-conditional-update with gte guard to reduce (but not eliminate) race window
   const { data: account, error: fetchErr } = await supabaseAdmin
     .from('credit_accounts')
     .select('balance')
@@ -96,59 +138,76 @@ export async function deductCredits(
     .single();
 
   if (fetchErr || !account) return { success: false, newBalance: 0 };
-  if (account.balance < amount) return { success: false, newBalance: account.balance };
+  if (Number(account.balance) < amount) return { success: false, newBalance: Number(account.balance) };
 
-  const newBalance = account.balance - amount;
-  const { error: updateErr } = await supabaseAdmin
+  const newBalance = Number(account.balance) - amount;
+  const { error: updErr } = await supabaseAdmin
     .from('credit_accounts')
     .update({ balance: newBalance, updated_at: new Date().toISOString() })
-    .eq('user_id', userId);
+    .eq('user_id', userId)
+    .gte('balance', amount); // Re-check balance to reduce (but not eliminate) race window
 
-  if (updateErr) return { success: false, newBalance: account.balance };
+  if (updErr) return { success: false, newBalance: Number(account.balance) };
 
-  // Log transaction
   await supabaseAdmin.from('credit_transactions').insert({
     user_id: userId,
     amount: -amount,
     type,
     metadata,
-  });
+  }).catch(err => console.error('Failed to log credit transaction:', err));
 
   return { success: true, newBalance };
 }
 
-// Add credits
+// Add credits using the atomic RPC
 export async function addCredits(
   userId: string,
   amount: number,
   type: string,
-  metadata: Record<string, any> = {}
+  metadata: Record<string, any> = {},
+  idempotencyKey?: string
 ): Promise<number> {
-  const { data: account } = await supabaseAdmin
-    .from('credit_accounts')
-    .select('balance')
-    .eq('user_id', userId)
-    .single();
-
-  const currentBalance = account?.balance || 0;
-  const newBalance = currentBalance + amount;
-
-  await supabaseAdmin
-    .from('credit_accounts')
-    .upsert({
-      user_id: userId,
-      balance: newBalance,
-      updated_at: new Date().toISOString(),
-    });
-
-  await supabaseAdmin.from('credit_transactions').insert({
-    user_id: userId,
-    amount,
-    type,
-    metadata,
+  const { data, error } = await supabaseAdmin.rpc('add_credits', {
+    p_user_id: userId,
+    p_amount: amount,
+    p_type: type,
+    p_description: metadata.description || null,
+    p_reference_id: metadata.reference_id || null,
+    p_idempotency_key: idempotencyKey || null,
+    p_metadata: metadata,
   });
 
-  return newBalance;
+  if (error) {
+    console.error('add_credits RPC error:', error);
+    // Fallback: upsert directly
+    const { data: account } = await supabaseAdmin
+      .from('credit_accounts')
+      .select('balance')
+      .eq('user_id', userId)
+      .single();
+
+    const currentBalance = Number(account?.balance ?? 0);
+    const newBalance = currentBalance + amount;
+
+    await supabaseAdmin
+      .from('credit_accounts')
+      .upsert({
+        user_id: userId,
+        balance: newBalance,
+        updated_at: new Date().toISOString(),
+      });
+
+    await supabaseAdmin.from('credit_transactions').insert({
+      user_id: userId,
+      amount,
+      type,
+      metadata,
+    }).catch(err => console.error('Failed to log credit transaction:', err));
+
+    return newBalance;
+  }
+
+  return Number(data ?? 0);
 }
 
 // Log API usage

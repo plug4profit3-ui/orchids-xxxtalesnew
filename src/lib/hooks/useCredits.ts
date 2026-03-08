@@ -1,6 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { UserProfile } from '../../types';
 import * as db from '../../services/supabaseData';
+import { fetchCreditBalance, consumeCredits, estimateCreditCost, CreditTransaction } from '../../services/creditService';
+import { supabase } from '../../services/supabase';
 
 export function useCredits(
   user: UserProfile,
@@ -9,6 +11,51 @@ export function useCredits(
   showToast: (title: string, message: string, icon?: string) => void,
 ) {
   const [showTrialConfirm, setShowTrialConfirm] = useState(false);
+  const [transactions, setTransactions] = useState<CreditTransaction[]>([]);
+
+  // Sync balance from server on mount and when user authenticates
+  useEffect(() => {
+    if (!user.id || !user.isAuthenticated) return;
+
+    let cancelled = false;
+    fetchCreditBalance()
+      .then(data => {
+        if (cancelled || !data) return;
+        setUser(prev => ({ ...prev, credits: data.balance, dailyMessagesLeft: data.daily_messages_left }));
+        setTransactions(data.transactions || []);
+      })
+      .catch(err => {
+        if (!cancelled) console.error('Failed to fetch credit balance:', err);
+      });
+
+    return () => { cancelled = true; };
+  }, [user.id, user.isAuthenticated]);
+
+  // Subscribe to real-time credit_accounts changes via Supabase
+  useEffect(() => {
+    if (!user.id || !user.isAuthenticated) return;
+
+    const channel = supabase
+      .channel(`credits:${user.id}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'credit_accounts',
+          filter: `user_id=eq.${user.id}`,
+        },
+        payload => {
+          const newBalance = Number((payload.new as any)?.balance ?? 0);
+          setUser(prev => ({ ...prev, credits: newBalance }));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user.id, user.isAuthenticated]);
 
   const onConsumeCredit = useCallback((cost: number): boolean => {
     if (user.isPremium) return true;
@@ -29,6 +76,51 @@ export function useCredits(
     showPaywall('Je dagelijkse berichten zijn op.');
     return false;
   }, [user.isPremium, user.dailyMessagesLeft, setUser, showPaywall]);
+
+  /**
+   * Server-side credit consumption for chat messages.
+   * Returns true if credits were successfully deducted, false if insufficient.
+   */
+  const onConsumeCreditServer = useCallback(async (
+    messageText: string,
+    intensity: 'normal' | 'high' | 'extreme' = 'normal',
+    messageId?: string
+  ): Promise<boolean> => {
+    if (user.isPremium) return true;
+
+    const { cost, estimated_input_tokens, estimated_output_tokens } = estimateCreditCost(messageText, intensity);
+
+    // Optimistic local check before hitting server
+    if (user.credits < cost) {
+      showPaywall(`Je hebt ${cost} credits nodig voor dit bericht.`);
+      return false;
+    }
+
+    const idempotency_key = messageId ? `chat_${messageId}` : `chat_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+
+    const result = await consumeCredits({
+      estimated_input_tokens,
+      estimated_output_tokens,
+      message_id: messageId,
+      idempotency_key,
+      intensity,
+    });
+
+    if (!result.success) {
+      // Update local balance from server response
+      setUser(prev => ({ ...prev, credits: result.remaining_balance }));
+      if (result.insufficient_funds) {
+        showPaywall(`Je hebt onvoldoende credits. Huidig saldo: ${result.remaining_balance.toFixed(0)} credits.`);
+      } else {
+        showToast('Fout', result.error || 'Credits konden niet worden afgeschreven.', '⚠️');
+      }
+      return false;
+    }
+
+    // Update local balance optimistically
+    setUser(prev => ({ ...prev, credits: result.remaining_balance }));
+    return true;
+  }, [user.isPremium, user.credits, setUser, showPaywall, showToast]);
 
   const handleStartTrial = useCallback(() => {
     if (user.trialUsed) {
@@ -55,6 +147,10 @@ export function useCredits(
       setUser(prev => ({ ...prev, credits: prev.credits + amount }));
     }
     showToast('Aankoop Geslaagd', `+${amount} credits toegevoegd!`, '✨');
+    // Refresh balance from server after purchase
+    fetchCreditBalance().then(data => {
+      if (data) setUser(prev => ({ ...prev, credits: data.balance }));
+    });
   };
 
   const claimDailyReward = (amount: number) => {
@@ -82,13 +178,25 @@ export function useCredits(
     }
   }, [user.isPremium, user.vipExpiresAt, user.id, setUser, showToast]);
 
+  // Refresh balance from server
+  const refreshBalance = useCallback(async () => {
+    const data = await fetchCreditBalance();
+    if (data) {
+      setUser(prev => ({ ...prev, credits: data.balance, dailyMessagesLeft: data.daily_messages_left }));
+      setTransactions(data.transactions || []);
+    }
+  }, [setUser]);
+
   return {
     onConsumeCredit,
     onConsumeDailyMessage,
+    onConsumeCreditServer,
     handleStartTrial,
     handlePurchase,
     claimDailyReward,
     checkTrialExpiry,
     showTrialConfirm,
+    transactions,
+    refreshBalance,
   };
 }

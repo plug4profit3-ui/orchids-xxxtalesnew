@@ -85,7 +85,7 @@ export class MemoryService {
     // Simple summarization - in production, use LLM for better summarization
     const summary = messages
       .slice(-10) // Last 10 messages
-      .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.text.substring(0, 100)}...')
+      .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.text.substring(0, 100)}...`)
       .join('\n');
     
     return summary;
