@@ -312,6 +312,10 @@ const App = () => {
             language={language}
             characters={allCharacters}
             onShowToast={showToast}
+            // New credit API integration
+            consumeCreditsApi={credits.consumeCreditsApi}
+            adjustCreditsApi={credits.adjustCreditsApi}
+            refreshBalance={credits.refreshBalance}
           />
         );
       case AppMode.STORY:

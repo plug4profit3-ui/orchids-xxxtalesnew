@@ -20,6 +20,21 @@ interface ChatInterfaceProps {
   language: Language;
   characters: Character[];
   onShowToast?: (title: string, message: string, icon?: string, characterId?: string) => void;
+  // New credit API integration
+  consumeCreditsApi?: (params: {
+    estimated_input_tokens: number;
+    estimated_output_tokens: number;
+    message_id?: string;
+    intensity?: 'normal' | 'high' | 'extreme';
+  }) => Promise<{ success: boolean; requestId?: string; error?: string }>;
+  adjustCreditsApi?: (params: {
+    request_id: string;
+    actual_input_tokens: number;
+    actual_output_tokens: number;
+    message_id?: string;
+    intensity?: 'normal' | 'high' | 'extreme';
+  }) => Promise<boolean>;
+  refreshBalance?: () => Promise<void>;
 }
 
 const XP_PER_LEVEL = 100;
@@ -46,7 +61,10 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   onShowPaywall,
   language,
   characters,
-  onShowToast
+  onShowToast,
+  consumeCreditsApi,
+  adjustCreditsApi,
+  refreshBalance,
 }) => {
   const [session, setSession] = useState<ChatSession>(initialSession);
   const [inputText, setInputText] = useState('');
@@ -320,6 +338,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     if (intensity === 'extreme') messageCost = 10;
 
     let isPaidAction = false;
+    let requestId: string | undefined;
+
     if (!user.isPremium) {
         // Only consume daily messages if intensity is NORMAL
         if (intensity === 'normal' && user.dailyMessagesLeft > 0) {
@@ -327,12 +347,35 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
             if (!onConsumeDailyMessage()) return;
         } else {
             // Intensity is HIGH/EXTREME OR daily limit reached -> consume credits
-            if (!onConsumeCredit(messageCost)) return; // Paywall shown by onConsumeCredit
-            isPaidAction = true;
+            // Use new API if available, fallback to legacy
+            if (consumeCreditsApi) {
+                // Estimate tokens (rough approximation: 1 token ≈ 4 chars)
+                const estimatedInputTokens = Math.ceil(cleanedInput.length / 4);
+                const estimatedOutputTokens = Math.ceil(estimatedInputTokens * 1.5); // Estimate 1.5x output
+                
+                const consumeResult = await consumeCreditsApi({
+                    estimated_input_tokens: estimatedInputTokens,
+                    estimated_output_tokens: estimatedOutputTokens,
+                    intensity,
+                    service_type: 'chat',
+                });
+                
+                if (!consumeResult.success) {
+                    // API already showed paywall, just return
+                    return;
+                }
+                requestId = consumeResult.requestId;
+                isPaidAction = true;
+            } else {
+                // Fallback to legacy local consumption
+                if (!onConsumeCredit(messageCost)) return;
+                isPaidAction = true;
+            }
         }
     }
     // ------------------
     
+    const messageId = Date.now().toString();
     await initAudio();
 
     const newMessage: Message = { id: Date.now().toString(), role: 'user', text: cleanedInput, timestamp: Date.now() };
@@ -397,6 +440,23 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       );
 
       setStreamingText('');
+
+      // --- CREDIT ADJUSTMENT ---
+      // Adjust credits based on actual token usage if we used the new API
+      if (requestId && adjustCreditsApi && response.usage) {
+        const actualInputTokens = response.usage.promptTokens || Math.ceil(cleanedInput.length / 4);
+        const actualOutputTokens = response.usage.completionTokens || Math.ceil(response.text.length / 4);
+        
+        // Fire and forget - don't block the UI
+        adjustCreditsApi({
+          request_id: requestId,
+          actual_input_tokens: actualInputTokens,
+          actual_output_tokens: actualOutputTokens,
+          message_id: messageId,
+          intensity,
+        }).catch(err => console.error('Credit adjustment failed:', err));
+      }
+      // ------------------------
 
       // MEMORY & AFFECTION UPDATE LOGICA
       const currentMemories = session.memories || [];
@@ -585,6 +645,19 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                        <div className="h-1 w-16 bg-black/50 rounded-full overflow-hidden"><div className="h-full bg-pink-500" style={{ width: `${session.arousal || 0}%` }} /></div>
                        <span className="text-[9px] text-pink-400 font-bold uppercase drop-shadow-md">{t.lust}</span>
                        {session.currentMood && <span className="text-lg animate-in zoom-in" title={`Mood: ${session.currentMood}`}>{getMoodIcon(session.currentMood)}</span>}
+                       {/* Credit Balance Indicator */}
+                       {!user.isPremium && user.credits !== undefined && (
+                         <span 
+                           className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                             user.credits < 10 ? 'bg-red-500/20 text-red-400 border border-red-500/50' : 
+                             user.credits < 50 ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/50' : 
+                             'bg-green-500/20 text-green-400 border border-green-500/50'
+                           }`}
+                           title={`Credits: ${user.credits}`}
+                         >
+                           {user.credits < 10 && '🚨 '}{user.credits} credits
+                         </span>
+                       )}
                   </div>
               </div>
           </div>
@@ -830,6 +903,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                 ))}
               </div>
             )}
+          {/* Credit Cost Warning */}
+          {!user.isPremium && user.credits !== undefined && (
+            <div className="max-w-4xl mx-auto mb-2 flex items-center justify-between text-xs">
+              <span className={`font-medium ${
+                intensity === 'normal' ? 'text-green-400' : 
+                intensity === 'high' ? 'text-yellow-400' : 'text-red-400'
+              }`}>
+                💰 Cost: {intensity === 'normal' ? (user.dailyMessagesLeft > 0 ? 'FREE' : '1 credit') : intensity === 'high' ? '5 credits' : '10 credits'}
+              </span>
+              {user.credits < 10 && user.dailyMessagesLeft === 0 && intensity === 'normal' && (
+                <span className="text-red-400 animate-pulse">🚨 Low balance - Top up now!</span>
+              )}
+            </div>
+          )}
+
           <div className="max-w-4xl mx-auto flex items-end gap-2">
               <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleImageUpload} />
               <button onClick={() => fileInputRef.current?.click()} className="p-3 rounded-full bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white hover:border-gold-500 transition-all active:scale-95"><Icons.Image size={20} /></button>
