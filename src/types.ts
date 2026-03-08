@@ -31,6 +31,7 @@ export enum AppMode {
   AUDIO_STORIES = 'audio_stories',
   IMAGINE = 'imagine',
   SOLO_COACH = 'solo_coach',
+  CODE_ANALYSIS = 'code_analysis',
   PAYMENT_SUCCESS = 'payment_success',
 }
 

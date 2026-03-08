@@ -1,10 +1,7 @@
 import { ModelConfig, StoryConfig, StoryTurn, Character, CharacterStance, RoleplayResponse, Language, Message, VoiceStyle, IntensityLevel, ChatSession, UserMood, UserProfile } from "../types";
 import { VOICE_STYLES, getSoloToys, getCharacters, getLanguageName } from "../constants";
 import * as db from "./supabaseData";
-import { getExperiment, assignExperimentVariant, logExperimentMetrics } from "./supabaseData";
-import * as db from "./supabaseData";
-import { getExperiment, assignExperimentVariant, logExperimentMetrics } from "./supabaseData";
-import { getAccessToken } from "./supabaseData";
+import { getExperiment, assignExperimentVariant, logExperimentMetrics, getAccessToken } from "./supabaseData";
 
 // Venice API calls are proxied via /api/chat and /api/image (API key is server-side only)
 const VENICE_MODEL = "deepseek-v3.2"; // Best Dutch language quality
@@ -95,6 +92,16 @@ class GeminiService {
   public async connectLive(_model: string, _config: any, _callbacks: any): Promise<any> {
     // Venice doesn't support live streaming - this is now a no-op
     throw new Error("Live streaming is not supported with Venice AI. Use text chat instead.");
+  }
+
+  // Code Analysis: streaming analysis via Venice API
+  public async analyzeCode(prompt: string, onChunk?: (chunk: string) => void): Promise<string> {
+    return this.chatCompletion(
+      "You are an elite full-stack architect. Provide detailed, structured code analysis. Be thorough but concise.",
+      [{ role: "user", content: prompt }],
+      onChunk,
+      4096 // Larger token limit for comprehensive analysis
+    );
   }
 
   // Solo Coach: text-based conversation via Venice API

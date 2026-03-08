@@ -24,7 +24,7 @@ export const getLanguageFlag = (code: string) =>
 export const TEXTS: Record<string, any> = {
   nl: {
     sidebar: {
-      credits: "CR", vip_member: "VIP MEMBER", start_trial: "START 3 DAGEN TRIAL", audio: "AUDIO", live_call: "LIVE CALL", visualizer: "VISUALIZER", find_video: "VIND VIDEO", chats: "CHATS", no_chats: "Nog geen chats...", stories: "JOUW VERHALEN", no_stories: "Nog geen verhalen...", discover: "ONTDEK", chat: "CHAT", story: "VERHAAL", offers: "LUXE AANBIEDINGEN", solo_coach: "SOLO COACH"
+      credits: "CR", vip_member: "VIP MEMBER", start_trial: "START 3 DAGEN TRIAL", audio: "AUDIO", live_call: "LIVE CALL", visualizer: "VISUALIZER", find_video: "VIND VIDEO", chats: "CHATS", no_chats: "Nog geen chats...", stories: "JOUW VERHALEN", no_stories: "Nog geen verhalen...", discover: "ONTDEK", chat: "CHAT", story: "VERHAAL", offers: "LUXE AANBIEDINGEN", solo_coach: "SOLO COACH", code_analysis: "CODE ANALYSE"
     },
     gallery: {
       title: "Partner Galerij", subtitle: "Selecteer je metgezel(len)", online: "ONLINE", own_creation: "EIGEN CREATIE", connect: "MAAK CONTACT", start_group: "START GROEPSCHAT"
@@ -59,7 +59,7 @@ export const TEXTS: Record<string, any> = {
   },
   en: {
     sidebar: {
-      credits: "CR", vip_member: "VIP MEMBER", start_trial: "START 3 DAY TRIAL", audio: "AUDIO", live_call: "LIVE CALL", visualizer: "VISUALIZER", find_video: "FIND VIDEO", chats: "CHATS", no_chats: "No chats yet...", stories: "YOUR STORIES", no_stories: "No stories yet...", discover: "DISCOVER", chat: "CHAT", story: "STORY", offers: "LUXURY OFFERS", solo_coach: "SOLO COACH"
+      credits: "CR", vip_member: "VIP MEMBER", start_trial: "START 3 DAY TRIAL", audio: "AUDIO", live_call: "LIVE CALL", visualizer: "VISUALIZER", find_video: "FIND VIDEO", chats: "CHATS", no_chats: "No chats yet...", stories: "YOUR STORIES", no_stories: "No stories yet...", discover: "DISCOVER", chat: "CHAT", story: "STORY", offers: "LUXURY OFFERS", solo_coach: "SOLO COACH", code_analysis: "CODE ANALYSIS"
     },
     gallery: {
       title: "Partner Gallery", subtitle: "Select your companion(s)", online: "ONLINE", own_creation: "OWN CREATION", connect: "CONNECT", start_group: "START GROUP CHAT"
@@ -94,7 +94,7 @@ export const TEXTS: Record<string, any> = {
   },
   de: {
     sidebar: {
-      credits: "CR", vip_member: "VIP MITGLIED", start_trial: "START 3 TAGE TEST", audio: "AUDIO", live_call: "LIVE ANRUF", visualizer: "VISUALIZER", find_video: "VIDEO FINDEN", chats: "CHATS", no_chats: "Noch keine Chats...", stories: "DEINE GESCHICHTEN", no_stories: "Noch keine Geschichten...", discover: "ENTDECKEN", chat: "CHAT", story: "GESCHICHTE", offers: "LUXUSANGEBOTE", solo_coach: "SOLO COACH"
+      credits: "CR", vip_member: "VIP MITGLIED", start_trial: "START 3 TAGE TEST", audio: "AUDIO", live_call: "LIVE ANRUF", visualizer: "VISUALIZER", find_video: "VIDEO FINDEN", chats: "CHATS", no_chats: "Noch keine Chats...", stories: "DEINE GESCHICHTEN", no_stories: "Noch keine Geschichten...", discover: "ENTDECKEN", chat: "CHAT", story: "GESCHICHTE", offers: "LUXUSANGEBOTE", solo_coach: "SOLO COACH", code_analysis: "CODE ANALYSE"
     },
     gallery: {
       title: "Partner Galerie", subtitle: "Wähle deine Begleiter", online: "ONLINE", own_creation: "EIGENE KREATION", connect: "VERBINDEN", start_group: "GRUPPE STARTEN"
@@ -129,7 +129,7 @@ export const TEXTS: Record<string, any> = {
   },
   fr: {
     sidebar: {
-      credits: "CR", vip_member: "MEMBRE VIP", start_trial: "ESSAI 3 JOURS", audio: "AUDIO", live_call: "APPEL LIVE", visualizer: "VISUALISEUR", find_video: "TROUVER VIDÉO", chats: "CHATS", no_chats: "Pas encore de chats...", stories: "VOS HISTOIRES", no_stories: "Pas encore d'histoires...", discover: "DÉCOUVRIR", chat: "CHAT", story: "HISTOIRE", offers: "OFFRES DE LUXE", solo_coach: "SOLO COACH"
+      credits: "CR", vip_member: "MEMBRE VIP", start_trial: "ESSAI 3 JOURS", audio: "AUDIO", live_call: "APPEL LIVE", visualizer: "VISUALISEUR", find_video: "TROUVER VIDÉO", chats: "CHATS", no_chats: "Pas encore de chats...", stories: "VOS HISTOIRES", no_stories: "Pas encore d'histoires...", discover: "DÉCOUVRIR", chat: "CHAT", story: "HISTOIRE", offers: "OFFRES DE LUXE", solo_coach: "SOLO COACH", code_analysis: "ANALYSE CODE"
     },
     gallery: {
       title: "Galerie Partenaires", subtitle: "Choisissez vos compagnes", online: "EN LIGNE", own_creation: "CRÉATION PROPRE", connect: "CONNECTER", start_group: "GROUPE"
@@ -164,7 +164,7 @@ export const TEXTS: Record<string, any> = {
   },
   it: {
     sidebar: {
-      credits: "CR", vip_member: "MEMBRO VIP", start_trial: "PROVA 3 GIORNI", audio: "AUDIO", live_call: "CHIAMATA LIVE", visualizer: "VISUALIZER", find_video: "TROVA VIDEO", chats: "CHAT", no_chats: "Nessuna chat...", stories: "LE TUE STORIE", no_stories: "Nessuna storia...", discover: "SCOPRI", chat: "CHAT", story: "STORIA", offers: "OFFERTE LUSSO", solo_coach: "SOLO COACH"
+      credits: "CR", vip_member: "MEMBRO VIP", start_trial: "PROVA 3 GIORNI", audio: "AUDIO", live_call: "CHIAMATA LIVE", visualizer: "VISUALIZER", find_video: "TROVA VIDEO", chats: "CHAT", no_chats: "Nessuna chat...", stories: "LE TUE STORIE", no_stories: "Nessuna storia...", discover: "SCOPRI", chat: "CHAT", story: "STORIA", offers: "OFFERTE LUSSO", solo_coach: "SOLO COACH", code_analysis: "ANALISI CODICE"
     },
     gallery: {
       title: "Galleria Partner", subtitle: "Scegli la tua compagnia", online: "ONLINE", own_creation: "CREAZIONE PROPRIA", connect: "CONNETTI", start_group: "AVVIA GRUPPO"
@@ -199,7 +199,7 @@ export const TEXTS: Record<string, any> = {
   },
   es: {
     sidebar: {
-      credits: "CR", vip_member: "MIEMBRO VIP", start_trial: "PRUEBA 3 DÍAS", audio: "AUDIO", live_call: "LLAMADA VIVO", visualizer: "VISUALIZADOR", find_video: "BUSCAR VIDEO", chats: "CHATS", no_chats: "Sin chats...", stories: "TUS HISTORIAS", no_stories: "Sin historias...", discover: "DESCUBRIR", chat: "CHAT", story: "HISTORIA", offers: "OFERTAS LUJO", solo_coach: "SOLO COACH"
+      credits: "CR", vip_member: "MIEMBRO VIP", start_trial: "PRUEBA 3 DÍAS", audio: "AUDIO", live_call: "LLAMADA VIVO", visualizer: "VISUALIZADOR", find_video: "BUSCAR VIDEO", chats: "CHATS", no_chats: "Sin chats...", stories: "TUS HISTORIAS", no_stories: "Sin historias...", discover: "DESCUBRIR", chat: "CHAT", story: "HISTORIA", offers: "OFERTAS LUJO", solo_coach: "SOLO COACH", code_analysis: "ANÁLISIS CÓDIGO"
     },
     gallery: {
       title: "Galería de Parejas", subtitle: "Selecciona tu compañía", online: "EN LÍNEA", own_creation: "PROPIA CREACIÓN", connect: "CONECTAR", start_group: "INICIAR GRUPO"
@@ -473,6 +473,33 @@ export const VOICE_STYLES: { id: VoiceStyle; label: string; prompt: string }[] =
   { id: 'nervous', label: 'Nervous', prompt: 'Speak nervously, shyly, and hesitantly.' },
   { id: 'slow', label: 'Slow', prompt: 'Speak very slowly and deliberately.' }
 ];
+
+// --- ELITE FULL-STACK ARCHITECT ANALYSIS PROMPT ---
+export const ELITE_FULLSTACK_ARCHITECT_PROMPT = `**Rol:** Je bent de beste Senior Full-Stack Developer en Product Architect ter wereld. Je hebt expertise in schaalbare architectuur, vlijmscherpe UI/UX-principes en high-performance code-efficiëntie.
+
+**Taak:** Voer een diepgaande, meedogenloze analyse uit van mijn volledige applicatie. Scan elk component, de datastructuur, de API-logica en de gebruikerservaring.
+
+**Analyse-criteria:**
+
+1.  **Code Kwaliteit & Architectuur:** Identificeer redundante code, slecht gestructureerde componenten en verbeteringen voor herbruikbaarheid.
+    
+2.  **UI/UX & Design:** Kijk kritisch naar de flow. Waar verliest een gebruiker focus? Is de interface intuïtief en pixel-perfect?
+    
+3.  **Performance & Schaalbaarheid:** Waar zitten de bottlenecks? Kan de database-structuur efficiënter?
+    
+4.  **Ontbrekende Features:** Welke 'killer features' ontbreken op basis van de huidige trends in deze niche?
+    
+
+**Output Formaat:**
+
+*   **Kritische Review:** Geef per component aan wat er "fout" is of beter kan.
+    
+*   **Directe Verbeteringen:** Geef concrete code-voorstellen of architecturale wijzigingen.
+    
+*   **Roadmap:** Een lijst met 5 toevoegingen die deze app naar een 'Unicorn' niveau tillen.
+    
+
+Begin nu de analyse van [naam van je app/project].`;
 
 // --- DYNAMIC TRANSLATION HELPERS ---
 
