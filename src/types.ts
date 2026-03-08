@@ -92,6 +92,19 @@ export interface ModelConfig {
   systemInstruction: string;
 }
 
+export type RelationshipPhase = 'meeting' | 'acquaintance' | 'flirt' | 'intimate' | 'deep_trust';
+
+export type VisualTheme = 'casual' | 'intimate' | 'dominant' | 'romantic' | 'playful';
+
+export type TypingIndicatorState = 
+  | 'thinking' 
+  | 'biting_lip' 
+  | 'typing_fast' 
+  | 'hesitating' 
+  | 'excited' 
+  | 'blushing' 
+  | 'breathing_heavy';
+
 export interface ChatSession {
   id: string;
   title: string;
@@ -114,6 +127,109 @@ export interface ChatSession {
   messagesSinceLastImage?: number;
   memories?: string[]; // Moved: Stores facts specific to THIS conversation
   currentMood?: UserMood; // New: Tracks the detected mood of the user in this session
+  relationshipPhase?: RelationshipPhase; // New: Current relationship phase with character
+  interactionCount?: number; // New: Total message count for phase progression
+  visualTheme?: VisualTheme; // New: Current visual theme based on sentiment/phase
+}
+
+// Feature 1: Persistent Memory per user+character
+export interface UserCharacterMemory {
+  id: string;
+  userId: string;
+  characterId: string;
+  summary: string; // Condensed conversation summary (max ~500 tokens)
+  keyFacts: string[]; // Extracted key facts about user
+  userPreferences: string[]; // What the user likes/dislikes
+  sharedExperiences: string[]; // Memorable moments from conversations
+  lastInteractionAt: string;
+  totalInteractions: number;
+  affectionLevel: number; // 0-100 relationship strength
+}
+
+// Feature 2: Character Evolution
+export interface PhaseConfig {
+  phase: RelationshipPhase;
+  minInteractions: number;
+  toneDescription: string;
+  vocabularyLevel: 'formal' | 'casual' | 'playful' | 'intimate' | 'explicit';
+  intimacyLevel: number; // 0-100
+  visualTheme: VisualTheme;
+  systemPromptModifier: string;
+}
+
+// Feature 3: Real-time feedback
+export interface TypingIndicatorConfig {
+  state: TypingIndicatorState;
+  message: string;
+  animation: 'pulse' | 'bounce' | 'breathe' | 'heartbeat' | 'shake';
+  durationMs: number;
+}
+
+// Feature 4: Exit-intent & Retention
+export interface UserActivity {
+  userId: string;
+  lastActiveAt: string;
+  lastSessionId?: string;
+  lastCharacterId?: string;
+  consecutiveInactiveDays: number;
+  totalSessions: number;
+  retentionStatus: 'active' | 'at_risk' | 'inactive' | 'churned';
+}
+
+// Feature 5: A/B Testing
+export interface Experiment {
+  id: string;
+  name: string;
+  featureFlag: string;
+  variants: ExperimentVariant[];
+  startDate: string;
+  endDate?: string;
+  status: 'draft' | 'running' | 'paused' | 'completed';
+}
+
+export interface ExperimentVariant {
+  id: string;
+  name: string;
+  weight: number; // 0-1, must sum to 1 across variants
+  config: Record<string, any>;
+}
+
+export interface ExperimentAssignment {
+  userId: string;
+  experimentId: string;
+  variantId: string;
+  assignedAt: string;
+}
+
+export interface ExperimentMetrics {
+  experimentId: string;
+  variantId: string;
+  userId: string;
+  sessionDuration: number;
+  messageLength: number;
+  convertedToPaid: boolean;
+  churned7Day: boolean;
+  recordedAt: string;
+}
+
+// Feature 7: Visual Theming
+export interface CharacterTheme {
+  id: string;
+  characterId: string;
+  theme: VisualTheme;
+  cssVariables: {
+    '--chat-bg': string;
+    '--chat-bubble-user': string;
+    '--chat-bubble-ai': string;
+    '--accent-color': string;
+    '--gradient-start': string;
+    '--gradient-end': string;
+  };
+  avatarModifiers?: {
+    outfit?: string;
+    expression?: string;
+    background?: string;
+  };
 }
 
 export interface Character {
@@ -130,6 +246,8 @@ export interface Character {
   isCustom?: boolean;
   personality?: string | string[];
   traits?: string[];
+  phaseConfigs?: Record<RelationshipPhase, PhaseConfig>; // New: Per-phase configuration
+  availableThemes?: VisualTheme[]; // New: Available visual themes for this character
 }
 
 export interface StoryConfig {

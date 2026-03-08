@@ -33,6 +33,7 @@ import OnboardingWizard from './components/OnboardingWizard';
 import ErrorBoundary from './components/ErrorBoundary';
 import InstallButton from './components/InstallButton';
 import Icons from './components/Icon';
+import WelcomeBackModal from './components/WelcomeBackModal';
 import { registerServiceWorker, requestNotificationPermission, scheduleReminderNotifications } from './services/notifications';
 
 const loadState = <T,>(key: string, fallback: T): T => {
@@ -90,6 +91,11 @@ const App = () => {
   // --- ONBOARDING ---
   const [showOnboarding, setShowOnboarding] = useState(false);
 
+  // Feature 4: Exit-intent & Retention
+  const [showWelcomeBack, setShowWelcomeBack] = useState(false);
+  const [userActivity, setUserActivity] = useState<any>(null);
+  const [lastSessionForWelcome, setLastSessionForWelcome] = useState<any>(null);
+
   // --- CLIFFHANGER (progressive storyline) ---
   const [cliffhangerArc, setCliffhangerArc] = useState<StoryArc | null>(null);
 
@@ -132,6 +138,21 @@ const App = () => {
             const pending = arcs.find(a => a.cliffhanger);
             if (pending) setCliffhangerArc(pending);
           }).catch(() => {});
+
+          // Feature 4: Check for user inactivity and show welcome back modal
+          const activity = await db.getUserActivity(user.id);
+          if (activity) {
+            const daysInactive = activity.consecutive_inactive_days || 0;
+            if (daysInactive >= 1) {
+              setUserActivity(activity);
+              // Get last session for welcome message
+              const lastSession = sessionsData.length > 0 ? sessionsData[0] : null;
+              setLastSessionForWelcome(lastSession);
+              setShowWelcomeBack(true);
+            }
+          }
+          // Update user activity
+          await db.updateUserActivity(user.id);
       } catch (e) {
         console.error('Failed to load user data:', e);
         setDataLoaded(true);
@@ -464,6 +485,16 @@ const App = () => {
       {/* Modals */}
       <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} onPurchase={credits.handlePurchase} onStartTrial={credits.handleStartTrial} reason={paywallReason} language={language} userId={user.id} />
       <DailyRewardModal isOpen={showDailyReward} onClaim={() => { credits.claimDailyReward(dailyRewardAmount); setShowDailyReward(false); }} streak={user.streak || 0} amount={dailyRewardAmount} />
+
+      {/* Feature 4: Welcome Back Modal */}
+      {showWelcomeBack && userActivity && (
+        <WelcomeBackModal
+          activity={userActivity}
+          lastSession={lastSessionForWelcome}
+          onClose={() => setShowWelcomeBack(false)}
+          characterName={lastSessionForWelcome?.characterName}
+        />
+      )}
       <LegalModal isOpen={showLegal} onClose={() => setShowLegal(false)} initialTab={legalTab} language={language} />
       <InstallButton />
 

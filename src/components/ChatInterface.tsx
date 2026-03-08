@@ -1,10 +1,13 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { Character, Message, ChatSession, UserProfile, Language, VoiceStyle, IntensityLevel, UserMood } from '../types';
+import { Character, Message, ChatSession, UserProfile, Language, VoiceStyle, IntensityLevel, UserMood, RelationshipPhase, TypingIndicatorState, UserCharacterMemory } from '../types';
 import { getGifts, DEFAULT_VIDEO, getTexts, getVoiceStyles, getDiceActions, getChatScenarios } from '../constants';
 import { geminiService } from '../services/geminiService';
 import { uploadImageToStorage, recordChatInteraction } from '../services/supabaseData';
+import { memoryService, evolutionService, feedbackService } from '../services/memoryService';
 import Icons from './Icon';
+import TypingIndicator from './TypingIndicator';
+import MemoryIndicator from './MemoryIndicator';
 
 interface ChatInterfaceProps {
   initialSession: ChatSession;
@@ -88,6 +91,18 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const chatScenarios = getChatScenarios(language);
   const [showScenarios, setShowScenarios] = useState(false);
 
+  // Feature 1: Persistent Memory
+  const [userCharacterMemory, setUserCharacterMemory] = useState<UserCharacterMemory | null>(null);
+  const [showMemoryIndicator, setShowMemoryIndicator] = useState(true);
+
+  // Feature 2: Character Evolution
+  const [relationshipPhase, setRelationshipPhase] = useState<RelationshipPhase>(initialSession.relationshipPhase || 'meeting');
+  const [interactionCount, setInteractionCount] = useState(initialSession.interactionCount || 0);
+
+  // Feature 3: Real-time Feedback
+  const [typingIndicatorState, setTypingIndicatorState] = useState<TypingIndicatorState>('thinking');
+  const [showTypingIndicator, setShowTypingIndicator] = useState(false);
+
   const activeCharacters = useMemo(() => {
     const ids = session.characterIds && session.characterIds.length > 0 
         ? session.characterIds 
@@ -134,7 +149,40 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     // Also update speech params if session changes (e.g. loading different chat)
     setSpeechSpeed(initialSession.speechSpeed || 1.0);
     setSpeechPitch(initialSession.speechPitch || 0);
+    
+    // Feature 2: Load relationship phase and interaction count
+    setRelationshipPhase(initialSession.relationshipPhase || 'meeting');
+    setInteractionCount(initialSession.interactionCount || 0);
   }, [initialSession, characters]);
+
+  // Feature 1: Load persistent memory on mount
+  useEffect(() => {
+    if (user.id && primaryCharacter?.id) {
+      memoryService.getMemory(user.id, primaryCharacter.id).then(memory => {
+        if (memory) {
+          setUserCharacterMemory(memory);
+        }
+      });
+    }
+  }, [user.id, primaryCharacter?.id]);
+
+  // Feature 2: Check for phase transition when interaction count changes
+  useEffect(() => {
+    if (evolutionService.shouldTransition(relationshipPhase, interactionCount)) {
+      const nextPhase = evolutionService.getNextPhase(relationshipPhase, interactionCount);
+      setRelationshipPhase(nextPhase);
+      
+      // Show toast for phase transition
+      const phaseNames: Record<RelationshipPhase, string> = {
+        meeting: 'Ontmoeting',
+        acquaintance: 'Kennismaking',
+        flirt: 'Flirt',
+        intimate: 'Intiem',
+        deep_trust: 'Diep Vertrouwen'
+      };
+      onShowToast?.('Relatie verdiept!', `Jullie relatie is nu: ${phaseNames[nextPhase]}, '💕');
+    }
+  }, [interactionCount, relationshipPhase]);
 
   const updateSettings = (updates: { voiceStyle?: VoiceStyle; intensity?: IntensityLevel; speechSpeed?: number; speechPitch?: number }) => {
       if (updates.voiceStyle) setVoiceStyle(updates.voiceStyle);
@@ -288,12 +336,31 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
     await initAudio();
 
     const newMessage: Message = { id: Date.now().toString(), role: 'user', text: cleanedInput, timestamp: Date.now() };
-    const updatedSession = { ...session, messages: [...session.messages, newMessage], lastUpdated: Date.now(), voiceStyle, intensity, speechSpeed, speechPitch };
+    
+    // Feature 2: Update interaction count
+    const newInteractionCount = interactionCount + 1;
+    setInteractionCount(newInteractionCount);
+    
+    const updatedSession = { 
+      ...session, 
+      messages: [...session.messages, newMessage], 
+      lastUpdated: Date.now(), 
+      voiceStyle, 
+      intensity, 
+      speechSpeed, 
+      speechPitch,
+      interactionCount: newInteractionCount,
+      relationshipPhase
+    };
 
     setSession(updatedSession);
     onSaveSession(updatedSession);
     setInputText('');
     setQuickReplies([]);
+    
+    // Feature 3: Show typing indicator with emotional state
+    setTypingIndicatorState('typing_fast');
+    setShowTypingIndicator(true);
     setIsTyping(true);
 
     const requestedSpeakerId = nextSpeakerId;
@@ -528,6 +595,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>
       </div>
 
+      {/* Feature 1: Memory Indicator */}
+      {showMemoryIndicator && userCharacterMemory && (
+        <div className="absolute top-16 left-4 right-16 z-40 animate-in fade-in slide-in-from-top-5">
+          <MemoryIndicator 
+            memory={userCharacterMemory} 
+            onClose={() => setShowMemoryIndicator(false)}
+          />
+        </div>
+      )}
+
       {showSettings && (
           <div className="absolute top-16 right-4 z-50 w-80 md:w-96 bg-[#0b0b0c] border border-white/10 rounded-2xl p-5 shadow-[0_0_40px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-top-5">
               <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
@@ -535,6 +612,34 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                       Chat Instellingen
                   </h3>
                   <button onClick={() => setShowSettings(false)} className="text-zinc-500 hover:text-white transition-colors"><Icons.X size={16}/></button>
+              </div>
+
+              {/* Feature 2: Relationship Phase Display */}
+              <div className="mb-6">
+                  <label className="text-zinc-400 text-[10px] font-bold uppercase tracking-wider block mb-2">
+                    Relatie Fase
+                  </label>
+                  <div className="bg-zinc-900/50 p-4 rounded-xl border border-gold-500/20">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-gold-500 font-bold text-sm capitalize">
+                        {relationshipPhase === 'meeting' && 'Ontmoeting 💫'}
+                        {relationshipPhase === 'acquaintance' && 'Kennismaking 🤝'}
+                        {relationshipPhase === 'flirt' && 'Flirt 💕'}
+                        {relationshipPhase === 'intimate' && 'Intiem 🔥'}
+                        {relationshipPhase === 'deep_trust' && 'Diep Vertrouwen 💝'}
+                      </span>
+                      <span className="text-zinc-500 text-xs">{interactionCount} berichten</span>
+                    </div>
+                    <div className="w-full h-2 bg-zinc-800 rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-gradient-to-r from-gold-500 to-pink-500 transition-all duration-500" 
+                        style={{ width: `${Math.min(100, (interactionCount % 50) * 2)}%` }}
+                      />
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-2">
+                      {50 - (interactionCount % 50)} berichten tot volgende fase
+                    </p>
+                  </div>
               </div>
 
               {/* EMOTIONELE TOON */}
@@ -670,17 +775,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                   </>
                 ) : (
                   <>
-                    <div className="flex items-center gap-2">
-                      {!isGroupChat && <img src={primaryCharacter.avatar} className="w-6 h-6 rounded-full object-cover border border-gold-500/30" />}
-                      <span className="text-[10px] font-bold text-gold-500/70 uppercase tracking-widest">
-                        {(nextSpeakerId ? activeCharacters.find(c => c.id === nextSpeakerId)?.name : primaryCharacter.name) || primaryCharacter.name} {language.startsWith('nl') ? 'typt' : 'is typing'}...
-                      </span>
-                    </div>
-                    <div className="flex gap-1.5 mt-2 items-center">
-                      <span className="w-2 h-2 bg-gold-500/60 rounded-full animate-bounce" style={{animationDuration: '0.6s'}}></span>
-                      <span className="w-2 h-2 bg-gold-500/60 rounded-full animate-bounce" style={{animationDuration: '0.6s', animationDelay: '150ms'}}></span>
-                      <span className="w-2 h-2 bg-gold-500/60 rounded-full animate-bounce" style={{animationDuration: '0.6s', animationDelay: '300ms'}}></span>
-                    </div>
+                    {/* Feature 3: Enhanced Typing Indicator */}
+                    <TypingIndicator 
+                      state={typingIndicatorState} 
+                      characterName={!isGroupChat ? primaryCharacter.name : undefined}
+                    />
                   </>
                 )}
               </div>

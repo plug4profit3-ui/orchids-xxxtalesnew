@@ -115,6 +115,130 @@ body > :not(#root):not(script):not(link):not(style):not(meta) {
   display: none !important;
 }
 
+/* Feature 3: Typing Indicator Animations */
+@keyframes breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.8; }
+}
+
+@keyframes heartbeat {
+  0%, 100% { transform: scale(1); }
+  14% { transform: scale(1.1); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.1); }
+  70% { transform: scale(1); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-2px); }
+  20%, 40%, 60%, 80% { transform: translateX(2px); }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.7; }
+}
+
+.animate-breathe {
+  animation: breathe 2s ease-in-out infinite;
+}
+
+.animate-heartbeat {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.animate-shake {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+.animate-dot-1 {
+  animation: dot-pulse 1s ease-in-out infinite;
+}
+
+.animate-dot-2 {
+  animation: dot-pulse 1s ease-in-out infinite 0.2s;
+}
+
+.animate-dot-3 {
+  animation: dot-pulse 1s ease-in-out infinite 0.4s;
+}
+
+/* Feature 7: Visual Theme Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out;
+}
+
+/* Feature 7: Chat Bubble Animations */
+.chat-bubble-enter {
+  animation: slideUp 0.3s ease-out;
+}
+
+/* Feature 3: Haptic feedback visual indicator */
+.haptic-indicator {
+  animation: shake 0.2s ease-in-out;
+}
+
+/* Feature 7: Theme CSS Variables */
+:root {
+  --chat-bg: 0 0% 96%;
+  --chat-bubble-user: 207 100% 95%;
+  --chat-bubble-ai: 120 100% 95%;
+  --accent-color: 207 90% 54%;
+  --gradient-start: 207 100% 95%;
+  --gradient-end: 0 0% 100%;
+}
+
+.theme-intimate {
+  --chat-bg: 340 100% 97%;
+  --chat-bubble-user: 340 82% 96%;
+  --chat-bubble-ai: 300 20% 96%;
+  --accent-color: 340 82% 52%;
+  --gradient-start: 340 82% 96%;
+  --gradient-end: 340 60% 90%;
+}
+
+.theme-dominant {
+  --chat-bg: 0 0% 10%;
+  --chat-bubble-user: 0 0% 18%;
+  --chat-bubble-ai: 0 0% 0%;
+  --accent-color: 0 0% 0%;
+  --gradient-start: 0 0% 18%;
+  --gradient-end: 0 0% 0%;
+}
+
+.theme-romantic {
+  --chat-bg: 340 100% 97%;
+  --chat-bubble-user: 340 82% 96%;
+  --chat-bubble-ai: 340 60% 90%;
+  --accent-color: 340 82% 52%;
+  --gradient-start: 340 82% 96%;
+  --gradient-end: 340 60% 90%;
+}
+
+.theme-playful {
+  --chat-bg: 0 0% 100%;
+  --chat-bubble-user: 30 100% 94%;
+  --chat-bubble-ai: 199 100% 94%;
+  --accent-color: 36 100% 50%;
+  --gradient-start: 30 100% 94%;
+  --gradient-end: 199 100% 94%;
+}
+
 /* Custom range slider for character creator */
 input[type="range"] {
   -webkit-appearance: none;

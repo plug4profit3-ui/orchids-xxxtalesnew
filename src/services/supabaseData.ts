@@ -1,6 +1,6 @@
 // Supabase data service - replaces localStorage for all user data
 import { supabase } from './supabase';
-import type { ChatSession, SavedStory, GeneratedImage, UserProfile } from '../types';
+import type { ChatSession, SavedStory, GeneratedImage, UserProfile, UserCharacterMemory, UserActivity, Experiment, ExperimentAssignment, ExperimentMetrics } from '../types';
 
 // --- PROFILE ---
 export async function loadProfile(userId: string): Promise<Partial<UserProfile> | null> {
@@ -299,6 +299,124 @@ export async function recordChatInteraction(
     totalMessages: (current.total_messages ?? 0) + 1,
     milestonesReached: current.milestones_reached ?? [],
   });
+}
+
+// Feature 1: Persistent Memory Functions
+export async function getUserCharacterMemory(userId: string, characterId: string): Promise<UserCharacterMemory | null> {
+  const { data, error } = await supabase
+    .from('user_character_memories')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('character_id', characterId)
+    .single();
+
+  if (error) {
+    if (error.code !== 'PGRST116') { // Not found error
+      console.error('Error fetching memory:', error);
+    }
+    return null;
+  }
+
+  return data;
+}
+
+export async function saveUserCharacterMemory(memory: Partial<UserCharacterMemory>): Promise<void> {
+  const { error } = await supabase
+    .from('user_character_memories')
+    .upsert({
+      user_id: memory.userId,
+      character_id: memory.characterId,
+      summary: memory.summary || '',
+      key_facts: memory.keyFacts || [],
+      user_preferences: memory.userPreferences || [],
+      shared_experiences: memory.sharedExperiences || [],
+      last_interaction_at: new Date().toISOString(),
+      total_interactions: memory.totalInteractions || 0,
+      affection_level: memory.affectionLevel || 0
+    }, { onConflict: 'user_id,character_id' });
+
+  if (error) {
+    console.error('Error saving memory:', error);
+  }
+}
+
+// Feature 4: User Activity Tracking
+export async function updateUserActivity(userId: string, sessionId?: string, characterId?: string): Promise<void> {
+  const { error } = await supabase
+    .from('user_activity')
+    .upsert({
+      user_id: userId,
+      last_active_at: new Date().toISOString(),
+      last_session_id: sessionId,
+      last_character_id: characterId
+    }, { onConflict: 'user_id' });
+
+  if (error) {
+    console.error('Error updating activity:', error);
+  }
+}
+
+export async function getUserActivity(userId: string): Promise<UserActivity | null> {
+  const { data, error } = await supabase
+    .from('user_activity')
+    .select('*')
+    .eq('user_id', userId)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return data;
+}
+
+// Feature 5: A/B Testing Functions
+export async function getExperiment(experimentId: string): Promise<Experiment | null> {
+  const { data, error } = await supabase
+    .from('experiments')
+    .select('*')
+    .eq('id', experimentId)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return data;
+}
+
+export async function assignExperimentVariant(userId: string, experimentId: string, variantId: string): Promise<void> {
+  const { error } = await supabase
+    .from('experiment_assignments')
+    .upsert({
+      user_id: userId,
+      experiment_id: experimentId,
+      variant_id: variantId,
+      assigned_at: new Date().toISOString()
+    }, { onConflict: 'user_id,experiment_id' });
+
+  if (error) {
+    console.error('Error assigning variant:', error);
+  }
+}
+
+export async function logExperimentMetrics(metrics: Partial<ExperimentMetrics>): Promise<void> {
+  const { error } = await supabase
+    .from('experiment_metrics')
+    .insert({
+      experiment_id: metrics.experimentId,
+      variant_id: metrics.variantId,
+      user_id: metrics.userId,
+      session_duration: metrics.sessionDuration,
+      message_length: metrics.messageLength,
+      converted_to_paid: metrics.convertedToPaid,
+      churned_7_day: metrics.churned7Day,
+      recorded_at: new Date().toISOString()
+    });
+
+  if (error) {
+    console.error('Error logging metrics:', error);
+  }
 }
 
 // --- STORY ARCS ---
