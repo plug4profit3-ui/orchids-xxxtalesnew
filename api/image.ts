@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireCredits, logApiUsage, COSTS } from './_supabase';
 import { LIMITS } from './_rateLimit';
+import { checkImagePrompt } from './_contentModeration';
 
 const VENICE_API_URL = "https://api.venice.ai/api/v1";
 
@@ -12,6 +13,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const apiKey = process.env.VENICE_API_KEY;
   if (!apiKey) {
     return res.status(500).json({ error: 'Server configuration error' });
+  }
+
+  // Content moderation: Check for explicit sexual content in image prompts
+  const prompt = req.body?.prompt;
+  const moderationResult = checkImagePrompt(prompt);
+  if (!moderationResult.isAllowed) {
+    return res.status(400).json({ 
+      error: 'Content policy violation: ' + moderationResult.reason,
+      policy_violation: true,
+      details: moderationResult.flaggedTerms ? `Flagged terms: ${moderationResult.flaggedTerms.join(', ')}` : undefined
+    });
   }
 
   // Require auth + 5 credits per image (server enforced)

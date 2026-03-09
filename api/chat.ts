@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { supabaseAdmin, requireAuth, getUserIdFromAuth, logApiUsage, COSTS } from './_supabase';
 import { LIMITS } from './_rateLimit';
+import { checkChatMessages } from './_contentModeration';
 
 const VENICE_API_URL = "https://api.venice.ai/api/v1";
 
@@ -24,6 +25,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const isStream = req.body?.stream === true;
+
+  // Content moderation: Check for explicit sexual content
+  const messages = req.body?.messages;
+  const moderationResult = checkChatMessages(messages);
+  if (!moderationResult.isAllowed) {
+    return res.status(400).json({ 
+      error: 'Content policy violation: ' + moderationResult.reason,
+      policy_violation: true,
+      details: moderationResult.flaggedTerms ? `Flagged terms: ${moderationResult.flaggedTerms.join(', ')}` : undefined
+    });
+  }
 
   try {
     const response = await fetch(`${VENICE_API_URL}/chat/completions`, {
