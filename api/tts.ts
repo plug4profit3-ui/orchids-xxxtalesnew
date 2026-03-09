@@ -1,6 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { requireAuth, logApiUsage, COSTS } from './_supabase';
 import { LIMITS } from './_rateLimit';
+import { checkContent } from './_contentModeration';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -25,6 +26,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (!text) {
     return res.status(400).json({ error: 'Text is required' });
   }
+
+  // Content moderation: Check for explicit sexual content in TTS text
+  const moderationResult = checkContent(text);
+  if (!moderationResult.isAllowed) {
+    return res.status(400).json({ 
+      error: 'Content policy violation: ' + moderationResult.reason,
+      policy_violation: true,
+      details: moderationResult.flaggedTerms ? `Flagged terms: ${moderationResult.flaggedTerms.join(', ')}` : undefined
+    });
+  }
+
   const model = voice || 'aura-2-thalia-en';
 
   try {
