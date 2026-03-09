@@ -25,6 +25,7 @@ export enum AppMode {
   STORY = 'story',
   CHAT = 'chat',
   GALLERY = 'gallery', 
+  LAB = 'lab',
   LIVE = 'live',
   CREATOR = 'creator',
   VIDEOS = 'videos',

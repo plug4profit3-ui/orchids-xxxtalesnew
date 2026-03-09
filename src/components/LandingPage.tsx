@@ -554,14 +554,14 @@ const LandingPage: React.FC<LandingPageProps> = ({
           ref={videoARef}
           src={LANDING_VIDEOS[0]}
           autoPlay loop muted playsInline
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms]"
-          style={{ opacity: activeSlot === 0 ? 0.6 : 0 }}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity"
+          style={{ transitionDuration: '2000ms', opacity: activeSlot === 0 ? 0.6 : 0 }}
         />
         <video
           ref={videoBRef}
           muted playsInline loop
-          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-[2000ms]"
-          style={{ opacity: activeSlot === 1 ? 0.6 : 0 }}
+          className="absolute inset-0 w-full h-full object-cover transition-opacity"
+          style={{ transitionDuration: '2000ms', opacity: activeSlot === 1 ? 0.6 : 0 }}
         />
       </div>
 

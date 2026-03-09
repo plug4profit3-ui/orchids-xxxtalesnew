@@ -100,7 +100,12 @@ const ImagineInterface: React.FC<ImagineInterfaceProps> = ({
             ) : (
               generatedImages.slice().reverse().map((img, idx) => (
                 <div key={idx} className="group relative aspect-square bg-zinc-900 rounded-[3.5rem] overflow-hidden border-2 border-white/5 shadow-[0_30px_60px_rgba(0,0,0,0.8)] animate-in zoom-in-95 duration-700">
-                  <img src={img.url} alt={img.prompt} className="w-full h-full object-cover transition-transform duration-[3s] group-hover:scale-115" />
+                  <img
+                    src={img.url}
+                    alt={img.prompt}
+                    className="w-full h-full object-cover transition-transform group-hover:scale-115"
+                    style={{ transitionDuration: '3s' }}
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 flex flex-col justify-end p-10">
                     <p className="text-white text-base font-body italic mb-8 line-clamp-3 drop-shadow-xl leading-relaxed">"{img.prompt}"</p>
                     <button onClick={() => handleDownload(img.url, idx)} className="self-end p-5 bg-gold-500 text-black rounded-full hover:scale-110 transition-transform shadow-2xl active:scale-90"><Icons.Download size={24} /></button>

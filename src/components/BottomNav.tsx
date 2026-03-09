@@ -13,6 +13,7 @@ const BottomNav: React.FC<BottomNavProps> = ({ mode, onModeChange, credits }) =>
     { id: AppMode.GALLERY, label: 'Ontdek', icon: Icons.Heart },
     { id: AppMode.STORY, label: 'Verhaal', icon: Icons.BookOpenCheck },
     { id: AppMode.IMAGINE, label: 'Imagine', icon: Icons.Sparkles },
+    { id: AppMode.LAB, label: 'Lab', icon: Icons.Zap },
     { id: AppMode.CREATOR, label: 'Creëer', icon: Icons.Star },
     { id: AppMode.VIDEOS, label: 'Video', icon: Icons.Play },
   ];

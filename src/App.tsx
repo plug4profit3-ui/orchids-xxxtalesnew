@@ -26,6 +26,7 @@ import VideoFinder from './components/VideoFinder';
 import CodeAnalysisInterface from './components/CodeAnalysisInterface';
 import CharacterCreator from './components/CharacterCreator';
 import AudioStoriesInterface from './components/AudioStoriesInterface';
+import InnovationLabInterface from './components/InnovationLabInterface';
 import LandingPage from './components/LandingPage';
 import PaywallModal from './components/PaywallModal';
 import DailyRewardModal from './components/DailyRewardModal';
@@ -100,6 +101,30 @@ const App = () => {
   // --- CLIFFHANGER (progressive storyline) ---
   const [cliffhangerArc, setCliffhangerArc] = useState<StoryArc | null>(null);
 
+
+  // --- DEMO MODE (for visual QA / screenshots without auth backend dependency) ---
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('demo') !== '1') return;
+
+    setUser(prev => ({
+      ...prev,
+      id: prev.id || 'demo-user',
+      name: prev.name || 'Demo User',
+      email: prev.email || 'demo@local.test',
+      isAuthenticated: true,
+      isVerified: true,
+      credits: Math.max(prev.credits || 0, 999),
+    }));
+
+    setDataLoaded(true);
+
+    if (params.get('mode') === 'lab') {
+      setMode(AppMode.LAB);
+    }
+  }, [setUser]);
   // Debounce ref for saving
   const saveTimer = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
 
@@ -353,6 +378,19 @@ const App = () => {
             isGenerating={isGeneratingImage}
             generatedImages={generatedImages}
             language={language}
+          />
+        );
+
+      case AppMode.LAB:
+        return (
+          <InnovationLabInterface
+            user={user}
+            activeSession={sessions.activeSession}
+            onOpenPaywall={(reason) => openPaywall(reason)}
+            onApplyScene={(prompt) => {
+              setMode(AppMode.STORY);
+              showToast('Scene toegepast', prompt, '🎬');
+            }}
           />
         );
       case AppMode.VIDEOS:
