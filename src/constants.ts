@@ -170,7 +170,7 @@ export const TEXTS: Record<string, any> = {
       title: "Galleria Partner", subtitle: "Scegli la tua compagnia", online: "ONLINE", own_creation: "CREAZIONE PROPRIA", connect: "CONNETTI", start_group: "AVVIA GRUPPO"
     },
     chat: {
-      type_message: "Scrivi un messaggio...", listening: "Ascolto...", gift_sent: "REGALO INVIATO", lust: "LUSSURIA", settings: { title: "IMPOSTAZIONI CHAT", tone: "TONO EMOTIVO", voice_mod: "MODIFICA VOCE", speed: "Velocità", pitch: "Tono", deep: "Basso", high: "Alto", intensity: "INTENSITÄ" }, dice: "LANCIA DADI (1 CR)"
+      type_message: "Scrivi un messaggio...", listening: "Ascolto...", gift_sent: "REGALO INVIATO", lust: "LUSSURIA", settings: { title: "IMPOSTAZIONI CHAT", tone: "TONO EMOTIVO", voice_mod: "MODIFICA VOCE", speed: "Velocità", pitch: "Tono", deep: "Basso", high: "Alto", intensity: "INTENSITÀ" }, dice: "LANCIA DADI (1 CR)"
     },
     story: {
       title: "ATELIER SCENARIO", subtitle: "NUOVA AVENTURA", step1: "FASE 1: ATMOSFERA", step2: "FASE 2: LUOGO & PARTNER", step3: "FASE 3: GIOCATTOLI", solo_mode: "MODALITÀ SOLO: Nessun partner.", next_step: "SCEGLI KINKS", back: "INDIETRO", quick_pick: "SCELTA RAPIDA", specific_wishes: "DESIDERI SPECIFICI", placeholder: "Descrivi la tua fantasia...", start_adventure: "INIZIA AVVENTURA", generating: "SCRIVENDO...", what_next: "COSA FA L'UOMO?", save: "SALVA", saved: "OK", new: "NUOVO", intensity_label: "INTENSITÀ"

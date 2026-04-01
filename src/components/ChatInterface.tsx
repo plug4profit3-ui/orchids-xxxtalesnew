@@ -198,7 +198,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         intimate: 'Intiem',
         deep_trust: 'Diep Vertrouwen'
       };
-      onShowToast?.('Relatie verdiept!', `Jullie relatie is nu: ${phaseNames[nextPhase]}, '💕');
+      onShowToast?.('Relatie verdiept!', `Jullie relatie is nu: ${phaseNames[nextPhase]}`, '💕');
     }
   }, [interactionCount, relationshipPhase]);
 
