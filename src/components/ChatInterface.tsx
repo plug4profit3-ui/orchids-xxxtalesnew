@@ -662,6 +662,20 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               </div>
           </div>
           <div className="flex items-center gap-2">
+              <button onClick={() => {
+                const charName = isGroupChat ? activeCharacters.map(c => c.name).join(', ') : primaryCharacter.name;
+                const lines = session.messages.map(msg => {
+                  const name = msg.role === 'user' ? 'Jij' : charName;
+                  const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                  return `[${time}] ${name}: ${msg.text}`;
+                });
+                const text = `Chat met ${charName}\n${'='.repeat(40)}\n\n${lines.join('\n\n')}`;
+                navigator.clipboard.writeText(text).then(() => {
+                  onShowToast?.('Gekopieerd!', 'Chat is gekopieerd naar klembord', '📋');
+                }).catch(() => {});
+              }} className="p-2 text-gold-500 bg-black/30 rounded-full hover:bg-black/50 transition-colors border border-transparent" title="Kopieer chat">
+                <Icons.Copy size={18} />
+              </button>
               <button onClick={() => setIsMuted(!isMuted)} className={`p-2 rounded-full border transition-all ${isMuted ? 'border-red-500 text-red-500 bg-red-500/10' : 'border-gold-500/20 text-gold-500 bg-black/30'}`}>{isMuted ? <Icons.VolumeX size={18} /> : <Icons.Volume2 size={18} />}</button>
               <button onClick={() => setShowDice(!showDice)} className="p-2 text-gold-500 bg-black/30 rounded-full hover:bg-black/50 transition-colors border border-transparent"><Icons.Dices size={20} /></button>
               <button onClick={() => setShowSettings(!showSettings)} className="p-2 text-zinc-300 hover:text-white transition-colors"><Icons.Settings size={20} /></button>

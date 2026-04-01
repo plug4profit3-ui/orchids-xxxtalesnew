@@ -380,6 +380,21 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
                         </div>
                     </div>
 
+                    <div className="space-y-4"><label className="text-[11px] font-black text-gold-500 uppercase tracking-widest block">{language === 'nl' ? 'LENGTE' : language === 'de' ? 'LÄNGE' : language === 'fr' ? 'LONGUEUR' : language === 'es' ? 'LONGITUD' : language === 'it' ? 'LUNGHEZZA' : 'LENGTH'}</label>
+                        <div className="flex gap-3">
+                            {[
+                                { value: 1, label: language === 'nl' ? 'Kort' : language === 'de' ? 'Kurz' : language === 'fr' ? 'Court' : language === 'es' ? 'Corto' : language === 'it' ? 'Corto' : 'Short', sub: '500' },
+                                { value: 2, label: language === 'nl' ? 'Normaal' : language === 'de' ? 'Normal' : language === 'fr' ? 'Normal' : language === 'es' ? 'Normal' : language === 'it' ? 'Normale' : 'Normal', sub: '1000' },
+                                { value: 3, label: language === 'nl' ? 'Lang' : language === 'de' ? 'Lang' : language === 'fr' ? 'Long' : language === 'es' ? 'Largo' : language === 'it' ? 'Lungo' : 'Long', sub: '1500' },
+                            ].map(opt => (
+                                <button key={opt.value} onClick={() => setConfig(prev => ({...prev, length: opt.value}))} className={`flex-1 py-3 rounded-xl border text-[10px] font-black uppercase tracking-widest transition-all ${config.length === opt.value ? 'bg-gold-500 text-black border-gold-500 shadow-[0_0_15px_rgba(255,215,0,0.4)]' : 'bg-black/40 border-white/10 text-zinc-500 hover:text-white hover:border-white/30'}`}>
+                                    <div>{opt.label}</div>
+                                    <div className="text-[8px] mt-0.5 opacity-70">{opt.sub} {language === 'nl' ? 'woorden' : language === 'de' ? 'Wörter' : language === 'fr' ? 'mots' : language === 'es' ? 'palabras' : language === 'it' ? 'parole' : 'words'}</div>
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
                     <div className="space-y-4"><label className="text-[11px] font-black text-gold-500 uppercase tracking-widest block">{t.quick_pick}</label>
                         <div className="grid grid-cols-2 gap-3">{activeKeywords.map(k => (
                                 <button key={k.id} onClick={() => setConfig(prev => ({...prev, keywords: prev.keywords.includes(k.label) ? prev.keywords.filter(kw => kw !== k.label) : [...prev.keywords, k.label]}))} className={`p-4 rounded-2xl border-2 flex items-center gap-3 transition-all ${config.keywords.includes(k.label) ? 'bg-gold-500/20 border-gold-500' : 'bg-black/40 border-white/5'}`}>

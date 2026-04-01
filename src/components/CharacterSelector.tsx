@@ -173,6 +173,7 @@ const CharacterCard: React.FC<{ char: Character; isSelected: boolean; onSelect: 
     const cardRef = useRef<HTMLDivElement>(null);
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
+    const [isVoicePlaying, setIsVoicePlaying] = useState(false);
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
@@ -211,12 +212,34 @@ const CharacterCard: React.FC<{ char: Character; isSelected: boolean; onSelect: 
             )}
 
             {!selectionMode && onToggleFavorite && (
-                <button
-                  onClick={(e) => { e.stopPropagation(); onToggleFavorite(char.id); }}
-                  className={`absolute top-6 right-6 z-20 p-2 rounded-full backdrop-blur-md transition-all active:scale-90 ${isFavorite ? 'bg-gold-500/20 border border-gold-500' : 'bg-black/40 border border-white/20 hover:border-gold-500/50'}`}
-                >
-                  <Icons.Star size={18} className={isFavorite ? 'text-gold-500 fill-gold-500' : 'text-white/60'} />
-                </button>
+                <div className="absolute top-6 right-6 z-20 flex items-center gap-2">
+                  <button
+                    onClick={async (e) => { 
+                      e.stopPropagation(); 
+                      if (isVoicePlaying) return;
+                      setIsVoicePlaying(true);
+                      try {
+                        const { speakWithDeepgram, stopSpeaking } = await import('../services/deepgramTTS');
+                        stopSpeaking();
+                        const previewText = `Hoi, ik ben ${char.name}. Luister naar mijn stem.`;
+                        await speakWithDeepgram(previewText, char.id, char.voiceStyle);
+                      } catch (err) {
+                        console.error('Voice preview failed:', err);
+                      } finally {
+                        setIsVoicePlaying(false);
+                      }
+                    }}
+                    className={`p-2 rounded-full backdrop-blur-md transition-all active:scale-90 ${isVoicePlaying ? 'bg-gold-500/30 border border-gold-500 animate-pulse' : 'bg-black/40 border border-white/20 hover:border-gold-500/50'}`}
+                  >
+                    <Icons.Volume2 size={16} className={isVoicePlaying ? 'text-gold-500' : 'text-white/60'} />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onToggleFavorite(char.id); }}
+                    className={`p-2 rounded-full backdrop-blur-md transition-all active:scale-90 ${isFavorite ? 'bg-gold-500/20 border border-gold-500' : 'bg-black/40 border border-white/20 hover:border-gold-500/50'}`}
+                  >
+                    <Icons.Star size={18} className={isFavorite ? 'text-gold-500 fill-gold-500' : 'text-white/60'} />
+                  </button>
+                </div>
             )}
 
             {isFavorite && (

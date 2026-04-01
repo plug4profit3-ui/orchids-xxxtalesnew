@@ -33,6 +33,7 @@ export enum AppMode {
   SOLO_COACH = 'solo_coach',
   CODE_ANALYSIS = 'code_analysis',
   PAYMENT_SUCCESS = 'payment_success',
+  IMAGE_GALLERY = 'image_gallery',
 }
 
 export type CharacterStance = 'neutral' | 'loving' | 'submissive' | 'dominant' | 'nasty';

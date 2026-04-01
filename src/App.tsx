@@ -27,6 +27,7 @@ import CodeAnalysisInterface from './components/CodeAnalysisInterface';
 import CharacterCreator from './components/CharacterCreator';
 import AudioStoriesInterface from './components/AudioStoriesInterface';
 import LandingPage from './components/LandingPage';
+import ImageGallery from './components/ImageGallery';
 import PaywallModal from './components/PaywallModal';
 import DailyRewardModal from './components/DailyRewardModal';
 import LegalModal from './components/LegalModal';
@@ -35,7 +36,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import InstallButton from './components/InstallButton';
 import Icons from './components/Icon';
 import WelcomeBackModal from './components/WelcomeBackModal';
-import { registerServiceWorker, requestNotificationPermission, scheduleReminderNotifications } from './services/notifications';
+import { registerServiceWorker, requestNotificationPermission, scheduleReminderNotifications, scheduleCharacterNotification, getNotificationPermission } from './services/notifications';
 
 const loadState = <T,>(key: string, fallback: T): T => {
   try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : fallback; } catch { return fallback; }
@@ -51,6 +52,7 @@ const App = () => {
   const [config] = useState<ModelConfig>(DEFAULT_CONFIG);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [language, setLanguage] = useState<Language>(() => loadState('language', 'nl'));
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => loadState('theme', 'dark'));
   const [dataLoaded, setDataLoaded] = useState(false);
 
   // --- TOAST ---
@@ -106,6 +108,7 @@ const App = () => {
   // Sync TTS language + preload locale
   useEffect(() => { setTTSLanguage(language); loadLocale(language).catch(() => {}); }, [language]);
   useEffect(() => { saveState('language', language); }, [language]);
+  useEffect(() => { saveState('theme', theme); }, [theme]);
 
   // --- LOAD USER DATA FROM SUPABASE ---
   useEffect(() => {
@@ -189,6 +192,15 @@ const App = () => {
       const reward = Math.min(10 + newStreak * 2, 50);
       setDailyRewardAmount(reward);
       setShowDailyReward(true);
+      // Show browser notification for daily reward
+      if (getNotificationPermission() === 'granted') {
+        try {
+          new Notification('🎁 Dagelijkse Beloning Beschikbaar!', {
+            body: `Claim je ${reward} credits voor streak dag ${newStreak}!`,
+            tag: 'xxxtales-daily-reward',
+          });
+        } catch {}
+      }
     }
   }, [user.isAuthenticated]);
 
@@ -370,6 +382,14 @@ const App = () => {
         return <AudioStoriesInterface user={user} language={language} />;
       case AppMode.CODE_ANALYSIS:
         return <CodeAnalysisInterface language={language} />;
+      case AppMode.IMAGE_GALLERY:
+        return (
+          <ImageGallery
+            sessions={sessions.savedSessions}
+            language={language}
+            onToggleSidebar={() => setIsSidebarOpen(true)}
+          />
+        );
       default:
         return null;
     }
@@ -423,6 +443,8 @@ const App = () => {
         activeStoryId={stories.activeStory?.id}
         onResetActiveStory={() => stories.setActiveStory(undefined)}
         onOpenLegal={(tab) => { setLegalTab(tab); setShowLegal(true); }}
+        theme={theme}
+        onToggleTheme={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
       />
 
       <main className="flex-1 flex flex-col overflow-hidden relative">

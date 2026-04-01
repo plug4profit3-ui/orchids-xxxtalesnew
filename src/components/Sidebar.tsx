@@ -27,6 +27,8 @@ interface SidebarProps {
   activeStoryId?: string;
   onResetActiveStory?: () => void;
   onOpenLegal: (tab: 'privacy' | 'terms') => void;
+  theme?: 'dark' | 'light';
+  onToggleTheme?: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({
@@ -52,6 +54,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   const [showLanguages, setShowLanguages] = useState(false);
   const [showDealsSheet, setShowDealsSheet] = useState(false);
+  const [chatSearch, setChatSearch] = useState('');
   const t = getTexts(language).sidebar;
   const affiliateLinks = getAffiliateLinks(language as string);
 
@@ -61,6 +64,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: AppMode.STORY,      icon: Icons.BookOpenCheck,  label: t.story },
     { id: AppMode.IMAGINE,    icon: Icons.Sparkles,       label: t.visualizer },
     { id: AppMode.LIVE,       icon: Icons.Video,          label: t.live_call },
+    { id: AppMode.IMAGE_GALLERY, icon: Icons.Images,      label: language === 'nl' ? 'GALERIJ' : language === 'de' ? 'GALERIE' : language === 'fr' ? 'GALERIE' : language === 'es' ? 'GALERÍA' : language === 'it' ? 'GALLERIA' : 'GALLERY' },
     { id: AppMode.SOLO_COACH, icon: Icons.Zap,            label: t.solo_coach },
     { id: AppMode.CODE_ANALYSIS, icon: Icons.Code,       label: t.code_analysis },
   ];
@@ -158,11 +162,28 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="flex-1 overflow-y-auto px-3 py-3 space-y-3 no-scrollbar">
           <div>
             <p className="text-[9px] font-black text-zinc-600 uppercase tracking-widest px-1 mb-1">{t.chats}</p>
-            {savedSessions.length === 0 ? (
-              <p className="text-[10px] text-zinc-700 italic px-1">{t.no_chats}</p>
+            <div className="relative mb-1.5">
+              <Icons.Search size={12} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-zinc-600" />
+              <input
+                type="text"
+                value={chatSearch}
+                onChange={e => setChatSearch(e.target.value)}
+                placeholder={language === 'nl' ? 'Zoek chats...' : language === 'de' ? 'Chats suchen...' : language === 'fr' ? 'Rechercher...' : language === 'es' ? 'Buscar...' : language === 'it' ? 'Cerca...' : 'Search chats...'}
+                className="w-full bg-zinc-900/80 border border-white/5 rounded-xl pl-8 pr-3 py-1.5 text-[10px] text-white placeholder-zinc-600 focus:outline-none focus:border-gold-500/40 transition-colors"
+              />
+            </div>
+            {(() => {
+              const filtered = chatSearch.trim()
+                ? savedSessions.filter(s =>
+                    s.title?.toLowerCase().includes(chatSearch.toLowerCase()) ||
+                    s.messages?.slice(-1)?.[0]?.text?.toLowerCase().includes(chatSearch.toLowerCase())
+                  )
+                : savedSessions;
+              return filtered.length === 0 ? (
+              <p className="text-[10px] text-zinc-700 italic px-1">{chatSearch.trim() ? (language === 'nl' ? 'Geen resultaten' : 'No results') : t.no_chats}</p>
             ) : (
               <div className="space-y-0.5 max-h-28 overflow-y-auto no-scrollbar">
-                {savedSessions.slice(0, 8).map(session => (
+                {filtered.slice(0, 8).map(session => (
                   <div key={session.id} className="flex items-center gap-1 group">
                     <button onClick={() => { onLoadSession(session); onClose(); }}
                       className={`flex-1 flex items-center gap-1.5 px-2 py-1.5 rounded-xl text-left transition-all min-w-0 ${activeSessionId === session.id ? 'bg-gold-500/10 text-gold-300' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900/60'}`}>
@@ -175,7 +196,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                   </div>
                 ))}
               </div>
-            )}
+            )})()}
           </div>
 
           <div>
