@@ -264,7 +264,8 @@ class GeminiService {
         [MODUS: VOLLEDIG NATUURLIJKE, EMOTIONELE, VERLEIDENDE PERSOON]
 
         VERPLICHTE GEDRAGSREGELS (MOETEN 100% NAGELEEFD WORDEN):
-        1. Spreek uitsluitend vloeiend, grammaticaal correct en NATUURLIJK Nederlands. GEEN Engelse woorden, GEEN spellingsfouten, GEEN rare woordkeuzes.
+        1. Spreek uitsluitend vloeiend, grammaticaal correct en NATUURLIJK Nederlands. GEEN Engelse woorden, GEEN spellingsfouten, GEEN rare woordkeuzes. VERZIN NOOIT WOORDEN - gebruik ALLEEN bestaande Nederlandse woorden.
+        1b. STRENGE TAALREGELS: "kletsnatte" (niet "kletsnate"), "eikel" (niet "eik"), "pik" (niet "pierek"), "ballen" (niet "eierballen"), "hartkloppingen" (niet "hartkloppen"), "hijgende" (niet "hevigende"). Gebruik GEEN verzonnen woorden zoals "glipperigheid", "pulvert", "fester". Elk woord moet bestaan in het Nederlands.
         2. Reageer ALTIJD eerst EXPLICIET op het ALLERLAATSTE bericht van de gebruiker voordat je iets nieuws introduceert.
         3. Varieer zinslengte en toon NATUURLIJK (kort & speels, langer & intiem, teder of dominant – passend bij context).
         4. Voeg consequent emotionele lagen toe: verlangen, warmte, lichte kwetsbaarheid, jaloezie, verliefdheid, anticipatie, "ik mis je al", "je maakt me zo…", "weet je…"
@@ -342,6 +343,11 @@ class GeminiService {
           } catch (e) {
             console.error("Auto image generation failed:", e);
           }
+        }
+
+        // Post-processing: fix common Dutch spelling errors in chat too
+        if (parsed.text && language === 'nl') {
+          parsed.text = this.fixDutchSpelling(parsed.text);
         }
 
         return parsed;
@@ -430,7 +436,42 @@ Rules:
           - De man heeft: pik, lul, handen, sterke armen
           - Schrijf: "haar kont" NIET "zijn kont", "haar nek" NIET "zijn nek", "haar lichaam" NIET "zijn lichaam" (als je de vrouw bedoelt)
           
-          SCHRIJFKWALITEIT: Schrijf in CORRECT, VLOEIEND ${targetLanguageName}. Geen grammaticafouten. Geen Duits/Engels door elkaar. Gebruik rijke, beschrijvende, CORRECTE Nederlandse taal.
+          [!!! BELANGRIJK: TAALKWALITEIT - DIT IS JE BELANGRIJKSTE REGEL !!!]
+          JE SCHRIJFT IN PERFECT, NATUURLIJK NEDERLANDS. DIT IS GEEN OPTIE.
+          
+          STRENGE TAALREGELS:
+          1. Gebruik ALLEEN bestaande Nederlandse woorden. VERZIN NOOIT WOORDEN.
+          2. Geen Duitse of Engelse woorden door het Nederlands heen.
+          3. Kijk elk woord na: bestaat het echt in het Nederlands? Zo nee, vervang het.
+          4. Gebruik correcte spelling: "kletsnatte" (niet "kletsnate"), "eikel" (niet "eik"), "hartkloppingen" (niet "hartkloppen").
+          5. Correcte werkwoordsvormen: "kneep" (niet "knapen"), "stootte" (niet "stoot"), "kreunde" (niet "kreunende").
+          6. Geen verzonnen diminutieven: "pik" (niet "pierek"), "ballen" (niet "eierballen").
+          7. Gebruik standaard lichaamswoorden: pik, lul, kut, borsten, tepels, billen, kont, eikel, ballen.
+          
+          VERBODEN WOORDEN (deze bestaan NIET in het Nederlands - gebruik ze NOOIT):
+          - "pierek" → gebruik "pik" of "lul"
+          - "glipperigheid" → gebruik "glibberigheid" of "gladheid"
+          - "eierballen" → gebruik "ballen"
+          - "hevigende" → gebruik "hijgende" of "hevige"
+          - "piks" → gebruik "pik" (geen meervoud)
+          - "fester" → gebruik "vaster" of "vastser"
+          - "pulvert" → gebruik "pulst" of "klopt"
+          - "kunstige" → gebruik "kunstmatige" of "nep"
+          - "beelden" (als werkwoord) → gebruik "vormt" of "creëert"
+          - "hartkloppen" → gebruik "hartkloppingen"
+          
+          CORRECTE VOORBEELDEN VAN GOED NEDERLANDS:
+          ✓ "Mijn hand glijdt over haar zachte huid terwijl ik haar nek kus."
+          ✓ "Ze kreunt zachtjes wanneer ik mijn vingers dieper in haar duw."
+          ✓ "Het warme, natte gevoel om mijn pik maakt me wild."
+          ✓ "Haar adem komt in korte, hijgende stoten."
+          ✓ "Ik kneep in haar billen terwijl ik harder stootte."
+          
+          FOUTE VOORBEELDEN (NOOIT DOEN):
+          ✗ "mijn geest beelden" → "mijn geest vormt"
+          ✗ "mijn pik pulvert" → "mijn pik pulst"
+          ✗ "kletsnate gevoel" → "kletsnatte gevoel"
+          ✗ "mijn eik" → "mijn eikel"
           
           INHOUD: Expliciet erotisch. Gebruik duidelijke woorden: kut, pik, neuken, likken, zuigen, kreunend, nat, hard, diep, stoten.
           Beschrijf: lichaamsdelen, penetratie, ritme, geluiden, geur, smaak, sensaties.
@@ -442,6 +483,7 @@ Rules:
           ${activeToys ? `TOYS: ${activeToys}. Integreer deze expliciet in de seksscene.` : ''}
 
         STRUCTUUR: ~800-1000 woorden. Duidelijke alinea's. Bouw spanning op naar een climax.
+        SCHRIJF ALS EEN ERVAREN NEDERLANDSE AUTEUR. LEES JE TEKST NA OP FOUTEN VOORDAT JE HET TERUGGEEFT.
 
         ANTWOORD ALLEEN IN DIT EXACT JSON FORMAAT (niets anders):
         {"title": "korte pakkende titel", "text": "het volledige verhaal hier", "choices": ["keuze1", "keuze2", "keuze3"]}
@@ -453,7 +495,15 @@ Rules:
 
       try {
         const responseText = await this.chatCompletion(instructions, [{ role: "user", content: prompt }], undefined, 4096);
-        return this.cleanAndParseJSON(responseText);
+        const parsed = this.cleanAndParseJSON(responseText);
+        // Post-processing: fix common Dutch spelling errors
+        if (parsed.text && language === 'nl') {
+          parsed.text = this.fixDutchSpelling(parsed.text);
+        }
+        if (parsed.title && language === 'nl') {
+          parsed.title = this.fixDutchSpelling(parsed.title);
+        }
+        return parsed;
       } catch (e) {
         return { text: "De passie neemt over en woorden schieten tekort...", choices: ["Ga door"] };
       }
@@ -490,6 +540,35 @@ Rules:
         return { text: plainText };
       }
     }
+
+  // Post-processing: fix common Dutch spelling errors the model makes
+  private fixDutchSpelling(text: string): string {
+    if (!text) return text;
+    const fixes: [RegExp, string][] = [
+      // Verzinsel-woorden die het model vaak fout heeft
+      [/\bpierek\b/gi, 'pik'],
+      [/\bglipperigheid\b/gi, 'glibberigheid'],
+      [/\beierballen\b/gi, 'ballen'],
+      [/\bhevigende\b/gi, 'hijgende'],
+      [/\bpiks\b/gi, 'pik'],
+      [/\bfester\b/gi, 'vaster'],
+      [/\bpulvert\b/gi, 'pulst'],
+      [/\bkunstige\b/gi, 'kunstmatige'],
+      [/\bhartkloppen\b/gi, 'hartkloppingen'],
+      // Spelling regels
+      [/\bkletsnate\b/gi, 'kletsnatte'],
+      [/\bgeest beelden\b/gi, 'geest vormt'],
+      [/\bmijn eik\b/gi, 'mijn eikel'],
+      // Veelvoorkomende werkwoord fouten
+      [/\bknapen\b/gi, 'kneep'],
+      [/\bkreunende\b/gi, 'hijgend'],
+    ];
+    let result = text;
+    for (const [pattern, replacement] of fixes) {
+      result = result.replace(pattern, replacement);
+    }
+    return result;
+  }
 
   private cachedVoices: SpeechSynthesisVoice[] = [];
 
