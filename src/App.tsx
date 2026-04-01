@@ -28,6 +28,7 @@ import CharacterCreator from './components/CharacterCreator';
 import AudioStoriesInterface from './components/AudioStoriesInterface';
 import LandingPage from './components/LandingPage';
 import ImageGallery from './components/ImageGallery';
+import UsageDashboard from './components/UsageDashboard';
 import PaywallModal from './components/PaywallModal';
 import DailyRewardModal from './components/DailyRewardModal';
 import LegalModal from './components/LegalModal';
@@ -388,6 +389,14 @@ const App = () => {
             sessions={sessions.savedSessions}
             language={language}
             onToggleSidebar={() => setIsSidebarOpen(true)}
+          />
+        );
+      case AppMode.USAGE_DASHBOARD:
+        return (
+          <UsageDashboard
+            user={user}
+            language={language}
+            onOpenPaywall={() => openPaywall('')}
           />
         );
       default:

@@ -158,6 +158,14 @@ export async function adjustCredits(params: {
   return apiRequest<AdjustResponse>('/api/credits/adjust', 'POST', params);
 }
 
+// Refund credits for a failed API call
+export async function refundCredits(params: {
+  request_id: string;
+  reason?: string;
+}): Promise<{ success: boolean; refunded: number; new_balance: number }> {
+  return apiRequest('/api/credits/refund', 'POST', params);
+}
+
 // Subscribe to real-time balance updates
 export function subscribeToBalanceChanges(
   userId: string,

@@ -60,7 +60,8 @@ import {
   Copy,
   Sun,
   Moon,
-  Images
+  Images,
+  BarChart3
 } from 'lucide-react';
 
 export const Icons = {
@@ -124,7 +125,8 @@ export const Icons = {
     Copy,
     Sun,
     Moon,
-    Images
+    Images,
+    BarChart3
 };
 
 export default Icons;

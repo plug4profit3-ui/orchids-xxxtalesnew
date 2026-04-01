@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabaseAdmin, requireAuth, getUserIdFromAuth, logApiUsage, COSTS } from './_supabase';
+import { supabaseAdmin, requireAuth, getUserIdFromAuth, logApiUsage, COSTS, deductCredits, addCredits } from './_supabase';
 import { LIMITS } from './_rateLimit';
 
 const VENICE_API_URL = "https://api.venice.ai/api/v1";

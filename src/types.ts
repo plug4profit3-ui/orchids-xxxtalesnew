@@ -34,6 +34,7 @@ export enum AppMode {
   CODE_ANALYSIS = 'code_analysis',
   PAYMENT_SUCCESS = 'payment_success',
   IMAGE_GALLERY = 'image_gallery',
+  USAGE_DASHBOARD = 'usage_dashboard',
 }
 
 export type CharacterStance = 'neutral' | 'loving' | 'submissive' | 'dominant' | 'nasty';
