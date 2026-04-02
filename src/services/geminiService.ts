@@ -396,7 +396,7 @@ Rules:
       return result.trim().replace(/^["']|["']$/g, '');
     }
 
-    public async generateStoryTurn(config: StoryConfig, previousTurns: StoryTurn[], choice?: string, language: Language = 'nl', isVip: boolean = false): Promise<StoryTurn> {
+    public async generateStoryTurn(config: StoryConfig, previousTurns: StoryTurn[], choice?: string, language: Language = 'nl', isVip: boolean = false, onStreamChunk?: (partial: string) => void): Promise<StoryTurn> {
     const allChars = getCharacters(language);
     const activeCharacters = allChars.filter(c => config.characters.includes(c.id)).map(c => c.name).join(', ');
     const isSolo = config.characters.length === 0;
@@ -497,7 +497,20 @@ Rules:
       : `START: ${isSolo ? 'Solo scene' : 'Met ' + activeCharacters}. Schrijf een verhaal van ${wordCount} woorden. Integreer: ${activeToys}.`;
 
       try {
-        const responseText = await this.chatCompletion(instructions, [{ role: "user", content: prompt }], undefined, 4096);
+        // Stream callback: extract text from partial JSON as it comes in
+        const streamCb = onStreamChunk ? (partial: string) => {
+          const match = partial.match(/"text"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+          if (match) {
+            try {
+              const decoded = JSON.parse(`"${match[1]}"`);
+              if (!decoded.includes('"arousal"') && !decoded.includes('"status"')) {
+                onStreamChunk(decoded);
+              }
+            } catch { onStreamChunk(match[1]); }
+          }
+        } : undefined;
+
+        const responseText = await this.chatCompletion(instructions, [{ role: "user", content: prompt }], streamCb, 4096);
         const parsed = this.cleanAndParseJSON(responseText);
         // Post-processing: fix common Dutch spelling errors
         if (parsed.text && language === 'nl') {

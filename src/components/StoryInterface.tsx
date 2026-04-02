@@ -110,6 +110,8 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
   const [currentStoryId, setCurrentStoryId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isSoloMode, setIsSoloMode] = useState(true);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+  const [streamingText, setStreamingText] = useState('');
   
   // Audio State
   const [playback, setPlayback] = useState<{ 
@@ -239,21 +241,32 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
 
     setMode('play'); 
     setIsGenerating(true);
+    setStreamingText('');
+    setGenerateError(null);
     const newStoryId = `story_${Date.now()}`;
     setCurrentStoryId(newStoryId);
 
     try {
         const finalLocation = config.location || activeLocations[0].name;
         const finalConfig = { ...config, location: finalLocation, characters: isSoloMode ? [] : config.characters };
-        const turn = await geminiService.generateStoryTurn(finalConfig, [], undefined, language as Language, user?.isPremium);
+        const turn = await geminiService.generateStoryTurn(finalConfig, [], undefined, language as Language, user?.isPremium, (partial: string) => setStreamingText(partial));
+        setStreamingText('');
         if (turn?.text) {
             const newTurns = [turn];
             setTurns(newTurns);
             const newTitle = turn.title || config.category || 'Nieuw Verhaal';
             setStoryTitle(newTitle);
             performSave(newTurns, newTitle, finalConfig, newStoryId);
+        } else {
+            setMode('setup');
+            setGenerateError('Verhaal genereren mislukt. Probeer opnieuw.');
         }
-    } catch (e) { setMode('setup'); } finally { setIsGenerating(false); }
+    } catch (e: any) {
+        setStreamingText('');
+        setMode('setup');
+        setGenerateError(e?.message || 'Onbekende fout bij genereren verhaal');
+        console.error('[StoryGenerate]', e);
+    } finally { setIsGenerating(false); }
   };
 
   const handleNextTurn = async (choice: string) => {
@@ -265,20 +278,29 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
     // --------------------
 
     setIsGenerating(true);
+    setStreamingText('');
+    setGenerateError(null);
     narratorRef.current?.stop();
     setPlayback(prev => ({ ...prev, isPlaying: false, isLoading: false, idx: null }));
     
     try {
         const finalLocation = config.location || activeLocations[0].name;
         const finalConfig = { ...config, location: finalLocation, characters: isSoloMode ? [] : config.characters };
-        const turn = await geminiService.generateStoryTurn(finalConfig, turns, choice, language as Language, user?.isPremium);
+        const turn = await geminiService.generateStoryTurn(finalConfig, turns, choice, language as Language, user?.isPremium, (partial: string) => setStreamingText(partial));
+        setStreamingText('');
         if (turn?.text) {
             const newTurns = [...turns, turn];
             setTurns(newTurns);
             performSave(newTurns, storyTitle, finalConfig);
             setTimeout(() => { if (scrollRef.current) scrollRef.current.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' }); }, 150);
+        } else {
+            setGenerateError('Verhaal genereren mislukt. Probeer opnieuw.');
         }
-    } catch (e) {} finally { setIsGenerating(false); }
+    } catch (e: any) {
+        setStreamingText('');
+        setGenerateError(e?.message || 'Fout bij genereren');
+        console.error('[StoryNextTurn]', e);
+    } finally { setIsGenerating(false); }
   };
 
   const handleRegenerate = async () => {
@@ -286,22 +308,30 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
     // No extra credit cost for regenerate (user already paid)
     
     setIsGenerating(true);
+    setStreamingText('');
+    setGenerateError(null);
     narratorRef.current?.stop();
     setPlayback(prev => ({ ...prev, isPlaying: false, isLoading: false, idx: null }));
 
     try {
       const finalLocation = config.location || activeLocations[0].name;
       const finalConfig = { ...config, location: finalLocation, characters: isSoloMode ? [] : config.characters };
-      // Regenerate: use all turns except the last one, with the same choice that led to the last turn
       const previousTurns = turns.slice(0, -1);
-      const lastChoice = turns.length > 1 ? '[SYSTEM: Rewrite the last part differently, with more variation and detail.]' : '[SYSTEM: Rewrite this opening differently, more creative.]';
-      const turn = await geminiService.generateStoryTurn(finalConfig, previousTurns, lastChoice, language as Language, user?.isPremium);
+      const lastChoice = turns.length > 1 ? 'Herschrijf dit anders, meer variatie en detail.' : 'Herschrijf dit opener anders, creatiever.';
+      const turn = await geminiService.generateStoryTurn(finalConfig, previousTurns, lastChoice, language as Language, user?.isPremium, (partial: string) => setStreamingText(partial));
+      setStreamingText('');
       if (turn?.text) {
         const newTurns = [...previousTurns, turn];
         setTurns(newTurns);
         performSave(newTurns, storyTitle, finalConfig);
+      } else {
+        setGenerateError('Herschrijven mislukt. Probeer opnieuw.');
       }
-    } catch (e) {} finally { setIsGenerating(false); }
+    } catch (e: any) {
+      setStreamingText('');
+      setGenerateError(e?.message || 'Fout bij regenereren');
+      console.error('[StoryRegenerate]', e);
+    } finally { setIsGenerating(false); }
   };
 
   const handleBackToSetup = () => {
