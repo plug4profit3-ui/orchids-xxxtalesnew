@@ -35,6 +35,8 @@ export enum AppMode {
   IMAGE_GALLERY = 'image_gallery',
   USAGE_DASHBOARD = 'usage_dashboard',
   LEADERBOARD = 'leaderboard',
+  PARTNER_DASHBOARD = 'partner_dashboard',
+  PARTNERS_LIST = 'partners_list',
 }
 
 export type CharacterStance = 'neutral' | 'loving' | 'submissive' | 'dominant' | 'nasty';

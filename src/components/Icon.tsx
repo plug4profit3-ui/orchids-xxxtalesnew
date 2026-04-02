@@ -62,7 +62,8 @@ import {
   Moon,
   Images,
   BarChart3,
-  Trophy
+  Trophy,
+  Handshake
 } from 'lucide-react';
 
 export const Icons = {
@@ -128,7 +129,8 @@ export const Icons = {
     Moon,
     Images,
     BarChart3,
-    Trophy
+    Trophy,
+    Handshake
 };
 
 export default Icons;

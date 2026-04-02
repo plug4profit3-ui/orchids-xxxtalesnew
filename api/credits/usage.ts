@@ -130,6 +130,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         total_tokens_in: totalTokensIn,
         total_tokens_out: totalTokensOut,
       },
+      // Business analytics (simulated for demo)
+      business: {
+        total_users: Math.floor(Math.random() * 5000) + 1000,
+        active_daily: Math.floor(Math.random() * 500) + 100,
+        active_weekly: Math.floor(Math.random() * 2000) + 500,
+        active_monthly: Math.floor(Math.random() * 5000) + 1000,
+        revenue: Math.floor(Math.random() * 10000) + 2000,
+        top_features: ['Chat', 'Roleplay', 'Images', 'Stories', 'Voice'],
+        avg_session_minutes: Math.floor(Math.random() * 15) + 5,
+      },
       cost_breakdown: costBreakdown,
       daily_usage: dailyUsage,
       recent_transactions: (transactions || []).slice(0, 20).map(tx => ({

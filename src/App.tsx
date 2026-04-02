@@ -30,6 +30,8 @@ import LandingPage from './components/LandingPage';
 import ImageGallery from './components/ImageGallery';
 import UsageDashboard from './components/UsageDashboard';
 import Leaderboard from './components/Leaderboard';
+import PartnerDashboard from './components/PartnerDashboard';
+import PartnersList from './components/PartnersList';
 import PaywallModal from './components/PaywallModal';
 import DailyRewardModal from './components/DailyRewardModal';
 import LegalModal from './components/LegalModal';
@@ -398,6 +400,45 @@ const App = () => {
             user={user}
             language={language}
             onOpenPaywall={() => openPaywall('')}
+          />
+        );
+      case AppMode.PARTNER_DASHBOARD:
+        return (
+          <PartnerDashboard 
+            language={language} 
+            onNavigate={(mode) => setMode(mode as AppMode)}
+          />
+        );
+      case AppMode.PARTNERS_LIST:
+        return (
+          <PartnersList 
+            language={language}
+            onClaimCode={async (code: string) => {
+              try {
+                const session = await supabase.auth.getSession();
+                const accessToken = session.data.session?.access_token;
+                if (!accessToken) return { success: false, error: 'Not authenticated' };
+                
+                const res = await fetch('/api/partners/claim', {
+                  method: 'POST',
+                  headers: { 
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  body: JSON.stringify({ code }),
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                  // Refresh credits
+                  const profile = await db.loadProfile(user.id);
+                  if (profile) setUser((prev: UserProfile) => ({ ...prev, credits: profile.credits || prev.credits }));
+                  return { success: true };
+                }
+                return { success: false, error: result.error };
+              } catch (e) {
+                return { success: false, error: 'Failed to claim code' };
+              }
+            }}
           />
         );
       case AppMode.LEADERBOARD:

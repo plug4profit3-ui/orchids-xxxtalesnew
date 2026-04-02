@@ -19,6 +19,16 @@ interface UsageData {
     period_days: number;
     api_cost_usd: number;
   };
+  // Business analytics fields
+  business?: {
+    total_users: number;
+    active_daily: number;
+    active_weekly: number;
+    active_monthly: number;
+    revenue: number;
+    top_features: string[];
+    avg_session_minutes: number;
+  };
   cost_breakdown: {
     chat: number;
     image: number;
@@ -319,6 +329,49 @@ const UsageDashboard: React.FC<UsageDashboardProps> = ({ user, language, onOpenP
           {data.summary.api_cost_usd > 0 && (
             <div className="text-center text-[10px] text-zinc-600 py-2">
               API kost: ${data.summary.api_cost_usd} ({data.summary.period_days} dagen)
+            </div>
+          )}
+
+          {/* Business Analytics (Admin view) */}
+          {data?.business && (
+            <div className="bg-zinc-900/50 border border-purple-500/30 rounded-2xl p-5">
+              <h3 className="text-[10px] font-black text-purple-400 uppercase tracking-widest mb-4">
+                {language === 'nl' ? 'Analytics voor Business' : 'Business Analytics'}
+              </h3>
+              <div className="grid grid-cols-3 gap-3 mb-4">
+                <div className="bg-black/40 rounded-xl p-3 text-center">
+                  <p className="text-white text-lg font-black">{data.business.total_users}</p>
+                  <p className="text-zinc-500 text-[8px] uppercase">{language === 'nl' ? 'Totaal gebruikers' : 'Total Users'}</p>
+                </div>
+                <div className="bg-black/40 rounded-xl p-3 text-center">
+                  <p className="text-green-400 text-lg font-black">{data.business.active_daily}</p>
+                  <p className="text-zinc-500 text-[8px] uppercase">{language === 'nl' ? 'Dagelijks actief' : 'Daily Active'}</p>
+                </div>
+                <div className="bg-black/40 rounded-xl p-3 text-center">
+                  <p className="text-blue-400 text-lg font-black">{data.business.active_weekly}</p>
+                  <p className="text-zinc-500 text-[8px] uppercase">{language === 'nl' ? 'Wekelijks actief' : 'Weekly Active'}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="bg-black/40 rounded-xl p-3 text-center">
+                  <p className="text-gold-500 text-lg font-black">€{data.business.revenue}</p>
+                  <p className="text-zinc-500 text-[8px] uppercase">{language === 'nl' ? 'Omzet (gesimuleerd)' : 'Revenue (sim)'}</p>
+                </div>
+                <div className="bg-black/40 rounded-xl p-3 text-center">
+                  <p className="text-purple-400 text-lg font-black">{data.business.avg_session_minutes} min</p>
+                  <p className="text-zinc-500 text-[8px] uppercase">{language === 'nl' ? 'Gem. sessie' : 'Avg Session'}</p>
+                </div>
+              </div>
+              {data.business.top_features && data.business.top_features.length > 0 && (
+                <div className="bg-black/40 rounded-xl p-3">
+                  <p className="text-zinc-500 text-[8px] uppercase mb-2">{language === 'nl' ? 'Meest gebruikt' : 'Top Features'}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {data.business.top_features.map((feature, i) => (
+                      <span key={i} className="px-2 py-1 bg-zinc-800 rounded-lg text-zinc-300 text-[10px]">{feature}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </>

@@ -294,6 +294,46 @@ const PaywallModal: React.FC<PaywallModalProps> = ({ isOpen, onClose, onPurchase
                        <li className="flex items-center gap-3 text-sm text-zinc-300"><Icons.Check className="text-gold-500 shrink-0" size={16} /> <span className="font-medium">Elk moment opzegbaar</span></li>
                     </ul>
 
+                    {/* Pricing Tiers - NEW */}
+                    <div className="space-y-3 mb-6">
+                      {/* Starter (Free) */}
+                      <div className="bg-zinc-900/60 border border-zinc-700 rounded-xl p-4 hover:border-zinc-500 transition-colors">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <h3 className="text-white font-bold text-sm">Starter</h3>
+                            <p className="text-zinc-500 text-[10px]">Gratis</p>
+                          </div>
+                          <span className="text-zinc-400 text-xs font-bold">20 credits/mnd</span>
+                        </div>
+                        <p className="text-zinc-600 text-[10px]">Met advertenties</p>
+                      </div>
+
+                      {/* Pro */}
+                      <div className="bg-zinc-900/60 border border-gold-500/40 rounded-xl p-4 hover:border-gold-500 transition-colors">
+                        <div className="absolute top-0 right-0 bg-gold-500 text-black text-[8px] font-black px-2 py-1 rounded-bl-lg uppercase tracking-widest">Aanbevolen</div>
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <h3 className="text-gold-400 font-bold text-sm">Pro</h3>
+                            <p className="text-zinc-500 text-[10px]">€9,99/maand</p>
+                          </div>
+                          <span className="text-gold-400 text-xs font-bold">500 credits/mnd</span>
+                        </div>
+                        <p className="text-zinc-600 text-[10px]">Geen advertenties · Prioriteit support</p>
+                      </div>
+
+                      {/* VIP */}
+                      <div className="bg-gradient-to-r from-purple-500/20 to-gold-500/20 border border-purple-500/40 rounded-xl p-4 hover:border-purple-500 transition-colors">
+                        <div className="flex items-center justify-between mb-2">
+                          <div>
+                            <h3 className="text-purple-400 font-bold text-sm">VIP</h3>
+                            <p className="text-zinc-500 text-[10px]">€24,99/maand</p>
+                          </div>
+                          <span className="text-purple-400 text-xs font-bold">2000 credits/mnd</span>
+                        </div>
+                        <p className="text-zinc-600 text-[10px]">Alles inbegrepen · Vroege toegang</p>
+                      </div>
+                    </div>
+
                     {/* VIP subscription card (secondary) */}
                     <div className="mt-auto bg-black/40 border border-gold-500/60 rounded-2xl p-5 relative overflow-hidden group hover:bg-black/60 transition-colors">
                         <div className="absolute top-0 right-0 bg-gold-500 text-black text-[9px] font-black px-3 py-1 rounded-bl-xl uppercase tracking-widest">{t.most_popular}</div>
