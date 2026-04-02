@@ -510,7 +510,7 @@ Rules:
           }
         } : undefined;
 
-        const responseText = await this.chatCompletion(instructions, [{ role: "user", content: prompt }], streamCb, 4096);
+        const responseText = await this.chatCompletion(instructions, [{ role: "user", content: prompt }], streamCb, 8192);
         const parsed = this.cleanAndParseJSON(responseText);
         // Post-processing: fix common Dutch spelling errors
         if (parsed.text && language === 'nl') {
@@ -552,7 +552,13 @@ Rules:
         // Try to extract JSON object from the text
         const jsonMatch = clean.match(/\{[\s\S]*\}/);
         if (jsonMatch) {
-          return JSON.parse(jsonMatch[0]);
+          const parsed = JSON.parse(jsonMatch[0]);
+          // Validate: text should be substantial (not cut off)
+          if (parsed.text && typeof parsed.text === 'string' && parsed.text.length < 150) {
+            // Text is too short - likely cut off, add a note
+            parsed.text = parsed.text + "... [verhaal werd afgekort, kies 'Ga door' om verder te lezen]";
+          }
+          return parsed;
         }
         return JSON.parse(clean);
       } catch (e) {
