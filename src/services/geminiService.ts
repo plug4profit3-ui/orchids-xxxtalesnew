@@ -507,7 +507,15 @@ Rules:
           parsed.title = this.fixDutchSpelling(parsed.title);
         }
         return parsed;
-      } catch (e) {
+      } catch (e: any) {
+        console.error('Story generation failed:', e?.message || e);
+        // Return more specific error messages
+        if (e?.message === 'INSUFFICIENT_CREDITS') {
+          return { text: "Je hebt niet genoeg credits voor dit verhaal. Koop meer credits om door te gaan.", choices: ["Koop Credits"] };
+        }
+        if (e?.message === 'UNAUTHORIZED') {
+          return { text: "Je sessie is verlopen. Log opnieuw in om verhalen te genereren.", choices: ["Vernieuw Pagina"] };
+        }
         return { text: "De passie neemt over en woorden schieten tekort...", choices: ["Ga door"] };
       }
   }

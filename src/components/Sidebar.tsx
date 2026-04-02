@@ -67,7 +67,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: AppMode.IMAGE_GALLERY, icon: Icons.Images,      label: language === 'nl' ? 'GALERIJ' : language === 'de' ? 'GALERIE' : language === 'fr' ? 'GALERIE' : language === 'es' ? 'GALERÍA' : language === 'it' ? 'GALLERIA' : 'GALLERY' },
     { id: AppMode.USAGE_DASHBOARD, icon: Icons.BarChart3, label: language === 'nl' ? 'VERBRUIK' : language === 'de' ? 'VERBRAUCH' : language === 'fr' ? 'UTILISATION' : language === 'es' ? 'USO' : language === 'it' ? 'UTILIZZO' : 'USAGE' },
     { id: AppMode.SOLO_COACH, icon: Icons.Zap,            label: t.solo_coach },
-    { id: AppMode.CODE_ANALYSIS, icon: Icons.Code,       label: t.code_analysis },
   ];
 
   const handleNav = (m: AppMode) => {

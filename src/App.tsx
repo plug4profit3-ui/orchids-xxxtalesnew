@@ -23,7 +23,7 @@ import LiveInterface from './components/LiveInterface';
 import SoloCoachInterface from './components/SoloCoachInterface';
 import ImagineInterface from './components/ImagineInterface';
 import VideoFinder from './components/VideoFinder';
-import CodeAnalysisInterface from './components/CodeAnalysisInterface';
+
 import CharacterCreator from './components/CharacterCreator';
 import AudioStoriesInterface from './components/AudioStoriesInterface';
 import LandingPage from './components/LandingPage';
