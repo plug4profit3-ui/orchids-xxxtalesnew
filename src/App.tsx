@@ -408,7 +408,7 @@ const App = () => {
   const isImmersiveMode = mode === AppMode.CHAT || mode === AppMode.LIVE || mode === AppMode.SOLO_COACH;
 
   return (
-    <div className="fixed inset-0 flex flex-col md:flex-row bg-black overflow-hidden">
+    <div className={`fixed inset-0 flex flex-col md:flex-row overflow-hidden ${theme === 'light' ? 'bg-zinc-100' : 'bg-black'}`}>
       <HoverReceiver />
       
       {/* Onboarding Wizard */}

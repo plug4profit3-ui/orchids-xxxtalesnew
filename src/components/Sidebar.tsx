@@ -109,6 +109,11 @@ const Sidebar: React.FC<SidebarProps> = ({
             <button onClick={() => setShowLanguages(v => !v)} className="w-7 h-7 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-sm hover:border-gold-500 transition-colors">
               {getLanguageFlag(language)}
             </button>
+            {onToggleTheme && (
+              <button onClick={onToggleTheme} className="w-7 h-7 rounded-full bg-zinc-900 border border-gold-500/30 flex items-center justify-center text-gold-500 hover:text-white hover:bg-gold-500/20 transition-colors" title={theme === 'dark' ? 'Light mode' : 'Dark mode'}>
+                {theme === 'dark' ? <Icons.Sun size={14} /> : <Icons.Moon size={14} />}
+              </button>
+            )}
             <button onClick={onLogout} className="w-7 h-7 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-red-900/30 hover:border-red-500/40 transition-colors" title="Logout">
               <Icons.LogOut size={12} />
             </button>

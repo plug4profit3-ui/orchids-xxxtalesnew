@@ -443,9 +443,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
       // --- CREDIT ADJUSTMENT ---
       // Adjust credits based on actual token usage if we used the new API
-      if (requestId && adjustCreditsApi && response.usage) {
-        const actualInputTokens = response.usage.promptTokens || Math.ceil(cleanedInput.length / 4);
-        const actualOutputTokens = response.usage.completionTokens || Math.ceil(response.text.length / 4);
+      if (requestId && adjustCreditsApi) {
+        const actualInputTokens = response.usage?.promptTokens || Math.ceil(cleanedInput.length / 4);
+        const actualOutputTokens = response.usage?.completionTokens || Math.ceil(response.text.length / 4);
         
         // Fire and forget - don't block the UI
         adjustCreditsApi({

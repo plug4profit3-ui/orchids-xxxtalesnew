@@ -85,6 +85,9 @@ export async function loadSessions(userId: string): Promise<ChatSession[]> {
     voiceStyle: row.voice_style,
     speechSpeed: row.speech_speed,
     speechPitch: row.speech_pitch,
+    relationshipPhase: row.relationship_phase || 'meeting',
+    interactionCount: row.interaction_count || 0,
+    currentMood: row.current_mood,
   }));
 }
 
@@ -108,6 +111,9 @@ export async function saveSession(userId: string, session: ChatSession) {
     voice_style: session.voiceStyle,
     speech_speed: session.speechSpeed,
     speech_pitch: session.speechPitch,
+    relationship_phase: session.relationshipPhase,
+    interaction_count: session.interactionCount || 0,
+    current_mood: session.currentMood,
     updated_at: new Date().toISOString(),
   });
 }
