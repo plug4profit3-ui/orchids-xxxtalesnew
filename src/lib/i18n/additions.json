@@ -1,0 +1,91 @@
+{
+  "features": {
+    "daily_streak": {
+      "title": "Daily Bonus",
+      "desc": "You're back! Here are your free credits for today.",
+      "current_streak": "Current Streak",
+      "reward": "Reward",
+      "claim": "Claim Reward",
+      "days": "Days",
+      "reward_claimed": "Reward claimed! +{amount} credits",
+      "day_1": "Day 1",
+      "day_7": "Day 7", 
+      "day_30": "Day 30",
+      "milestone": "Milestone reached!"
+    },
+    "referral": {
+      "title": "Invite Friends",
+      "subtitle": "Share your code and earn credits",
+      "your_code": "Your Code",
+      "copy": "Copy",
+      "copied": "Copied!",
+      "enter_code": "Enter referral code",
+      "apply": "Apply",
+      "both_earn": "You both earn 50 credits!",
+      "invalid_code": "Invalid code",
+      "share": "Share"
+    },
+    "chat_topics": {
+      "title": "Start a conversation",
+      "tell_about_day": "Tell me about your day",
+      "what_wore_today": "What did you wear today",
+      "favorite_moment": "Favorite moment so far",
+      "secret_fantasy": "Secret fantasy"
+    },
+    "story_export": {
+      "title": "Export Story",
+      "download_pdf": "Download as PDF",
+      "copy_text": "Copy as Text",
+      "copied": "Copied to clipboard!",
+      "exported": "Story exported!"
+    },
+    "character_mood": {
+      "title": "Mood",
+      "verliefd": "Love",
+      "dominant": "Dominant",
+      "speels": "Playful",
+      "romantisch": "Romantic",
+      "intiem": "Intimate",
+      "select_mood": "Select mood"
+    },
+    "warm_theme": {
+      "title": "Theme",
+      "dark": "Dark",
+      "light": "Light",
+      "warm": "Warm"
+    },
+    "chat_background": {
+      "title": "Chat Background",
+      "default": "Default",
+      "stars": "Stars",
+      "gradient_purple": "Gradient Purple",
+      "gradient_pink": "Gradient Pink",
+      "solid": "Solid Color"
+    },
+    "personal_stats": {
+      "title": "Your Stats",
+      "favorite_character": "Favorite Character",
+      "total_words": "Total Words Generated",
+      "stories_created": "Stories Created",
+      "time_spent": "Time Spent (est.)",
+      "minutes": "min",
+      "messages": "messages"
+    },
+    "photo_upload": {
+      "title": "Add Your Photo",
+      "upload": "Upload Photo",
+      "generating": "Generating story from photo...",
+      "preview": "Preview",
+      "remove": "Remove"
+    },
+    "leaderboard": {
+      "title": "Leaderboard",
+      "stories": "Stories Created",
+      "credits_spent": "Credits Spent",
+      "streak": "Streak Days",
+      "rank": "Rank",
+      "user": "User",
+      "empty": "No data yet"
+    }
+  }
+}

@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Character, Message, ChatSession, UserProfile, Language, VoiceStyle, IntensityLevel, UserMood, RelationshipPhase, TypingIndicatorState, UserCharacterMemory } from '../types';
-import { getGifts, DEFAULT_VIDEO, getTexts, getVoiceStyles, getDiceActions, getChatScenarios } from '../constants';
+import { getGifts, DEFAULT_VIDEO, getTexts, getVoiceStyles, getDiceActions, getChatScenarios, getChatTopics } from '../constants';
 import { geminiService } from '../services/geminiService';
 import { uploadImageToStorage, recordChatInteraction } from '../services/supabaseData';
 import { memoryService, evolutionService, feedbackService } from '../services/memoryService';
@@ -107,7 +107,9 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
   const diceActions = getDiceActions(language);
   const voiceStyles = getVoiceStyles(language);
   const chatScenarios = getChatScenarios(language);
+  const chatTopics = getChatTopics(language);
   const [showScenarios, setShowScenarios] = useState(false);
+  const [showChatTopics, setShowChatTopics] = useState(false);
 
   // Feature 1: Persistent Memory
   const [userCharacterMemory, setUserCharacterMemory] = useState<UserCharacterMemory | null>(null);
@@ -912,6 +914,23 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         </div>
       )}
 
+      {showChatTopics && (
+        <div className="bg-black/60 border-t border-white/10 px-3 py-2 z-20 animate-in slide-in-from-bottom-5 backdrop-blur-md">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+            {chatTopics.map((s: any, i: number) => (
+              <button
+                key={i}
+                onClick={() => { setInputText(s.prompt); setShowChatTopics(false); }}
+                className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-full border border-pink-500/30 bg-pink-900/20 text-xs font-bold text-pink-200 hover:border-pink-500 hover:text-pink-400 hover:bg-pink-500/10 transition-all active:scale-95"
+              >
+                <span>{s.icon}</span>
+                <span>{s.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
         <div className="p-3 md:p-4 bg-black/40 border-t border-white/5 relative z-20 safe-pb backdrop-blur-md">
             {nextSpeakerId && isGroupChat && <div className="absolute -top-10 left-0 right-0 flex justify-center animate-in slide-in-from-bottom-2 fade-in"><div className="bg-gold-500 text-black px-4 py-1.5 rounded-full text-[10px] font-bold shadow-lg flex items-center gap-2"><Icons.MessageSquare size={12} /><span>Volgende: {activeCharacters.find(c => c.id === nextSpeakerId)?.name}</span><button onClick={() => setNextSpeakerId(null)} className="ml-2 hover:text-white"><Icons.X size={12} /></button></div></div>}
             {quickReplies.length > 0 && !isTyping && (
@@ -943,6 +962,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
               <button onClick={() => fileInputRef.current?.click()} className="p-3 rounded-full bg-zinc-900/80 border border-white/10 text-zinc-400 hover:text-white hover:border-gold-500 transition-all active:scale-95"><Icons.Image size={20} /></button>
               <button onClick={() => setShowGifts(!showGifts)} className={`p-3 rounded-full bg-zinc-900/80 border transition-all active:scale-95 ${showGifts ? 'border-gold-500 text-gold-500' : 'border-white/10 text-zinc-400 hover:text-white'}`}><Icons.Sparkles size={20} /></button>
               <button onClick={() => setShowScenarios(!showScenarios)} className={`p-3 rounded-full bg-zinc-900/80 border transition-all active:scale-95 ${showScenarios ? 'border-gold-500 text-gold-500' : 'border-white/10 text-zinc-400 hover:text-white'}`}><Icons.MapPin size={20} /></button>
+              <button onClick={() => setShowChatTopics(!showChatTopics)} className={`p-3 rounded-full bg-zinc-900/80 border transition-all active:scale-95 ${showChatTopics ? 'border-pink-500 text-pink-500' : 'border-white/10 text-zinc-400 hover:text-white'}`}><Icons.Heart size={20} /></button>
               <button onClick={toggleListening} className={`p-3 rounded-full bg-zinc-900/80 border transition-all active:scale-95 ${isListening ? 'border-red-500 text-red-500 animate-pulse' : 'border-white/10 text-zinc-400 hover:text-white'}`}>{isListening ? <Icons.MicOff size={20} /> : <Icons.Mic size={20} />}</button>
               <div className="flex-1 bg-zinc-900/80 border border-white/10 rounded-[1.5rem] flex items-center px-4 py-1.5 focus-within:border-gold-500/50 transition-colors">
                   <textarea value={inputText} onChange={e => setInputText(e.target.value)} onKeyDown={e => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSendMessage(); } }} placeholder={isListening ? t.listening : t.type_message} className="w-full bg-transparent border-none text-white text-sm max-h-24 py-2 resize-none focus:ring-0 placeholder-zinc-500 no-scrollbar leading-relaxed" rows={1} style={{minHeight: '44px'}} />

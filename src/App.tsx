@@ -29,6 +29,7 @@ import AudioStoriesInterface from './components/AudioStoriesInterface';
 import LandingPage from './components/LandingPage';
 import ImageGallery from './components/ImageGallery';
 import UsageDashboard from './components/UsageDashboard';
+import Leaderboard from './components/Leaderboard';
 import PaywallModal from './components/PaywallModal';
 import DailyRewardModal from './components/DailyRewardModal';
 import LegalModal from './components/LegalModal';
@@ -53,7 +54,7 @@ const App = () => {
   const [config] = useState<ModelConfig>(DEFAULT_CONFIG);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [language, setLanguage] = useState<Language>(() => loadState('language', 'nl'));
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => loadState('theme', 'dark'));
+  const [theme, setTheme] = useState<'dark' | 'light' | 'warm'>(() => loadState('theme', 'dark'));
   const [dataLoaded, setDataLoaded] = useState(false);
 
   // --- TOAST ---
@@ -399,6 +400,10 @@ const App = () => {
             onOpenPaywall={() => openPaywall('')}
           />
         );
+      case AppMode.LEADERBOARD:
+        return (
+          <Leaderboard language={language} />
+        );
       default:
         return null;
     }
@@ -408,7 +413,7 @@ const App = () => {
   const isImmersiveMode = mode === AppMode.CHAT || mode === AppMode.LIVE || mode === AppMode.SOLO_COACH;
 
   return (
-    <div className={`fixed inset-0 flex flex-col md:flex-row overflow-hidden ${theme === 'light' ? 'bg-zinc-100' : 'bg-black'}`}>
+    <div className={`fixed inset-0 flex flex-col md:flex-row overflow-hidden ${theme === 'light' ? 'bg-zinc-100' : theme === 'warm' ? 'bg-[#1a1410]' : 'bg-black'}`}>
       <HoverReceiver />
       
       {/* Onboarding Wizard */}

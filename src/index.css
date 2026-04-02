@@ -266,3 +266,34 @@ input[type="range"]::-moz-range-thumb {
   border: none;
   box-shadow: 0 0 10px rgba(244, 63, 94, 0.5), 0 2px 6px rgba(0,0,0,0.3);
 }
+
+/* Warm Theme (Feature 6) */
+.theme-warm {
+  --background: 26 28% 6%;
+  --foreground: 33 55% 92%;
+  --card: 26 28% 8%;
+  --card-foreground: 33 55% 92%;
+  --primary: 33 100% 50%;
+  --primary-foreground: 26 28% 6%;
+  --accent: 33 100% 50%;
+  --accent-foreground: 26 28% 6%;
+  --border: 33 30% 20%;
+}
+
+/* Chat Backgrounds (Feature 7) */
+.chat-bg-default { background: #000; }
+.chat-bg-stars { 
+  background: #000;
+  background-image: radial-gradient(white 1px, transparent 1px), radial-gradient(white 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 0, 25px 25px;
+}
+.chat-bg-gradient-purple {
+  background: linear-gradient(135deg, #1a0a2e 0%, #16213e 50%, #0f3460 100%);
+}
+.chat-bg-gradient-pink {
+  background: linear-gradient(135deg, #2d1b4e 0%, #4a1942 50%, #681338 100%);
+}
+.chat-bg-solid {
+  background: #1a1a1a;
+}

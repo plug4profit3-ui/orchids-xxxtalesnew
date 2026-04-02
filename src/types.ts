@@ -34,6 +34,7 @@ export enum AppMode {
   PAYMENT_SUCCESS = 'payment_success',
   IMAGE_GALLERY = 'image_gallery',
   USAGE_DASHBOARD = 'usage_dashboard',
+  LEADERBOARD = 'leaderboard',
 }
 
 export type CharacterStance = 'neutral' | 'loving' | 'submissive' | 'dominant' | 'nasty';
@@ -50,6 +51,12 @@ export interface UserProfile {
   dailyMessagesLeft: number;
   lastLoginDate?: string; 
   streak?: number;
+  streak_days?: number;
+  last_claim_date?: string;
+  referral_code?: string;
+  referred_by?: string;
+  chat_background?: ChatBackground;
+  character_moods?: Record<string, CharacterMood>;
   isAuthenticated: boolean;
   isVerified: boolean;
   customCharacters?: Character[];
@@ -102,6 +109,20 @@ export interface ModelConfig {
 export type RelationshipPhase = 'meeting' | 'acquaintance' | 'flirt' | 'intimate' | 'deep_trust';
 
 export type VisualTheme = 'casual' | 'intimate' | 'dominant' | 'romantic' | 'playful';
+
+export type ThemeMode = 'dark' | 'light' | 'warm';
+
+export type CharacterMood = 'verliefd' | 'dominant' | 'speels' | 'romantisch' | 'intiem';
+
+export type ChatBackground = 'default' | 'stars' | 'gradient-purple' | 'gradient-pink' | 'solid';
+
+export interface LeaderboardEntry {
+  order: number;
+  username: string;
+  storiesCreated: number;
+  creditsSpent: number;
+  streakDays: number;
+}
 
 export type TypingIndicatorState = 
   | 'thinking' 

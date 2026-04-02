@@ -1,35 +1,231 @@
 {
   "sidebar": {
-    "credits": "CR", "vip_member": "VIP MEMBER", "start_trial": "START 3 DAGEN TRIAL", "audio": "AUDIO", "live_call": "LIVE CALL", "visualizer": "VISUALIZER", "find_video": "VIND VIDEO", "chats": "CHATS", "no_chats": "Nog geen chats...", "stories": "JOUW VERHALEN", "no_stories": "Nog geen verhalen...", "discover": "ONTDEK", "chat": "CHAT", "story": "VERHAAL", "offers": "LUXE AANBIEDINGEN", "solo_coach": "SOLO COACH"
+    "credits": "CR",
+    "vip_member": "VIP MEMBER",
+    "start_trial": "START 3 DAGEN TRIAL",
+    "audio": "AUDIO",
+    "live_call": "LIVE CALL",
+    "visualizer": "VISUALIZER",
+    "find_video": "VIND VIDEO",
+    "chats": "CHATS",
+    "no_chats": "Nog geen chats...",
+    "stories": "JOUW VERHALEN",
+    "no_stories": "Nog geen verhalen...",
+    "discover": "ONTDEK",
+    "chat": "CHAT",
+    "story": "VERHAAL",
+    "offers": "LUXE AANBIEDINGEN",
+    "solo_coach": "SOLO COACH"
   },
   "gallery": {
-    "title": "Partner Galerij", "subtitle": "Selecteer je metgezel(len)", "online": "ONLINE", "own_creation": "EIGEN CREATIE", "connect": "MAAK CONTACT", "start_group": "START GROEPSCHAT"
+    "title": "Partner Galerij",
+    "subtitle": "Selecteer je metgezel(len)",
+    "online": "ONLINE",
+    "own_creation": "EIGEN CREATIE",
+    "connect": "MAAK CONTACT",
+    "start_group": "START GROEPSCHAT"
   },
   "chat": {
-    "type_message": "Typ je bericht...", "listening": "Luisteren...", "gift_sent": "CADEAU VERSTUURD", "lust": "LUST", "settings": { "title": "CHAT INSTELLINGEN", "tone": "EMOTIONELE TOON", "voice_mod": "STEM MODIFICATIE", "speed": "Snelheid", "pitch": "Toonhoogte", "deep": "Diep", "high": "Hoog", "intensity": "INTENSITEIT" }, "dice": "ROL DE DOBBELSTEEN (1 CR)"
+    "type_message": "Typ je bericht...",
+    "listening": "Luisteren...",
+    "gift_sent": "CADEAU VERSTUURD",
+    "lust": "LUST",
+    "settings": {
+      "title": "CHAT INSTELLINGEN",
+      "tone": "EMOTIONELE TOON",
+      "voice_mod": "STEM MODIFICATIE",
+      "speed": "Snelheid",
+      "pitch": "Toonhoogte",
+      "deep": "Diep",
+      "high": "Hoog",
+      "intensity": "INTENSITEIT"
+    },
+    "dice": "ROL DE DOBBELSTEEN (1 CR)"
   },
   "story": {
-    "title": "SCENARIO ATELIER", "subtitle": "NIEUW AVONTUUR STARTEN", "step1": "STAP 1: KIES EEN SFEER", "step2": "STAP 2: LOCATIE & PARTNERS", "step3": "STAP 3: HULPMIDDELEN", "solo_mode": "SOLO MODUS ACTIEF: Geen partners, puur eigen genot.", "next_step": "KIES JE KINKS", "back": "TERUG", "quick_pick": "SNELKIEZEN", "specific_wishes": "SPECIFIEKE WENSEN", "placeholder": "Typ hier jouw specifieke fantasie, items, of scenario...", "start_adventure": "START HET AVONTUUR", "generating": "DE LUST WORDT GESCHREVEN...", "what_next": "WAT DOET DE MAN NU?", "save": "OPSLAAN", "saved": "OK", "new": "NIEUW", "intensity_label": "INTENSITEIT"
+    "title": "SCENARIO ATELIER",
+    "subtitle": "NIEUW AVONTUUR STARTEN",
+    "step1": "STAP 1: KIES EEN SFEER",
+    "step2": "STAP 2: LOCATIE & PARTNERS",
+    "step3": "STAP 3: HULPMIDDELEN",
+    "solo_mode": "SOLO MODUS ACTIEF: Geen partners, puur eigen genot.",
+    "next_step": "KIES JE KINKS",
+    "back": "TERUG",
+    "quick_pick": "SNELKIEZEN",
+    "specific_wishes": "SPECIFIEKE WENSEN",
+    "placeholder": "Typ hier jouw specifieke fantasie, items, of scenario...",
+    "start_adventure": "START HET AVONTUUR",
+    "generating": "DE LUST WORDT GESCHREVEN...",
+    "what_next": "WAT DOET DE MAN NU?",
+    "save": "OPSLAAN",
+    "saved": "OK",
+    "new": "NIEUW",
+    "intensity_label": "INTENSITEIT"
   },
   "live": {
-    "vip_label": "VIP VIDEO VERBINDING (VROUWELIJK)", "start_call": "START LIVE CALL", "connecting": "BEZIG MET VERBINDEN...", "hd_conn": "HD VERBINDING"
+    "vip_label": "VIP VIDEO VERBINDING (VROUWELIJK)",
+    "start_call": "START LIVE CALL",
+    "connecting": "BEZIG MET VERBINDEN...",
+    "hd_conn": "HD VERBINDING"
   },
   "coach": {
-    "title": "SOLO COACH NOVA", "subtitle": "INTIEME BEGELEIDING & ADVIES", "start": "START SESSIE", "connecting": "VERBINDING MAKEN MET NOVA...", "active": "LUISTEREN...", "desc": "Nova is jouw persoonlijke gids. Ze leert wat jij lekker vindt en geeft real-time instructies om je solo-sessies intenser te maken."
+    "title": "SOLO COACH NOVA",
+    "subtitle": "INTIEME BEGELEIDING & ADVIES",
+    "start": "START SESSIE",
+    "connecting": "VERBINDING MAKEN MET NOVA...",
+    "active": "LUISTEREN...",
+    "desc": "Nova is jouw persoonlijke gids. Ze leert wat jij lekker vindt en geeft real-time instructies om je solo-sessies intenser te maken."
   },
   "imagine": {
-    "title": "VISUALISATIE", "subtitle": "BEELDEN BIJ JE STOUTSTE WOORDEN", "placeholder": "Beschrijf je verlangen...", "generate": "GENEREER (5 CR)", "visualizing": "VISUALISEREN...", "no_images": "NOG GEEN BEELDEN GEGENEREERD"
+    "title": "VISUALISATIE",
+    "subtitle": "BEELDEN BIJ JE STOUTSTE WOORDEN",
+    "placeholder": "Beschrijf je verlangen...",
+    "generate": "GENEREER (5 CR)",
+    "visualizing": "VISUALISEREN...",
+    "no_images": "NOG GEEN BEELDEN GEGENEREERD"
   },
   "creator": {
-    "title": "PARTNER ATELIER", "subtitle": "MANIFESTEER JE IDEALE METGEZEL", "name_label": "NAAM", "name_placeholder": "Naam...", "base_label": "KIES BASIS", "desc_placeholder": "Beschrijf haar verlangens...", "manifest": "MANIFESTEER (10 CR)", "synthesizing": "SYNTHETISEREN...", "continue": "GA DOOR"
+    "title": "PARTNER ATELIER",
+    "subtitle": "MANIFESTEER JE IDEALE METGEZEL",
+    "name_label": "NAAM",
+    "name_placeholder": "Naam...",
+    "base_label": "KIES BASIS",
+    "desc_placeholder": "Beschrijf haar verlangens...",
+    "manifest": "MANIFESTEER (10 CR)",
+    "synthesizing": "SYNTHETISEREN...",
+    "continue": "GA DOOR"
   },
   "video": {
-    "title": "VIDEO FINDER", "subtitle": "VIND JE ULTIEME PASSIE", "placeholder": "Typ keywords...", "search_btn": "ZOEK VIDEOS"
+    "title": "VIDEO FINDER",
+    "subtitle": "VIND JE ULTIEME PASSIE",
+    "placeholder": "Typ keywords...",
+    "search_btn": "ZOEK VIDEOS"
   },
   "paywall": {
-    "premium_access": "PREMIUM TOEGANG", "hook": "Ga dieper in je", "fantasy": "Fantasie", "default_reason": "Ontgrendel de volledige ervaring...", "benefit1": "Onbeperkt Chatten & Roleplay", "benefit2": "Ontvang & Genereer Erotische Fotos", "benefit3": "Real-time Live Video Calls", "choose_access": "KIES JE TOEGANG", "most_popular": "MEEST GEKOZEN", "vip_sub": "VIP MEMBERSHIP", "per_month": "/ maand", "vip_desc": "Volledige toegang, onbeperkt berichten, 500 beeld credits p/m.", "start_trial": "START GRATIS TRIAL (3 DAGEN)", "credits": "Credits", "footer": "DISCREET • OP ELK MOMENT OPZEGBAAR • 18+ ONLY"
+    "premium_access": "PREMIUM TOEGANG",
+    "hook": "Ga dieper in je",
+    "fantasy": "Fantasie",
+    "default_reason": "Ontgrendel de volledige ervaring...",
+    "benefit1": "Onbeperkt Chatten & Roleplay",
+    "benefit2": "Ontvang & Genereer Erotische Fotos",
+    "benefit3": "Real-time Live Video Calls",
+    "choose_access": "KIES JE TOEGANG",
+    "most_popular": "MEEST GEKOZEN",
+    "vip_sub": "VIP MEMBERSHIP",
+    "per_month": "/ maand",
+    "vip_desc": "Volledige toegang, onbeperkt berichten, 500 beeld credits p/m.",
+    "start_trial": "START GRATIS TRIAL (3 DAGEN)",
+    "credits": "Credits",
+    "footer": "DISCREET • OP ELK MOMENT OPZEGBAAR • 18+ ONLY"
   },
   "intensity": {
-    "normal": "NORMAAL", "high": "HOOG", "extreme": "EXTREEM"
+    "normal": "NORMAAL",
+    "high": "HOOG",
+    "extreme": "EXTREEM"
+  },
+  "features": {
+    "features": {
+      "daily_streak": {
+        "title": "Dagelijkse Bonus",
+        "desc": "Je bent terug! Hier zijn je gratis credits voor vandaag.",
+        "current_streak": "Huidige Streak",
+        "reward": "Beloning",
+        "claim": "Claim Beloning",
+        "days": "Dagen",
+        "reward_claimed": "Beloning geclaimd! +{amount} credits",
+        "day_1": "Dag 1",
+        "day_7": "Dag 7",
+        "day_30": "Dag 30",
+        "milestone": "Mijlpaal bereikt!"
+      },
+      "referral": {
+        "title": "Vrienden Uitnodigen",
+        "subtitle": "Deel je code en verdien credits",
+        "your_code": "Jouw Code",
+        "copy": "Kopieer",
+        "copied": "Gekopieerd!",
+        "enter_code": "Voer referral code in",
+        "apply": "Toepassen",
+        "both_earn": "Jullie verdienen beide 50 credits!",
+        "invalid_code": "Ongeldige code",
+        "share": "Delen"
+      },
+      "chat_topics": {
+        "title": "Start een gesprek",
+        "tell_about_day": "Vertel over je dag",
+        "what_wore_today": "Wat droeg je vandaag",
+        "favorite_moment": "Favoriet moment tot nu toe",
+        "secret_fantasy": "Geheime fantasie"
+      },
+      "story_export": {
+        "title": "Verhaal Exporteren",
+        "download_pdf": "Download als PDF",
+        "copy_text": "Kopieer als Tekst",
+        "copied": "Gekopieerd naar clipboard!",
+        "exported": "Verhaal geëxporteerd!"
+      },
+      "character_mood": {
+        "title": "Sfeer",
+        "verliefd": "Verliefd",
+        "dominant": "Dominant",
+        "speels": "Speels",
+        "romantisch": "Romantisch",
+        "intiem": "Intiem",
+        "select_mood": "Kies sfeer"
+      },
+      "warm_theme": {
+        "title": "Thema",
+        "dark": "Donker",
+        "light": "Licht",
+        "warm": "Warm"
+      },
+      "chat_background": {
+        "title": "Chat Achtergrond",
+        "default": "Standaard",
+        "stars": "Sterren",
+        "gradient_purple": "Paarse Gradient",
+        "gradient_pink": "Roze Gradient",
+        "solid": "Effen Kleur"
+      },
+      "personal_stats": {
+        "title": "Jouw Stats",
+        "favorite_character": "Favoriete Karakter",
+        "total_words": "Totale Woorden Gegenereerd",
+        "stories_created": "Verhalen Gemaakt",
+        "time_spent": "Tijd Besteed (schatting)",
+        "minutes": "min",
+        "messages": "berichten"
+      },
+      "photo_upload": {
+        "title": "Voeg Eigen Foto Toe",
+        "upload": "Upload Foto",
+        "generating": "Verhaal genereren van foto...",
+        "preview": "Voorbeeld",
+        "remove": "Verwijder"
+      },
+      "leaderboard": {
+        "title": "Leaderboard",
+        "stories": "Verhalen Gemaakt",
+        "credits_spent": "Credits Besteed",
+        "streak": "Streak Dagen",
+        "rank": "Rank",
+        "user": "Gebruiker",
+        "empty": "Nog geen data"
+      }
+    },
+    "story_export": {
+      "title": "Verhaal Exporteren",
+      "export_pdf": "Download als PDF",
+      "export_copy": "Kopieer als Tekst",
+      "copied": "Gekopieerd!",
+      "exported": "Verhaal geëxporteerd!"
+    },
+    "photo_upload": {
+      "title": "Voeg Eigen Foto Toe",
+      "upload": "Upload Foto",
+      "generating": "Verhaal genereren van foto...",
+      "preview": "Voorbeeld",
+      "remove": "Verwijder"
+    }
   }
 }

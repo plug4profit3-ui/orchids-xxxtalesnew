@@ -1,35 +1,231 @@
 {
   "sidebar": {
-    "credits": "CR", "vip_member": "MEMBRE VIP", "start_trial": "ESSAI 3 JOURS", "audio": "AUDIO", "live_call": "APPEL LIVE", "visualizer": "VISUALISEUR", "find_video": "TROUVER VIDÉO", "chats": "CHATS", "no_chats": "Pas encore de chats...", "stories": "VOS HISTOIRES", "no_stories": "Pas encore d'histoires...", "discover": "DÉCOUVRIR", "chat": "CHAT", "story": "HISTOIRE", "offers": "OFFRES DE LUXE", "solo_coach": "SOLO COACH"
+    "credits": "CR",
+    "vip_member": "MEMBRE VIP",
+    "start_trial": "ESSAI 3 JOURS",
+    "audio": "AUDIO",
+    "live_call": "APPEL LIVE",
+    "visualizer": "VISUALISEUR",
+    "find_video": "TROUVER VIDÉO",
+    "chats": "CHATS",
+    "no_chats": "Pas encore de chats...",
+    "stories": "VOS HISTOIRES",
+    "no_stories": "Pas encore d'histoires...",
+    "discover": "DÉCOUVRIR",
+    "chat": "CHAT",
+    "story": "HISTOIRE",
+    "offers": "OFFRES DE LUXE",
+    "solo_coach": "SOLO COACH"
   },
   "gallery": {
-    "title": "Galerie Partenaires", "subtitle": "Choisissez vos compagnes", "online": "EN LIGNE", "own_creation": "CRÉATION PROPRE", "connect": "CONNECTER", "start_group": "GROUPE"
+    "title": "Galerie Partenaires",
+    "subtitle": "Choisissez vos compagnes",
+    "online": "EN LIGNE",
+    "own_creation": "CRÉATION PROPRE",
+    "connect": "CONNECTER",
+    "start_group": "GROUPE"
   },
   "chat": {
-    "type_message": "Écrivez votre message...", "listening": "Écoute...", "gift_sent": "CADEAU ENVOYÉ", "lust": "DÉSIR", "settings": { "title": "PARAMÈTRES CHAT", "tone": "TON ÉMOTIONNEL", "voice_mod": "MODIFICATION VOIX", "speed": "Vitesse", "pitch": "Hauteur", "deep": "Grave", "high": "Aigu", "intensity": "INTENSITÉ" }, "dice": "LANCER DÉS (1 CR)"
+    "type_message": "Écrivez votre message...",
+    "listening": "Écoute...",
+    "gift_sent": "CADEAU ENVOYÉ",
+    "lust": "DÉSIR",
+    "settings": {
+      "title": "PARAMÈTRES CHAT",
+      "tone": "TON ÉMOTIONNEL",
+      "voice_mod": "MODIFICATION VOIX",
+      "speed": "Vitesse",
+      "pitch": "Hauteur",
+      "deep": "Grave",
+      "high": "Aigu",
+      "intensity": "INTENSITÉ"
+    },
+    "dice": "LANCER DÉS (1 CR)"
   },
   "story": {
-    "title": "ATELIER SCÉNARIO", "subtitle": "NOUVELLE AVENTURE", "step1": "ÉTAPE 1: AMBIANCE", "step2": "ÉTAPE 2: LIEU & PARTENAIRES", "step3": "ÉTAPE 3: JOUETS", "solo_mode": "MODE SOLO: Pas de partenaires.", "next_step": "CHOISIR KINKS", "back": "RETOUR", "quick_pick": "CHOIX RAPIDE", "specific_wishes": "DÉSIRS SPÉCIFIQUES", "placeholder": "Décrivez votre fantasme...", "start_adventure": "LANCER AVENTURE", "generating": "L'HISTOIRE S'ÉCRIT...", "what_next": "QUE FAIT L'HOMME ?", "save": "SAUVER", "saved": "OK", "new": "NOUVEAU", "intensity_label": "INTENSITÉ"
+    "title": "ATELIER SCÉNARIO",
+    "subtitle": "NOUVELLE AVENTURE",
+    "step1": "ÉTAPE 1: AMBIANCE",
+    "step2": "ÉTAPE 2: LIEU & PARTENAIRES",
+    "step3": "ÉTAPE 3: JOUETS",
+    "solo_mode": "MODE SOLO: Pas de partenaires.",
+    "next_step": "CHOISIR KINKS",
+    "back": "RETOUR",
+    "quick_pick": "CHOIX RAPIDE",
+    "specific_wishes": "DÉSIRS SPÉCIFIQUES",
+    "placeholder": "Décrivez votre fantasme...",
+    "start_adventure": "LANCER AVENTURE",
+    "generating": "L'HISTOIRE S'ÉCRIT...",
+    "what_next": "QUE FAIT L'HOMME ?",
+    "save": "SAUVER",
+    "saved": "OK",
+    "new": "NOUVEAU",
+    "intensity_label": "INTENSITÉ"
   },
   "live": {
-    "vip_label": "CONNEXION VIDÉO VIP (FEMME)", "start_call": "LANCER APPEL", "connecting": "CONNEXION...", "hd_conn": "CONNEXION HD"
+    "vip_label": "CONNEXION VIDÉO VIP (FEMME)",
+    "start_call": "LANCER APPEL",
+    "connecting": "CONNEXION...",
+    "hd_conn": "CONNEXION HD"
   },
   "coach": {
-    "title": "SOLO COACH NOVA", "subtitle": "GUIDANCE INTIME", "start": "DÉMARRER", "connecting": "CONNEXION...", "active": "ÉCOUTE...", "desc": "Nova est votre guide personnel. Elle donne des instructions en temps réel."
+    "title": "SOLO COACH NOVA",
+    "subtitle": "GUIDANCE INTIME",
+    "start": "DÉMARRER",
+    "connecting": "CONNEXION...",
+    "active": "ÉCOUTE...",
+    "desc": "Nova est votre guide personnel. Elle donne des instructions en temps réel."
   },
   "imagine": {
-    "title": "VISUALISATION", "subtitle": "IMAGES POUR VOS MOTS", "placeholder": "Décrivez votre désir...", "generate": "GÉNÉRER (5 CR)", "visualizing": "VISUALISATION...", "no_images": "AUCUNE IMAGE"
+    "title": "VISUALISATION",
+    "subtitle": "IMAGES POUR VOS MOTS",
+    "placeholder": "Décrivez votre désir...",
+    "generate": "GÉNÉRER (5 CR)",
+    "visualizing": "VISUALISATION...",
+    "no_images": "AUCUNE IMAGE"
   },
   "creator": {
-    "title": "CRÉATEUR PARTENAIRE", "subtitle": "MANIFESTEZ VOTRE IDÉAL", "name_label": "NOM", "name_placeholder": "Nom...", "base_label": "BASE", "desc_placeholder": "Décrivez ses désirs...", "manifest": "MANIFESTER (10 CR)", "synthesizing": "SYNTHÈSE...", "continue": "CONTINUER"
+    "title": "CRÉATEUR PARTENAIRE",
+    "subtitle": "MANIFESTEZ VOTRE IDÉAL",
+    "name_label": "NOM",
+    "name_placeholder": "Nom...",
+    "base_label": "BASE",
+    "desc_placeholder": "Décrivez ses désirs...",
+    "manifest": "MANIFESTER (10 CR)",
+    "synthesizing": "SYNTHÈSE...",
+    "continue": "CONTINUER"
   },
   "video": {
-    "title": "CHERCHEUR VIDÉO", "subtitle": "TROUVEZ VOTRE PASSION", "placeholder": "Mots-clés...", "search_btn": "CHERCHER VIDÉOS"
+    "title": "CHERCHEUR VIDÉO",
+    "subtitle": "TROUVEZ VOTRE PASSION",
+    "placeholder": "Mots-clés...",
+    "search_btn": "CHERCHER VIDÉOS"
   },
   "paywall": {
-    "premium_access": "ACCÈS PREMIUM", "hook": "Plongez dans votre", "fantasy": "Fantasme", "default_reason": "Débloquez l'expérience complète...", "benefit1": "Chat & Roleplay illimités", "benefit2": "Photos érotiques générées", "benefit3": "Appels Vidéo en Temps Réel", "choose_access": "CHOISISSEZ VOTRE ACCÈS", "most_popular": "POPULAIRE", "vip_sub": "MEMBRE VIP", "per_month": "/ mois", "vip_desc": "Accès complet, messages illimités, 500 crédits image.", "start_trial": "ESSAI GRATUIT (3 JOURS)", "credits": "Crédits", "footer": "DISCRET • ANNULABLE À TOUT MOMENT • 18+ UNIQUEMENT"
+    "premium_access": "ACCÈS PREMIUM",
+    "hook": "Plongez dans votre",
+    "fantasy": "Fantasme",
+    "default_reason": "Débloquez l'expérience complète...",
+    "benefit1": "Chat & Roleplay illimités",
+    "benefit2": "Photos érotiques générées",
+    "benefit3": "Appels Vidéo en Temps Réel",
+    "choose_access": "CHOISISSEZ VOTRE ACCÈS",
+    "most_popular": "POPULAIRE",
+    "vip_sub": "MEMBRE VIP",
+    "per_month": "/ mois",
+    "vip_desc": "Accès complet, messages illimités, 500 crédits image.",
+    "start_trial": "ESSAI GRATUIT (3 JOURS)",
+    "credits": "Crédits",
+    "footer": "DISCRET • ANNULABLE À TOUT MOMENT • 18+ UNIQUEMENT"
   },
   "intensity": {
-    "normal": "NORMAL", "high": "ÉLEVÉ", "extreme": "EXTRÊME"
+    "normal": "NORMAL",
+    "high": "ÉLEVÉ",
+    "extreme": "EXTRÊME"
+  },
+  "features": {
+    "features": {
+      "daily_streak": {
+        "title": "Täglicher Bonus",
+        "desc": "Du bist zurück! Hier sind deine kostenlosen Credits für heute.",
+        "current_streak": "Aktuelle Serie",
+        "reward": "Belohnung",
+        "claim": "Belohnung Abholen",
+        "days": "Tage",
+        "reward_claimed": "Belohnung abgeholt! +{amount} Credits",
+        "day_1": "Tag 1",
+        "day_7": "Tag 7",
+        "day_30": "Tag 30",
+        "milestone": "Meilenstein erreicht!"
+      },
+      "referral": {
+        "title": "Freunde Einladen",
+        "subtitle": "Teile deinen Code und verdiene Credits",
+        "your_code": "Dein Code",
+        "copy": "Kopieren",
+        "copied": "Kopiert!",
+        "enter_code": "Referral-Code eingeben",
+        "apply": "Anwenden",
+        "both_earn": "Ihr verdient beide 50 Credits!",
+        "invalid_code": "Ungültiger Code",
+        "share": "Teilen"
+      },
+      "chat_topics": {
+        "title": "Gespräch starten",
+        "tell_about_day": "Erzähl mir von deinem Tag",
+        "what_wore_today": "Was hast du heute getragen",
+        "favorite_moment": "Lieblingsmoment bisher",
+        "secret_fantasy": "Geheime Fantasie"
+      },
+      "story_export": {
+        "title": "Geschichte Exportieren",
+        "download_pdf": "Als PDF Herunterladen",
+        "copy_text": "Als Text Kopieren",
+        "copied": "In Zwischenablage kopiert!",
+        "exported": "Geschichte exportiert!"
+      },
+      "character_mood": {
+        "title": "Stimmung",
+        "verliefd": "Verliebt",
+        "dominant": "Dominant",
+        "speels": "Verspielt",
+        "romantisch": "Romantisch",
+        "intiem": "Intim",
+        "select_mood": "Stimmung wählen"
+      },
+      "warm_theme": {
+        "title": "Thema",
+        "dark": "Dunkel",
+        "light": "Hell",
+        "warm": "Warm"
+      },
+      "chat_background": {
+        "title": "Chat Hintergrund",
+        "default": "Standard",
+        "stars": "Sterne",
+        "gradient_purple": "Lila Verlauf",
+        "gradient_pink": "Rosa Verlauf",
+        "solid": "Einfarbig"
+      },
+      "personal_stats": {
+        "title": "Deine Stats",
+        "favorite_character": "Lieblingscharakter",
+        "total_words": "Gesamtwörter Generiert",
+        "stories_created": "Geschichten Erstellt",
+        "time_spent": "Verbrachte Zeit (geschätzt)",
+        "minutes": "Min",
+        "messages": "Nachrichten"
+      },
+      "photo_upload": {
+        "title": "Eigenes Foto Hinzufügen",
+        "upload": "Foto Hochladen",
+        "generating": "Geschichte aus Foto wird generiert...",
+        "preview": "Vorschau",
+        "remove": "Entfernen"
+      },
+      "leaderboard": {
+        "title": "Bestenliste",
+        "stories": "Geschichten Erstellt",
+        "credits_spent": "Credits Ausgegeben",
+        "streak": "Serientage",
+        "rank": "Rang",
+        "user": "Benutzer",
+        "empty": "Noch keine Daten"
+      }
+    },
+    "story_export": {
+      "title": "Export Story",
+      "export_pdf": "Download as PDF",
+      "export_copy": "Copy as Text",
+      "copied": "Copied!",
+      "exported": "Story exported!"
+    },
+    "photo_upload": {
+      "title": "Add Your Photo",
+      "upload": "Upload Photo",
+      "generating": "Generating story from photo...",
+      "preview": "Preview",
+      "remove": "Remove"
+    }
   }
 }

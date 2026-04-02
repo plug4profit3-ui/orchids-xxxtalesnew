@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useRef, useMemo, memo } from 'react';
-import { Character, Language } from '../types';
+import { Character, Language, CharacterMood } from '../types';
 import Icons from './Icon';
 import { getTexts } from '../constants';
 
@@ -14,9 +14,11 @@ interface CharacterSelectorProps {
   language?: Language;
   favoriteIds?: string[];
   onToggleFavorite?: (charId: string) => void;
+  characterMoods?: Record<string, CharacterMood>;
+  onMoodSelect?: (charId: string, mood: CharacterMood) => void;
 }
 
-const CharacterSelector: React.FC<CharacterSelectorProps> = ({ isOpen, onClose, characters, selectedCharacterId, onSelect, onToggleSidebar, language = 'nl', favoriteIds = [], onToggleFavorite }) => {
+const CharacterSelector: React.FC<CharacterSelectorProps> = ({ isOpen, onClose, characters, selectedCharacterId, onSelect, onToggleSidebar, language = 'nl', favoriteIds = [], onToggleFavorite, characterMoods = {}, onMoodSelect }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMultiSelect, setIsMultiSelect] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
@@ -147,6 +149,8 @@ const CharacterSelector: React.FC<CharacterSelectorProps> = ({ isOpen, onClose, 
                       ownText={t.own_creation}
                       isFavorite={favoriteIds.includes(char.id)}
                       onToggleFavorite={onToggleFavorite}
+                      mood={characterMoods?.[char.id]}
+                      onMoodSelect={onMoodSelect ? (mood) => onMoodSelect(char.id, mood) : undefined}
                     />
                   ))
               }
@@ -168,12 +172,21 @@ const CharacterSelector: React.FC<CharacterSelectorProps> = ({ isOpen, onClose, 
   );
 };
 
-const CharacterCard: React.FC<{ char: Character; isSelected: boolean; onSelect: () => void; selectionMode: boolean; connectText: string; onlineText: string; ownText: string; isFavorite?: boolean; onToggleFavorite?: (id: string) => void }> = ({ char, isSelected, onSelect, selectionMode, connectText, onlineText, ownText, isFavorite, onToggleFavorite }) => {
+const CharacterCard: React.FC<{ char: Character; isSelected: boolean; onSelect: () => void; selectionMode: boolean; connectText: string; onlineText: string; ownText: string; isFavorite?: boolean; onToggleFavorite?: (id: string) => void; mood?: CharacterMood; onMoodSelect?: (mood: CharacterMood) => void }> = ({ char, isSelected, onSelect, selectionMode, connectText, onlineText, ownText, isFavorite, onToggleFavorite, mood, onMoodSelect }) => {
     const videoRef = useRef<HTMLVideoElement>(null);
     const cardRef = useRef<HTMLDivElement>(null);
     const [isVideoPlaying, setIsVideoPlaying] = useState(false);
     const [isAnimating, setIsAnimating] = useState(false);
     const [isVoicePlaying, setIsVoicePlaying] = useState(false);
+    const [showMoodPicker, setShowMoodPicker] = useState(false);
+    
+    const moods: { id: CharacterMood; icon: string; color: string }[] = [
+      { id: 'verliefd', icon: '💕', color: 'bg-pink-500' },
+      { id: 'dominant', icon: '💪', color: 'bg-red-600' },
+      { id: 'speels', icon: '🎉', color: 'bg-yellow-500' },
+      { id: 'romantisch', icon: '🌹', color: 'bg-rose-500' },
+      { id: 'intiem', icon: '🔥', color: 'bg-orange-500' },
+    ];
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
@@ -245,6 +258,40 @@ const CharacterCard: React.FC<{ char: Character; isSelected: boolean; onSelect: 
             {isFavorite && (
               <div className="absolute top-6 left-6 z-20 bg-gold-500 text-black px-2 py-0.5 rounded-full text-[8px] font-black tracking-widest uppercase">
                 FAV
+              </div>
+            )}
+
+            {/* Mood Badge */}
+            {mood && (
+              <div className="absolute top-6 left-6 z-20 bg-black/60 backdrop-blur-md border border-white/20 px-2 py-0.5 rounded-full text-xs">
+                {moods.find(m => m.id === mood)?.icon || '🎭'}
+              </div>
+            )}
+
+            {/* Mood Selector Button */}
+            {!selectionMode && onMoodSelect && (
+              <div className="absolute bottom-24 right-6 z-30">
+                <button
+                  onClick={(e) => { e.stopPropagation(); setShowMoodPicker(!showMoodPicker); }}
+                  className="p-2 rounded-full bg-black/60 backdrop-blur-md border border-white/20 hover:border-pink-500 transition-all"
+                  title="Select mood"
+                >
+                  <Icons.Heart size={16} className="text-pink-400" />
+                </button>
+                {showMoodPicker && (
+                  <div className="absolute bottom-full right-0 mb-2 flex gap-1 p-2 bg-black/90 backdrop-blur-md rounded-xl border border-white/20 animate-in zoom-in-95 origin-bottom-right">
+                    {moods.map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={(e) => { e.stopPropagation(); onMoodSelect(m.id); setShowMoodPicker(false); }}
+                        className={`p-2 rounded-lg ${mood === m.id ? m.color : 'bg-white/10'} hover:scale-110 transition-transform`}
+                        title={m.id}
+                      >
+                        {m.icon}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 

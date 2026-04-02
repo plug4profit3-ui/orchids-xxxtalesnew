@@ -447,9 +447,54 @@ const SCENARIOS: Record<string, { icon: string; label: string; prompt: string }[
   ],
 };
 
+// Chat Topics - Quick start conversation prompts
+const CHAT_TOPICS: Record<string, { icon: string; label: string; prompt: string }[]> = {
+  nl: [
+    { icon: '📅', label: 'Vertel over je dag', prompt: 'Vertel me over je dag vandaag. Wat is het leukste dat je hebt meegemaakt?' },
+    { icon: '👗', label: 'Wat droeg je vandaag', prompt: 'Wat droeg je vandaag? Ik ben benieuwd naar je stijl.' },
+    { icon: '⭐', label: 'Favoriet moment', prompt: 'Wat is je favoriete moment tot nu toe met mij? Vertel me alles.' },
+    { icon: '🤫', label: 'Geheime fantasie', prompt: 'Ik wil alles weten over je geheime fantasieën. Vertrouw me, ik kan een geheim bewaren...' },
+  ],
+  en: [
+    { icon: '📅', label: 'Tell me about your day', prompt: 'Tell me about your day today. What was the best thing that happened?' },
+    { icon: '👗', label: 'What did you wear today', prompt: 'What did you wear today? I\'m curious about your style.' },
+    { icon: '⭐', label: 'Favorite moment', prompt: 'What\'s your favorite moment so far with me? Tell me everything.' },
+    { icon: '🤫', label: 'Secret fantasy', prompt: 'I want to know all about your secret fantasies. Trust me, I can keep a secret...' },
+  ],
+  de: [
+    { icon: '📅', label: 'Erzähl mir von deinem Tag', prompt: 'Erzähl mir von deinem Tag heute. Was war das Beste, das passiert ist?' },
+    { icon: '👗', label: 'Was hast du heute getragen', prompt: 'Was hast du heute getragen? Ich bin neugierig auf deinen Stil.' },
+    { icon: '⭐', label: 'Lieblingsmoment', prompt: 'Was ist dein Lieblingsmoment bisher mit mir? Erzähl mir alles.' },
+    { icon: '🤫', label: 'Geheime Fantasie', prompt: 'Ich will alles über deine geheimen Fantasien wissen. Vertrau mir, ich kann ein Geheimnis bewahren...' },
+  ],
+  fr: [
+    { icon: '📅', label: 'Parle-moi de ta journée', prompt: 'Parle-moi de ta journée aujourd\'hui. Quelle est la meilleure chose qui se soit passée?' },
+    { icon: '👗', label: 'Qu\'as-tu porté aujourd\'hui', prompt: 'Qu\'as-tu porté aujourd\'hui? Je suis curieuse de ton style.' },
+    { icon: '⭐', label: 'Moment préféré', prompt: 'Quel est ton moment préféré avec moi jusqu\'à présent? Dis-moi tout.' },
+    { icon: '🤫', label: 'Fantasme secret', prompt: 'Je veux tout savoir sur tes fantasmes secrets. Fais-moi confiance, je peux garder un secret...' },
+  ],
+  es: [
+    { icon: '📅', label: 'Cuéntame sobre tu día', prompt: 'Cuéntame sobre tu día hoy. ¿Qué fue lo mejor que pasó?' },
+    { icon: '👗', label: 'Qué llevaste hoy', prompt: 'Qué llevaste puesto hoy? Estoy curiosa por tu estilo.' },
+    { icon: '⭐', label: 'Momento favorito', prompt: 'Cuál es tu momento favorito conmigo hasta ahora? Cuéntame todo.' },
+    { icon: '🤫', label: 'Fantasía secreta', prompt: 'Quiero saber todo sobre tus fantasías secretas. Confía en mí, puedo guardar un secreto...' },
+  ],
+  it: [
+    { icon: '📅', label: 'Raccontami della tua giornata', prompt: 'Raccontami della tua giornata oggi. Cosa è successo di bello?' },
+    { icon: '👗', label: 'Cosa hai indossato oggi', prompt: 'Cosa hai indossato oggi? Sono curiosa del tuo stile.' },
+    { icon: '⭐', label: 'Momento preferito', prompt: 'Qual è il tuo momento preferito con me finora? Raccontami tutto.' },
+    { icon: '🤫', label: 'Fantasie segrete', prompt: 'Voglio sapere tutto delle tue fantasie segrete. Fidati, posso tenere un segreto...' },
+  ],
+};
+
 export const getChatScenarios = (lang: string) => {
   const code = lang.split('-')[0];
   return SCENARIOS[code] || SCENARIOS['en'];
+};
+
+export const getChatTopics = (lang: string) => {
+  const code = lang.split('-')[0];
+  return CHAT_TOPICS[code] || CHAT_TOPICS['en'];
 };
 
 export const AFFILIATE_BANNERS = [

@@ -56,6 +56,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   onToggleTheme,
 }) => {
   const [showLanguages, setShowLanguages] = useState(false);
+  const [showThemeMenu, setShowThemeMenu] = useState(false);
   const [showDealsSheet, setShowDealsSheet] = useState(false);
   const [chatSearch, setChatSearch] = useState('');
   const t = getTexts(language).sidebar;
@@ -69,6 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     { id: AppMode.LIVE,       icon: Icons.Video,          label: t.live_call },
     { id: AppMode.IMAGE_GALLERY, icon: Icons.Images,      label: language === 'nl' ? 'GALERIJ' : language === 'de' ? 'GALERIE' : language === 'fr' ? 'GALERIE' : language === 'es' ? 'GALERÍA' : language === 'it' ? 'GALLERIA' : 'GALLERY' },
     { id: AppMode.USAGE_DASHBOARD, icon: Icons.BarChart3, label: language === 'nl' ? 'VERBRUIK' : language === 'de' ? 'VERBRAUCH' : language === 'fr' ? 'UTILISATION' : language === 'es' ? 'USO' : language === 'it' ? 'UTILIZZO' : 'USAGE' },
+    { id: AppMode.LEADERBOARD, icon: Icons.Trophy,        label: language === 'nl' ? 'RANKING' : language === 'de' ? 'RANG' : language === 'fr' ? 'RANG' : language === 'es' ? 'RANKING' : language === 'it' ? 'CLASSIFICA' : 'RANK' },
     { id: AppMode.SOLO_COACH, icon: Icons.Zap,            label: t.solo_coach },
   ];
 
@@ -110,9 +112,18 @@ const Sidebar: React.FC<SidebarProps> = ({
               {getLanguageFlag(language)}
             </button>
             {onToggleTheme && (
-              <button onClick={onToggleTheme} className="w-7 h-7 rounded-full bg-zinc-900 border border-gold-500/30 flex items-center justify-center text-gold-500 hover:text-white hover:bg-gold-500/20 transition-colors" title={theme === 'dark' ? 'Light mode' : 'Dark mode'}>
-                {theme === 'dark' ? <Icons.Sun size={14} /> : <Icons.Moon size={14} />}
-              </button>
+              <div className="relative">
+                <button onClick={() => setShowThemeMenu(v => !v)} className="w-7 h-7 rounded-full bg-zinc-900 border border-gold-500/30 flex items-center justify-center text-gold-500 hover:text-white hover:bg-gold-500/20 transition-colors" title="Theme">
+                  {theme === 'dark' ? <Icons.Moon size={14} /> : theme === 'light' ? <Icons.Sun size={14} /> : <span className="text-xs">🔥</span>}
+                </button>
+                {showThemeMenu && (
+                  <div className="absolute top-full right-0 mt-2 w-24 bg-black/90 border border-gold-500/30 rounded-xl p-1 z-50 animate-in zoom-in-95 origin-top-right">
+                    <button onClick={() => { onToggleTheme(); setShowThemeMenu(false); }} className="w-full text-left text-[10px] py-1.5 px-2 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white flex items-center gap-2"><Icons.Moon size={12} /> Dark</button>
+                    <button onClick={() => { if (theme !== 'light') onToggleTheme(); setShowThemeMenu(false); }} className="w-full text-left text-[10px] py-1.5 px-2 rounded-lg hover:bg-white/10 text-zinc-400 hover:text-white flex items-center gap-2"><Icons.Sun size={12} /> Light</button>
+                    <button onClick={() => { setTheme('warm'); setShowThemeMenu(false); saveState('theme', 'warm'); }} className="w-full text-left text-[10px] py-1.5 px-2 rounded-lg hover:bg-white/10 text-orange-400 hover:text-orange-300 flex items-center gap-2"><span>🔥</span> Warm</button>
+                  </div>
+                )}
+              </div>
             )}
             <button onClick={onLogout} className="w-7 h-7 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center text-zinc-500 hover:text-white hover:bg-red-900/30 hover:border-red-500/40 transition-colors" title="Logout">
               <Icons.LogOut size={12} />

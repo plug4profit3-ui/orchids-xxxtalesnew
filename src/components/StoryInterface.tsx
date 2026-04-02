@@ -125,6 +125,8 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
   });
 
   const [openSettingsIdx, setOpenSettingsIdx] = useState<number | null>(null);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   
   const scrollRef = useRef<HTMLDivElement>(null);
   const narratorRef = useRef<StoryNarrator | null>(null);
@@ -334,6 +336,50 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
     } finally { setIsGenerating(false); }
   };
 
+  // Export functions
+  const handleExportPDF = () => {
+    const content = turns.map((turn, idx) => `${idx === 0 && turn.title ? turn.title + '\n\n' : ''}${turn.text}`).join('\n\n---\n\n');
+    const fullContent = `${turn.title || 'Story'}\n\n${content}\n\n---\nExported from XXX Tales`;
+    
+    // Create a simple print-friendly window
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>${turn.title || 'Story'} - XXX Tales</title>
+            <style>
+              body { font-family: Georgia, serif; max-width: 800px; margin: 0 auto; padding: 40px; line-height: 1.8; }
+              h1 { color: #D4AF37; }
+              .meta { color: #666; font-size: 12px; margin-top: 20px; }
+            </style>
+          </head>
+          <body>
+            <h1>${turn.title || 'Untitled Story'}</h1>
+            ${turns.map((turn, idx) => `<p>${turn.text.replace(/\n/g, '<br>')}</p>`).join('<br>')}
+            <div class="meta">Exported from XXX Tales on ${new Date().toLocaleString()}</div>
+            <script>window.onload = function() { window.print(); }</script>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+    }
+    setShowExportMenu(false);
+  };
+
+  const handleCopyText = async () => {
+    const content = turns.map((turn, idx) => `${idx === 0 && turn.title ? turn.title + '\n\n' : ''}${turn.text}`).join('\n\n---\n\n');
+    const fullContent = `${turn.title || 'Story'}\n\n${content}\n\n---\nExported from XXX Tales`;
+    
+    try {
+      await navigator.clipboard.writeText(fullContent);
+      alert(t.copied || 'Copied to clipboard!');
+    } catch (e) {
+      console.error('Copy failed:', e);
+    }
+    setShowExportMenu(false);
+  };
+
   const handleBackToSetup = () => {
       narratorRef.current?.stop();
       if (onCreateNew) onCreateNew();
@@ -364,6 +410,36 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
             {setupStep === 'details' && (
                 <div className="space-y-8">
                     <div className="flex items-center gap-4"><button onClick={() => setSetupStep('scenario')} className="text-gold-500 p-2 bg-white/5 rounded-full border border-gold-500/20"><Icons.ChevronLeft size={20}/></button><span className="text-white font-black text-xs uppercase tracking-widest">{config.category}</span></div>
+                    
+                    {/* Photo Upload Feature */}
+                    <div className="space-y-4">
+                      <label className="text-[11px] font-black text-pink-500 uppercase tracking-widest block">{t.photo_upload || 'Add Your Photo'}</label>
+                      <div className="flex items-center gap-4">
+                        <label className="flex items-center gap-2 px-4 py-3 bg-pink-500/20 border border-pink-500/30 rounded-xl cursor-pointer hover:bg-pink-500/30 transition-all">
+                          <Icons.Image size={18} className="text-pink-400" />
+                          <span className="text-xs font-bold text-pink-300">{t.upload || 'Upload Photo'}</span>
+                          <input type="file" accept="image/*" className="hidden" onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onload = (ev) => {
+                                setUploadedImage(ev.target?.result as string);
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }} />
+                        </label>
+                        {uploadedImage && (
+                          <div className="relative w-16 h-16 rounded-xl overflow-hidden border border-pink-500/50">
+                            <img src={uploadedImage} alt="Preview" className="w-full h-full object-cover" />
+                            <button onClick={() => setUploadedImage(null)} className="absolute top-0 right-0 p-1 bg-red-500 rounded-bl-lg">
+                              <Icons.X size={12} className="text-white" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
                     <div className="space-y-4"><label className="text-[11px] font-black text-gold-500 uppercase tracking-widest block">{t.step2}</label>
                       <div className="flex gap-3 overflow-x-auto no-scrollbar py-2">
                           {activeLocations.map(loc => (
@@ -459,6 +535,13 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
               <button onClick={handleBackToSetup} className="flex items-center gap-2 p-3 bg-black/60 backdrop-blur-xl rounded-full text-gold-500 border border-gold-500/30 shadow-xl active:scale-90"><Icons.ChevronLeft size={22} /><span className="text-[10px] font-black uppercase tracking-widest hidden md:inline">{t.new}</span></button>
               <div className="flex items-center gap-3">
                 <button onClick={handleRegenerate} disabled={isGenerating || turns.length === 0} className="flex items-center gap-2 px-4 py-3 rounded-full border bg-black/60 backdrop-blur-xl border-white/10 text-zinc-400 hover:text-gold-500 hover:border-gold-500/40 transition-all disabled:opacity-30 active:scale-90"><Icons.RefreshCw size={16} /><span className="text-[10px] font-black uppercase tracking-widest hidden md:inline">Rewrite</span></button>
+                <button onClick={() => setShowExportMenu(!showExportMenu)} disabled={turns.length === 0} className={`flex items-center gap-2 px-5 py-3 rounded-full border transition-all bg-black/60 backdrop-blur-xl border-gold-500/40 text-gold-500 hover:bg-gold-500 hover:text-black disabled:opacity-30`}><Icons.Download size={18} /><span className="text-[11px] font-black uppercase tracking-widest">Export</span></button>
+                {showExportMenu && (
+                  <div className="absolute top-full right-0 mt-3 w-48 bg-black/90 glass-premium border border-gold-500/30 rounded-2xl p-2 z-50 animate-in zoom-in-95 origin-top-right">
+                    <button onClick={handleExportPDF} className="w-full text-left text-xs py-2 px-3 rounded-xl transition-all font-bold text-zinc-300 hover:bg-white/10 hover:text-white flex items-center gap-2"><Icons.FileText size={14} /> {t.export_pdf || 'Export PDF'}</button>
+                    <button onClick={handleCopyText} className="w-full text-left text-xs py-2 px-3 rounded-xl transition-all font-bold text-zinc-300 hover:bg-white/10 hover:text-white flex items-center gap-2"><Icons.Copy size={14} /> {t.export_copy || 'Copy Text'}</button>
+                  </div>
+                )}
                 <button onClick={() => performSave(turns, storyTitle, config)} className={`flex items-center gap-2 px-5 py-3 rounded-full border transition-all ${isSaved ? 'bg-green-600 border-green-600 shadow-[0_0_20px_rgba(34,197,94,0.4)]' : 'bg-black/60 backdrop-blur-xl border-gold-500/40 text-gold-500'}`}>{isSaved ? <Icons.Check size={18} /> : <Icons.Save size={18} />}<span className="text-[11px] font-black uppercase tracking-widest">{isSaved ? t.saved : t.save}</span></button>
               </div>
             </div>
