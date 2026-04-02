@@ -181,7 +181,7 @@ const UsageDashboard: React.FC<UsageDashboardProps> = ({ user, language, onOpenP
         const accessToken = session.data.session?.access_token;
         if (!accessToken) return;
 
-        const res = await fetch('/api/credits/usage?days=30', {
+        const res = await fetch('/api/credits?action=usage&days=30', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (res.ok) {

@@ -100,7 +100,7 @@ async function apiRequest<T>(
 
 // Get current credit balance
 export async function getCreditBalance(): Promise<CreditBalance> {
-  return apiRequest<CreditBalance>('/api/credits/balance');
+  return apiRequest<CreditBalance>('/api/credits');
 }
 
 // Get transaction history
@@ -128,7 +128,7 @@ export async function getTransactions(
 
 // Get available credit packages
 export async function getCreditPackages(): Promise<{ packages: CreditPackage[] }> {
-  const response = await fetch('/api/credits/packages');
+  const response = await fetch('/api/credits?action=packages');
   if (!response.ok) {
     throw new Error('Failed to fetch packages');
   }
@@ -144,7 +144,7 @@ export async function consumeCredits(params: {
   intensity?: 'normal' | 'high' | 'extreme';
   service_type?: 'chat' | 'image' | 'tts';
 }): Promise<ConsumeResponse> {
-  return apiRequest<ConsumeResponse>('/api/credits/consume', 'POST', params);
+  return apiRequest<ConsumeResponse>('/api/credits?action=consume', 'POST', params);
 }
 
 // Adjust credits after actual API usage
@@ -155,7 +155,7 @@ export async function adjustCredits(params: {
   message_id?: string;
   intensity?: 'normal' | 'high' | 'extreme';
 }): Promise<AdjustResponse> {
-  return apiRequest<AdjustResponse>('/api/credits/adjust', 'POST', params);
+  return apiRequest<AdjustResponse>('/api/credits?action=adjust', 'POST', params);
 }
 
 // Refund credits for a failed API call
@@ -163,7 +163,7 @@ export async function refundCredits(params: {
   request_id: string;
   reason?: string;
 }): Promise<{ success: boolean; refunded: number; new_balance: number }> {
-  return apiRequest('/api/credits/refund', 'POST', params);
+  return apiRequest('/api/credits?action=refund', 'POST', params);
 }
 
 // Subscribe to real-time balance updates
