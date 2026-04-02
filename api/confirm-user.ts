@@ -1,5 +1,5 @@
 // Create or sign-in a user via Supabase Admin API (bypasses email rate limits)
-import { supabaseAdmin } from './_supabase';
+import { supabaseAdmin } from './_supabase.js';
 
 export default async function handler(req: any, res: any) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });

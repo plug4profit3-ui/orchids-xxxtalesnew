@@ -11,9 +11,6 @@
     },
     "api/tts.ts": {
       "maxDuration": 30
-    },
-    "api/music.ts": {
-      "maxDuration": 60
     }
   },
   "rewrites": [

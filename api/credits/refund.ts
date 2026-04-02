@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabaseAdmin, requireAuth, addCredits } from '../_supabase';
+import { supabaseAdmin, requireAuth, addCredits } from '../_supabase.js';
 
 /**
  * POST /api/credits/refund

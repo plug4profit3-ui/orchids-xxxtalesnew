@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { requireAuth, logApiUsage, COSTS } from './_supabase';
-import { LIMITS } from './_rateLimit';
+import { requireAuth, logApiUsage, COSTS } from './_supabase.js';
+import { LIMITS } from './_rateLimit.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {

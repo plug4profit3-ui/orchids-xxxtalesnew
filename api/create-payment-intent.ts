@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
-import { supabaseAdmin } from './_supabase';
+import { supabaseAdmin } from './_supabase.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-01-28.clover',
+  apiVersion: '2026-02-25.clover',
 });
 
 const PRICE_MAP: Record<string, { priceId: string; credits: number; amount: number; type: 'one_time' | 'subscription' }> = {

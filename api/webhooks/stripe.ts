@@ -1,9 +1,9 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import Stripe from 'stripe';
-import { supabaseAdmin, addCredits } from '../_supabase';
+import { supabaseAdmin, addCredits } from '../_supabase.js';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2026-01-28.clover',
+  apiVersion: '2026-02-25.clover',
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -98,7 +98,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         if (userId) {
           const isActive = subscription.status === 'active';
-          const expiresAt = new Date(subscription.current_period_end * 1000).toISOString();
+          const expiresAt = new Date((subscription as any).current_period_end * 1000).toISOString();
 
           await supabaseAdmin
             .from('profiles')
@@ -134,9 +134,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       case 'invoice.payment_succeeded': {
         const invoice = event.data.object as Stripe.Invoice;
         // For subscription renewals, grant monthly VIP credits
-        if (invoice.subscription && invoice.billing_reason === 'subscription_cycle') {
+        const invoiceSubscription = (invoice as any).subscription;
+        if (invoiceSubscription && invoice.billing_reason === 'subscription_cycle') {
           const subscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string
+            invoiceSubscription as string
           );
           const userId = subscription.metadata?.userId;
 
@@ -145,7 +146,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             await addCredits(userId, 400, 'vip_monthly', {
               subscription_id: subscription.id,
               invoice_id: invoice.id,
-              period_end: new Date(subscription.current_period_end * 1000).toISOString(),
+              period_end: new Date((subscription as any).current_period_end * 1000).toISOString(),
             });
             console.log(`🎁 Granted 400 VIP monthly credits to ${userId}`);
           }

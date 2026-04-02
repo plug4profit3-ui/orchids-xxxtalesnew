@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabaseAdmin } from '../_supabase';
+import { supabaseAdmin } from '../_supabase.js';
 
 /**
  * GET /api/credits/packages
