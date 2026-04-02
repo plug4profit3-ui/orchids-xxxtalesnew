@@ -141,7 +141,7 @@ const ReferralsSection: React.FC<ReferralsSectionProps> = ({ userId, language })
         const accessToken = session.data.session?.access_token;
         if (!accessToken) return;
 
-        const res = await fetch('/api/referrals/code', {
+        const res = await fetch('/api/referrals', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (res.ok) {
@@ -175,7 +175,7 @@ const ReferralsSection: React.FC<ReferralsSectionProps> = ({ userId, language })
       const accessToken = session.data.session?.access_token;
       if (!accessToken) return;
 
-      const res = await fetch('/api/referrals/apply', {
+      const res = await fetch('/api/referrals', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -190,7 +190,7 @@ const ReferralsSection: React.FC<ReferralsSectionProps> = ({ userId, language })
         setMessage({ type: 'success', text: t.bonus_received });
         setReferralCode('');
         // Refresh data
-        const res = await fetch('/api/referrals/code', {
+        const res = await fetch('/api/referrals', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (res.ok) {

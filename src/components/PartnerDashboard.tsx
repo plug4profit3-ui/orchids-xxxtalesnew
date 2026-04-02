@@ -117,7 +117,7 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ language }) => {
         if (!accessToken) return;
 
         // Get user's partner code from profile
-        const res = await fetch('/api/partners/code', {
+        const res = await fetch('/api/partners?type=code', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (res.ok) {
@@ -126,7 +126,7 @@ const PartnerDashboard: React.FC<PartnerDashboardProps> = ({ language }) => {
         }
 
         // Get partner stats from API (simulated for demo)
-        const statsRes = await fetch('/api/partners/stats', {
+        const statsRes = await fetch('/api/partners?type=stats', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         if (statsRes.ok) {

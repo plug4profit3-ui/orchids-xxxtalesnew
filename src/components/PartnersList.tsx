@@ -104,7 +104,7 @@ const PartnersList: React.FC<PartnersListProps> = ({ language, onClaimCode, onCl
   useEffect(() => {
     const fetchPartners = async () => {
       try {
-        const res = await fetch('/api/partners/list');
+        const res = await fetch('/api/partners');
         if (res.ok) {
           const data = await res.json();
           setPartners(data.partners || []);

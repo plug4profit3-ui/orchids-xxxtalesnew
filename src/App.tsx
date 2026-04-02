@@ -419,7 +419,7 @@ const App = () => {
                 const accessToken = session.data.session?.access_token;
                 if (!accessToken) return { success: false, error: 'Not authenticated' };
                 
-                const res = await fetch('/api/partners/claim', {
+                const res = await fetch('/api/partners', {
                   method: 'POST',
                   headers: { 
                     'Content-Type': 'application/json',
