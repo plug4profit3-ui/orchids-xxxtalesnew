@@ -10,6 +10,15 @@ interface State {
   error?: Error;
 }
 
+const LABELS: Record<string, { title: string; unknown: string; retry: string }> = {
+  nl: { title: 'Er ging iets mis', unknown: 'Onbekende fout', retry: 'Opnieuw proberen' },
+  en: { title: 'Something went wrong', unknown: 'Unknown error', retry: 'Try again' },
+  de: { title: 'Etwas ist schiefgegangen', unknown: 'Unbekannter Fehler', retry: 'Erneut versuchen' },
+  fr: { title: 'Quelque chose s\'est mal passé', unknown: 'Erreur inconnue', retry: 'Réessayer' },
+  es: { title: 'Algo salió mal', unknown: 'Error desconocido', retry: 'Intentar de nuevo' },
+  it: { title: 'Qualcosa è andato storto', unknown: 'Errore sconosciuto', retry: 'Riprova' },
+};
+
 class ErrorBoundary extends Component<Props, State> {
   state: State = { hasError: false };
 
@@ -21,20 +30,27 @@ class ErrorBoundary extends Component<Props, State> {
     console.error('[ErrorBoundary]', error, info.componentStack);
   }
 
+  private getLabels() {
+    let lang = 'nl';
+    try { lang = JSON.parse(localStorage.getItem('language') || '"nl"'); } catch {}
+    return LABELS[lang] || LABELS['en'];
+  }
+
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) return this.props.fallback;
+      const t = this.getLabels();
       return (
         <div className="flex flex-col items-center justify-center h-full gap-6 p-8 text-center">
           <div className="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center text-3xl">⚠️</div>
           <div>
-            <h3 className="text-white font-black text-lg mb-2">Er ging iets mis</h3>
-            <p className="text-zinc-400 text-sm mb-4">{this.state.error?.message || 'Onbekende fout'}</p>
+            <h3 className="text-white font-black text-lg mb-2">{t.title}</h3>
+            <p className="text-zinc-400 text-sm mb-4">{this.state.error?.message || t.unknown}</p>
             <button
               onClick={() => this.setState({ hasError: false, error: undefined })}
               className="px-6 py-3 bg-gold-500/20 border border-gold-500/30 rounded-2xl text-gold-400 text-sm font-bold hover:bg-gold-500/30 transition-colors"
             >
-              Opnieuw proberen
+              {t.retry}
             </button>
           </div>
         </div>

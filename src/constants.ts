@@ -191,7 +191,7 @@ export const TEXTS: Record<string, any> = {
       title: "TROVA VIDEO", subtitle: "TROVA LA TUA PASSIONE", placeholder: "Parole chiave...", search_btn: "CERCA VIDEO"
     },
     paywall: {
-      premium_access: "ACCESSO PREMIUM", hook: "Vai a fondo nella tua", fantasy: "Fantasia", default_reason: "Sblocca l'esperienza completa...", benefit1: "Chat & Roleplay illimitati", benefit2: "Ricevi & Genera Foto Erotiche", benefit3: "Videochiamate in Tempo Reale", choose_access: "SCEGLI IL TUO ACCESSO", most_popular: "POPOLARE", vip_sub: "MEMBRESÍA VIP", per_month: "/ mese", vip_desc: "Accesso completo, messaggi illimitati, 500 crediti immagine.", start_trial: "PROVA GRATIS (3 GIORNI)", credits: "Crediti", footer: "DISCRETO • ANNULLABILE SEMPRE • SOLO 18+"
+      premium_access: "ACCESSO PREMIUM", hook: "Vai a fondo nella tua", fantasy: "Fantasia", default_reason: "Sblocca l'esperienza completa...", benefit1: "Chat & Roleplay illimitati", benefit2: "Ricevi & Genera Foto Erotiche", benefit3: "Videochiamate in Tempo Reale", choose_access: "SCEGLI IL TUO ACCESSO", most_popular: "POPOLARE", vip_sub: "ABBONAMENTO VIP", per_month: "/ mese", vip_desc: "Accesso completo, messaggi illimitati, 500 crediti immagine.", start_trial: "PROVA GRATIS (3 GIORNI)", credits: "Crediti", footer: "DISCRETO • ANNULLABILE SEMPRE • SOLO 18+"
     },
     intensity: {
       normal: "NORMALE", high: "ALTA", extreme: "ESTREMA"
@@ -376,7 +376,7 @@ export const LEGAL_CONTENT: Record<string, LegalContent> = {
       { title: "4. Seguridad", content: "Usted es responsable de su cuenta." },
       { title: "5. Tolerancia Cero", content: "PROHIBIDO crear contenido ilegal o Deepfakes.", warningText: "La violación resulta en terminación inmediata." },
       { title: "6. Pagos", content: "Precios en Euros IVA incl." },
-      { title: "7. Responsabilidad", content: "Servizio proporcionado 'tal cual'." }
+      { title: "7. Responsabilidad", content: "Servicio proporcionado 'tal cual'." }
     ]
   }
 };

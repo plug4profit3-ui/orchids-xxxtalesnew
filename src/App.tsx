@@ -522,7 +522,7 @@ const App = () => {
 
       {/* Modals */}
       <PaywallModal isOpen={showPaywall} onClose={() => setShowPaywall(false)} onPurchase={credits.handlePurchase} onStartTrial={credits.handleStartTrial} reason={paywallReason} language={language} userId={user.id} />
-      <DailyRewardModal isOpen={showDailyReward} onClaim={() => { credits.claimDailyReward(dailyRewardAmount); setShowDailyReward(false); }} streak={user.streak || 0} amount={dailyRewardAmount} />
+      <DailyRewardModal isOpen={showDailyReward} onClaim={() => { credits.claimDailyReward(dailyRewardAmount); setShowDailyReward(false); }} streak={user.streak || 0} amount={dailyRewardAmount} language={language} />
 
       {/* Feature 4: Welcome Back Modal */}
       {showWelcomeBack && userActivity && (
@@ -531,6 +531,7 @@ const App = () => {
           lastSession={lastSessionForWelcome}
           onClose={() => setShowWelcomeBack(false)}
           characterName={lastSessionForWelcome?.characterName}
+          language={language}
         />
       )}
       <LegalModal isOpen={showLegal} onClose={() => setShowLegal(false)} initialTab={legalTab} language={language} />
