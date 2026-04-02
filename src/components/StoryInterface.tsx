@@ -620,6 +620,12 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
                     <span className="text-[12px] font-black text-gold-500 uppercase tracking-[0.5em] drop-shadow-lg">{t.generating}</span>
                 </div>
             )}
+            {turns.length > 0 && turns[turns.length-1]?.text?.includes('...') && (
+                <div className="flex flex-col items-center justify-center p-6 m-4 border border-red-500/30 bg-red-500/10 rounded-xl">
+                    <p className="text-red-400 text-sm mb-3">Het verhaal is afgekort. Wil je verder?</p>
+                    <button onClick={handleRegenerate} className="px-6 py-2 bg-gold-500 text-black font-bold rounded-full text-sm">Herschrijf verhaal</button>
+                </div>
+            )}
             <div className="h-[480px]" />
         </div>
         <div className="fixed bottom-0 left-0 right-0 z-[55] pointer-events-none">
@@ -629,13 +635,19 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
                     <div className="max-w-xl mx-auto pb-10 space-y-5">
                         <div className="flex items-center justify-center gap-4 mb-2"><div className="h-px flex-1 bg-gradient-to-r from-transparent to-gold-500/30" /><p className="text-gold-500 text-[11px] font-black uppercase tracking-[0.6em] whitespace-nowrap drop-shadow-lg">{t.what_next}</p><div className="h-px flex-1 bg-gradient-to-l from-transparent to-gold-500/30" /></div>
                         <div className="flex flex-col gap-3 relative z-10">
-                            {turns[turns.length-1]?.choices?.map((c, i) => (
-                                <button key={i} onClick={() => handleNextTurn(c)} className="w-full py-4.5 px-6 rounded-[2.2rem] text-left text-[14px] md:text-[17px] font-bold shadow-2xl flex items-center gap-5 group active:scale-[0.96] border border-gold-500/40 bg-black/85 backdrop-blur-3xl transition-all hover:bg-gold-500 hover:text-black hover:border-white/20">
-                                    <div className="w-10 h-10 rounded-full bg-gold-500 text-black flex items-center justify-center text-[14px] font-black shrink-0 group-hover:bg-black group-hover:text-gold-500 transition-colors shadow-lg">{i + 1}</div>
-                                    <span className="leading-tight drop-shadow-sm flex-1">{c}</span>
-                                    {!user?.isPremium && <span className="text-[9px] text-zinc-500 font-bold ml-auto opacity-70 group-hover:text-black">(120 Cr)</span>}
-                                </button>
-                            ))}
+                            {(() => {
+                                const lastTurn = turns[turns.length-1];
+                                const choices = lastTurn?.choices && lastTurn.choices.length > 0 
+                                    ? lastTurn.choices 
+                                    : ['Ga door met het verhaal', 'Neem even pauze', 'Probeer opnieuw'];
+                                return choices.map((c, i) => (
+                                    <button key={i} onClick={() => i === 2 && !lastTurn?.choices ? handleRegenerate() : handleNextTurn(c)} className="w-full py-4.5 px-6 rounded-[2.2rem] text-left text-[14px] md:text-[17px] font-bold shadow-2xl flex items-center gap-5 group active:scale-[0.96] border border-gold-500/40 bg-black/85 backdrop-blur-3xl transition-all hover:bg-gold-500 hover:text-black hover:border-white/20">
+                                        <div className="w-10 h-10 rounded-full bg-gold-500 text-black flex items-center justify-center text-[14px] font-black shrink-0 group-hover:bg-black group-hover:text-gold-500 transition-colors shadow-lg">{i + 1}</div>
+                                        <span className="leading-tight drop-shadow-sm flex-1">{c}</span>
+                                        {!user?.isPremium && i !== 1 && <span className="text-[9px] text-zinc-500 font-bold ml-auto opacity-70 group-hover:text-black">(120 Cr)</span>}
+                                    </button>
+                                ));
+                            })()}
                         </div>
                     </div>
                 )}
