@@ -693,7 +693,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
       )}
 
       {showSettings && (
-          <div className="absolute top-16 right-4 z-50 w-80 md:w-96 bg-[#0b0b0c] border border-white/10 rounded-2xl p-5 shadow-[0_0_40px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-top-5">
+          <>
+              {/* Backdrop - tap to close (mobile only) */}
+              <div className="fixed inset-0 z-40 bg-black/50 md:hidden" onClick={() => setShowSettings(false)} />
+              <div className="fixed inset-x-0 bottom-0 z-50 md:absolute md:inset-auto md:top-16 md:right-4 md:w-96 bg-[#0b0b0c] border border-white/10 md:rounded-2xl rounded-t-3xl p-5 shadow-[0_0_40px_rgba(0,0,0,0.8)] animate-in slide-in-from-bottom-5 md:slide-in-from-top-5 max-h-[80dvh] overflow-y-auto no-scrollbar">
+                  {/* Drag indicator (mobile only) */}
+                  <div className="w-10 h-1 bg-zinc-700 rounded-full mx-auto mb-3 md:hidden" />
               <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
                   <h3 className="text-gold-500 font-headline font-bold uppercase tracking-widest text-sm">
                       Chat Instellingen
@@ -813,6 +818,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
                    </div>
               </div>
           </div>
+          </>
       )}
 
       {diceResult && (
