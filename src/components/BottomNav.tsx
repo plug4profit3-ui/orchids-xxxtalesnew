@@ -8,13 +8,28 @@ interface BottomNavProps {
   credits: number;
 }
 
+const LABELS: Record<string, string[]> = {
+  nl: ['Ontdek', 'Verhaal', 'Imagine', 'Creëer', 'Video'],
+  en: ['Discover', 'Story', 'Imagine', 'Create', 'Video'],
+  de: ['Entdecken', 'Geschichte', 'Imagine', 'Erstellen', 'Video'],
+  fr: ['Découvrir', 'Histoire', 'Imagine', 'Créer', 'Vidéo'],
+  es: ['Descubrir', 'Historia', 'Imagine', 'Crear', 'Video'],
+  it: ['Scoprire', 'Storia', 'Imagine', 'Crea', 'Video'],
+};
+
 const BottomNav: React.FC<BottomNavProps> = ({ mode, onModeChange, credits }) => {
+  // Detect language from localStorage or default to nl
+  const lang = (() => {
+    try { return JSON.parse(localStorage.getItem('language') || '"nl"'); } catch { return 'nl'; }
+  })();
+  const labels = LABELS[lang] || LABELS['en'];
+
   const tabs = [
-    { id: AppMode.GALLERY, label: 'Ontdek', icon: Icons.Heart },
-    { id: AppMode.STORY, label: 'Verhaal', icon: Icons.BookOpenCheck },
-    { id: AppMode.IMAGINE, label: 'Imagine', icon: Icons.Sparkles },
-    { id: AppMode.CREATOR, label: 'Creëer', icon: Icons.Star },
-    { id: AppMode.VIDEOS, label: 'Video', icon: Icons.Play },
+    { id: AppMode.GALLERY, label: labels[0], icon: Icons.Heart },
+    { id: AppMode.STORY, label: labels[1], icon: Icons.BookOpenCheck },
+    { id: AppMode.IMAGINE, label: labels[2], icon: Icons.Sparkles },
+    { id: AppMode.CREATOR, label: labels[3], icon: Icons.Star },
+    { id: AppMode.VIDEOS, label: labels[4], icon: Icons.Play },
   ];
 
   return (

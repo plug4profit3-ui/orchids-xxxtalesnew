@@ -83,6 +83,11 @@ export interface RoleplayResponse {
   characterId?: string; // ID of the character who spoke
   new_memories?: string[]; // New: Extracted facts from the current interaction
   affection_change?: number; // Added: Change in affection level (-5 to +5)
+  usage?: {
+    promptTokens: number;
+    completionTokens: number;
+    totalTokens: number;
+  };
 }
 
 export interface ModelConfig {

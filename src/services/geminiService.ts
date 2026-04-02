@@ -529,7 +529,15 @@ Rules:
         if (e?.message === 'UNAUTHORIZED') {
           return { text: "Je sessie is verlopen. Log opnieuw in om verhalen te genereren.", choices: ["Vernieuw Pagina"] };
         }
-        return { text: "De passie neemt over en woorden schieten tekort...", choices: ["Ga door"] };
+        const fallbackTexts: Record<string, { text: string; choices: string[] }> = {
+          nl: { text: "De passie neemt over en woorden schieten tekort...", choices: ["Ga door"] },
+          en: { text: "Passion takes over and words fail...", choices: ["Continue"] },
+          de: { text: "Die Leidenschaft übernimmt und Worte versagen...", choices: ["Weiter"] },
+          fr: { text: "La passion l'emporte et les mots manquent...", choices: ["Continuer"] },
+          es: { text: "La pasión toma el control y las palabras faltan...", choices: ["Continuar"] },
+          it: { text: "La passione prende il sopravvento e le parole mancano...", choices: ["Continua"] },
+        };
+        return fallbackTexts[language] || fallbackTexts['en'];
       }
   }
 

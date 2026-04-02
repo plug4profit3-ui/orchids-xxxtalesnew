@@ -50,7 +50,10 @@ const Sidebar: React.FC<SidebarProps> = ({
   activeSessionId,
   activeStoryId,
   onResetActiveStory,
-  onOpenLegal
+  onOpenLegal,
+  onOpenPaywall,
+  theme,
+  onToggleTheme,
 }) => {
   const [showLanguages, setShowLanguages] = useState(false);
   const [showDealsSheet, setShowDealsSheet] = useState(false);

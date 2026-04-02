@@ -413,6 +413,38 @@ const SCENARIOS: Record<string, { icon: string; label: string; prompt: string }[
     { icon: '🚗', label: 'Backseat', prompt: 'We are sitting in the backseat of a car at a secluded parking spot. It is dark outside...' },
     { icon: '🧖', label: 'Spa', prompt: 'We are together in a private spa with candlelight and soft music. The warm water embraces us...' },
   ],
+  de: [
+    { icon: '🏨', label: 'Hotelzimmer', prompt: 'Wir sind zusammen in einem luxuriösen Hotelzimmer mit Stadtblick. Die Atmosphäre ist intim und verführerisch...' },
+    { icon: '🏖️', label: 'Strand', prompt: 'Wir sind zusammen an einem einsamen Strand bei Sonnenuntergang. Die warme Brise streichelt unsere Haut...' },
+    { icon: '🚿', label: 'Dusche', prompt: 'Wir stehen zusammen unter einer warmen Dusche. Der Dampf füllt das Badezimmer...' },
+    { icon: '🛏️', label: 'Schlafzimmer', prompt: 'Wir liegen zusammen im Bett an einem faulen Sonntagmorgen. Die Laken sind weich und warm...' },
+    { icon: '🚗', label: 'Rücksitz', prompt: 'Wir sitzen zusammen auf dem Rücksitz eines Autos an einem abgelegenen Parkplatz. Es ist dunkel draußen...' },
+    { icon: '🧖', label: 'Spa', prompt: 'Wir sind zusammen in einem privaten Spa mit Kerzenlicht und sanfter Musik. Das warme Wasser umarmt uns...' },
+  ],
+  fr: [
+    { icon: '🏨', label: "Chambre d'hôtel", prompt: "Nous sommes ensemble dans une chambre d'hôtel luxueuse avec vue sur la ville. L'atmosphère est intime et séduisante..." },
+    { icon: '🏖️', label: 'Plage', prompt: 'Nous sommes sur une plage déserte au coucher du soleil. La brise caresse notre peau...' },
+    { icon: '🚿', label: 'Douche', prompt: 'Nous sommes sous une douche chaude ensemble. La vapeur remplit la salle de bain...' },
+    { icon: '🛏️', label: 'Chambre', prompt: 'Nous sommes au lit ensemble un dimanche matin paresseux. Les draps sont doux et chauds...' },
+    { icon: '🚗', label: 'Banquette', prompt: 'Nous sommes assis sur la banquette arrière d une voiture dans un parking isolé. Il fait noir dehors...' },
+    { icon: '🧖', label: 'Spa', prompt: 'Nous sommes ensemble dans un spa privé avec des bougies et de la musique douce. L eau chaude nous enveloppe...' },
+  ],
+  es: [
+    { icon: '🏨', label: 'Habitación', prompt: 'Estamos juntos en una habitación de hotel de lujo con vista a la ciudad. El ambiente es íntimo y seductor...' },
+    { icon: '🏖️', label: 'Playa', prompt: 'Estamos en una playa desierta al atardecer. La brisa cálida acaricia nuestra piel...' },
+    { icon: '🚿', label: 'Ducha', prompt: 'Estamos juntos bajo una ducha caliente. El vapor llena el baño...' },
+    { icon: '🛏️', label: 'Dormitorio', prompt: 'Estamos en la cama un domingo por la mañana. Las sábanas son suaves y calientes...' },
+    { icon: '🚗', label: 'Asiento trasero', prompt: 'Estamos sentados en el asiento trasero de un auto en un estacionamiento apartado. Está oscuro afuera...' },
+    { icon: '🧖', label: 'Spa', prompt: 'Estamos juntos en un spa privado con luz de velas y música suave. El agua caliente nos abraza...' },
+  ],
+  it: [
+    { icon: '🏨', label: 'Camera d\'hotel', prompt: 'Siamo insieme in una camera d\'hotel di lusso con vista sulla città. L\'atmosfera è intima e seducente...' },
+    { icon: '🏖️', label: 'Spiaggia', prompt: 'Siamo su una spiaggia deserta al tramonto. La brezza calda accarezza la nostra pelle...' },
+    { icon: '🚿', label: 'Doccia', prompt: 'Siamo insieme sotto una doccia calda. Il vapore riempie il bagno...' },
+    { icon: '🛏️', label: 'Camera da letto', prompt: 'Siamo a letto insieme in una pigra domenica mattina. Le lenzuola sono morbide e calde...' },
+    { icon: '🚗', label: 'Sedile posteriore', prompt: 'Siamo seduti sul sedile posteriore di un\'auto in un parcheggio isolato. È buio fuori...' },
+    { icon: '🧖', label: 'Spa', prompt: 'Siamo insieme in una spa privata con candele e musica dolce. L\'acqua calda ci avvolge...' },
+  ],
 };
 
 export const getChatScenarios = (lang: string) => {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Language, UserProfile } from '../types';
+import { supabase } from '../services/supabase';
 import Icons from './Icon';
 
 interface UsageDashboardProps {
@@ -76,6 +77,86 @@ const LABELS: Record<string, any> = {
     credits: 'credits',
     daily_free: 'Daily free',
   },
+  de: {
+    title: 'Dein Verbrauch',
+    subtitle: 'Übersicht deiner Credits und Aktivität',
+    balance: 'Aktuelles Guthaben',
+    spent: 'Verbraucht',
+    purchased: 'Gekauft',
+    refunded: 'Erstattet',
+    breakdown: 'Aufteilung',
+    chat: 'Chat',
+    image: 'Bilder',
+    tts: 'Stimme',
+    story: 'Geschichten',
+    gift: 'Geschenke',
+    recent: 'Letzte Transaktionen',
+    no_data: 'Noch keine Daten',
+    buy_credits: 'Credits Kaufen',
+    per_day: 'pro Tag',
+    credits: 'Credits',
+    daily_free: 'Tägliche Gratis',
+  },
+  fr: {
+    title: 'Votre Utilisation',
+    subtitle: 'Aperçu de vos crédits et activités',
+    balance: 'Solde Actuel',
+    spent: 'Dépensé',
+    purchased: 'Acheté',
+    refunded: 'Remboursé',
+    breakdown: 'Répartition',
+    chat: 'Chat',
+    image: 'Images',
+    tts: 'Voix',
+    story: 'Histoires',
+    gift: 'Cadeaux',
+    recent: 'Transactions Récentes',
+    no_data: 'Pas encore de données',
+    buy_credits: 'Acheter Crédits',
+    per_day: 'par jour',
+    credits: 'crédits',
+    daily_free: 'Gratuit quotidien',
+  },
+  es: {
+    title: 'Tu Uso',
+    subtitle: 'Resumen de tus créditos y actividad',
+    balance: 'Saldo Actual',
+    spent: 'Gastado',
+    purchased: 'Comprado',
+    refunded: 'Reembolsado',
+    breakdown: 'Desglose',
+    chat: 'Chat',
+    image: 'Imágenes',
+    tts: 'Voz',
+    story: 'Historias',
+    gift: 'Regalos',
+    recent: 'Transacciones Recientes',
+    no_data: 'Sin datos aún',
+    buy_credits: 'Comprar Créditos',
+    per_day: 'por día',
+    credits: 'créditos',
+    daily_free: 'Gratis diario',
+  },
+  it: {
+    title: 'Il Tuo Uso',
+    subtitle: 'Panoramica dei tuoi crediti e attività',
+    balance: 'Saldo Attuale',
+    spent: 'Speso',
+    purchased: 'Acquistato',
+    refunded: 'Rimborsato',
+    breakdown: 'Ripartizione',
+    chat: 'Chat',
+    image: 'Immagini',
+    tts: 'Voce',
+    story: 'Storie',
+    gift: 'Regali',
+    recent: 'Transazioni Recenti',
+    no_data: 'Nessun dato ancora',
+    buy_credits: 'Compra Crediti',
+    per_day: 'al giorno',
+    credits: 'crediti',
+    daily_free: 'Gratis giornaliero',
+  },
 };
 
 const UsageDashboard: React.FC<UsageDashboardProps> = ({ user, language, onOpenPaywall }) => {
@@ -86,8 +167,7 @@ const UsageDashboard: React.FC<UsageDashboardProps> = ({ user, language, onOpenP
   useEffect(() => {
     const fetchUsage = async () => {
       try {
-        const token = (await import('../services/supabase')).supabase.auth.getSession;
-        const session = await (await import('../services/supabase')).supabase.auth.getSession();
+        const session = await supabase.auth.getSession();
         const accessToken = session.data.session?.access_token;
         if (!accessToken) return;
 
@@ -208,11 +288,14 @@ const UsageDashboard: React.FC<UsageDashboardProps> = ({ user, language, onOpenP
           {/* Recent Transactions */}
           <div className="bg-zinc-900/50 border border-white/5 rounded-2xl p-5">
             <h3 className="text-[10px] font-black text-gold-500 uppercase tracking-widest mb-4">{t.recent}</h3>
-            {data.recent_transactions.length === 0 ? (
+            {(() => {
+              const HIDDEN_TYPES = ['signup_bonus', 'api_call', 'adjustment'];
+              const visible = data.recent_transactions.filter(tx => !HIDDEN_TYPES.includes(tx.type));
+              return visible.length === 0 ? (
               <p className="text-zinc-600 text-xs text-center py-4">{t.no_data}</p>
             ) : (
               <div className="space-y-2">
-                {data.recent_transactions.map(tx => (
+                {visible.map(tx => (
                   <div key={tx.id} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
                     <div className="flex items-center gap-3">
                       <span className={`text-sm font-mono ${txTypeColors[tx.type] || 'text-zinc-400'}`}>
@@ -229,7 +312,7 @@ const UsageDashboard: React.FC<UsageDashboardProps> = ({ user, language, onOpenP
                   </div>
                 ))}
               </div>
-            )}
+            )})()}
           </div>
 
           {/* API Cost info */}
