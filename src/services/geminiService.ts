@@ -519,6 +519,12 @@ Rules:
         if (parsed.title && language === 'nl') {
           parsed.title = this.fixDutchSpelling(parsed.title);
         }
+        
+        // Clean up weird characters and encoding issues
+        if (parsed.text) {
+          parsed.text = this.cleanText(parsed.text);
+        }
+        
         return parsed;
       } catch (e: any) {
         console.error('Story generation failed:', e?.message || e);
@@ -605,6 +611,38 @@ Rules:
     for (const [pattern, replacement] of fixes) {
       result = result.replace(pattern, replacement);
     }
+    return result;
+  }
+
+  // Clean up weird characters, encoding issues, and control characters
+  private cleanText(text: string): string {
+    if (!text) return text;
+    let result = text;
+    
+    // Remove null bytes and control characters (keep newlines, tabs)
+    result = result.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
+    
+    // Fix common encoding issues
+    result = result.replace(/\uFFFD/g, ''); // Remove replacement character
+    result = result.replace(/\u2022|\u2023|\u2043|\u2044/g, '-'); // Fix bullet characters
+    
+    // Fix double escaped newlines that show as literal \n
+    result = result.replace(/\\n/g, '\n');
+    
+    // Fix multiple spaces
+    result = result.replace(/[ \t]+/g, ' ');
+    
+    // Fix broken quotes
+    result = result.replace(/[\u2018\u2019]/g, "'");
+    result = result.replace(/[\u201C\u201D]/g, '"');
+    
+    // Fix em-dash issues
+    result = result.replace(/[\u2013\u2014]/g, '-');
+    
+    // Remove any non-printable characters except valid Unicode text
+    // Keep letters, numbers, punctuation, whitespace, Dutch characters (àâäéèêëïîôùûü)
+    result = result.replace(/[^\x20-\x7E\u00C0-\u017F\u0192\u00D0-\u00F6\u00F8-\u00FF\n\r\t]/g, '');
+    
     return result;
   }
 
