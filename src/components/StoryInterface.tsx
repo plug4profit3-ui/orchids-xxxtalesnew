@@ -620,6 +620,12 @@ const StoryInterface: React.FC<StoryInterfaceProps> = ({ language = 'nl', user, 
                     <span className="text-[12px] font-black text-gold-500 uppercase tracking-[0.5em] drop-shadow-lg">{t.generating}</span>
                 </div>
             )}
+            {generateError && (
+                <div className="flex flex-col items-center justify-center p-6 m-4 border border-red-500/30 bg-red-500/10 rounded-xl">
+                    <p className="text-red-400 text-sm mb-3">{generateError}</p>
+                    <button onClick={() => setMode('setup')} className="px-6 py-2 bg-gold-500 text-black font-bold rounded-full text-sm">Opnieuw proberen</button>
+                </div>
+            )}
             {turns.length > 0 && turns[turns.length-1]?.text?.includes('...') && (
                 <div className="flex flex-col items-center justify-center p-6 m-4 border border-red-500/30 bg-red-500/10 rounded-xl">
                     <p className="text-red-400 text-sm mb-3">Het verhaal is afgekort. Wil je verder?</p>
