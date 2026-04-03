@@ -277,7 +277,7 @@ const CharacterCreator: React.FC<CharacterCreatorProps> = ({ onSave, language, o
       style={{ aspectRatio: '3/4' }}
     >
       {image ? (
-        <img src={image} alt={cardLabel} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+        <img src={image} alt={cardLabel} className="absolute inset-0 w-full h-full object-cover" loading="lazy" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
       ) : (
         <>
           <div className={`absolute inset-0 bg-gradient-to-br ${gradient}`} />
