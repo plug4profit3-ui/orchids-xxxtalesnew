@@ -23,6 +23,7 @@ interface PaywallModalProps {
   reason: string;
   language?: Language;
   userId?: string;
+  addToast?: (title: string, message: string, icon?: string) => void;
 }
 
 type ProductKey = 'vip' | 'starter' | 'popular' | 'intense' | 'elite';
@@ -140,7 +141,7 @@ const CheckoutForm: React.FC<CheckoutFormProps> = ({ productKey, onSuccess, onBa
   );
 };
 
-const PaywallModal: React.FC<PaywallModalProps> = ({ isOpen, onClose, onPurchase, onStartTrial, reason, language = 'nl', userId }) => {
+const PaywallModal: React.FC<PaywallModalProps> = ({ isOpen, onClose, onPurchase, onStartTrial, reason, language = 'nl', userId, addToast }) => {
   const t = getTexts(language as string).paywall;
   const [selectedProduct, setSelectedProduct] = useState<ProductKey | null>(null);
   const [clientSecret, setClientSecret] = useState<string | null>(null);
@@ -394,6 +395,61 @@ const PaywallModal: React.FC<PaywallModalProps> = ({ isOpen, onClose, onPurchase
                         Discreet gefactureerd · Digitale service · 18+ Only<br/>
                         <span className="opacity-50 font-normal normal-case">Door verder te gaan ga je akkoord met onze voorwaarden.</span>
                     </p>
+                </div>
+
+                {/* Social Share Section */}
+                <div className="mt-6 pt-6 border-t border-zinc-800">
+                    <h3 className="text-sm font-bold text-white mb-2">{t.share_title}</h3>
+                    <p className="text-xs text-zinc-500 mb-4">{t.share_desc}</p>
+                    
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="flex-1">
+                            <div className="flex items-center gap-2 bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2">
+                                <input 
+                                    type="text" 
+                                    readOnly 
+                                    value={`https://xxx-tales.nl?ref=${userId || 'guest'}`}
+                                    className="flex-1 bg-transparent text-xs text-zinc-400 outline-none"
+                                />
+                                <button 
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(`https://xxx-tales.nl?ref=${userId || 'guest'}`);
+                                        addToast(t.link_copied, '', '📋');
+                                    }}
+                                    className="text-gold-500 hover:text-gold-400"
+                                >
+                                    <Icons.Copy size={14} />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex gap-2">
+                        <button 
+                            onClick={() => {
+                                const url = `https://xxx-tales.nl?ref=${userId || 'guest'}`;
+                                const text = language === 'nl' 
+                                    ? 'Ontdek XXX-Tales - Jouw extreme fantasie wacht!' 
+                                    : 'Discover XXX-Tales - Your extreme fantasy awaits!';
+                                window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank');
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 py-2 bg-[#1DA1F2]/20 hover:bg-[#1DA1F2]/30 border border-[#1DA1F2]/30 rounded-lg text-xs text-white transition-colors"
+                        >
+                            <Icons.Twitter size={14} />
+                            {t.share_twitter}
+                        </button>
+                        <button 
+                            onClick={() => {
+                                const url = `https://xxx-tales.nl?ref=${userId || 'guest'}`;
+                                const text = language === 'nl' ? 'Ontdek XXX-Tales!' : 'Discover XXX-Tales!';
+                                window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank');
+                            }}
+                            className="flex-1 flex items-center justify-center gap-2 py-2 bg-[#25D366]/20 hover:bg-[#25D366]/30 border border-[#25D366]/30 rounded-lg text-xs text-white transition-colors"
+                        >
+                            <span>💬</span>
+                            {t.share_whatsapp}
+                        </button>
+                    </div>
                 </div>
             </div>
           </>

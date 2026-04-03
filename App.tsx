@@ -256,6 +256,61 @@ const App: React.FC = () => {
     if (savedUserId && !user.isAuthenticated) loadUserData(savedUserId);
   }, [loadUserData, user.isAuthenticated]);
 
+  // URL Hash Routing for Deep Links
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      switch (hash) {
+        case 'story':
+          setMode(AppMode.STORY);
+          break;
+        case 'chat':
+          setMode(AppMode.CHAT);
+          break;
+        case 'gallery':
+          setMode(AppMode.GALLERY);
+          break;
+        case 'live':
+          setMode(AppMode.LIVE);
+          break;
+        case 'creator':
+          setMode(AppMode.CREATOR);
+          break;
+        case 'videos':
+          setMode(AppMode.VIDEOS);
+          break;
+        case 'audio':
+        case 'audio_stories':
+          setMode(AppMode.AUDIO_STORIES);
+          break;
+        case 'imagine':
+        case 'visualizer':
+          setMode(AppMode.IMAGINE);
+          break;
+        case 'coach':
+        case 'solo_coach':
+          setMode(AppMode.SOLO_COACH);
+          break;
+        default:
+          // Check for ref code in URL
+          const params = new URLSearchParams(window.location.search);
+          const refCode = params.get('ref');
+          if (refCode) {
+            // Store ref code for potential affiliate tracking
+            localStorage.setItem('xxx_ref_code', refCode);
+          }
+          break;
+      }
+    };
+
+    // Handle initial hash on mount
+    handleHashChange();
+
+    // Also listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
   useEffect(() => {
     if (user.isAuthenticated && user.id && user.isVerified) {
       localStorage.setItem('xxx_active_session_id', user.id);
@@ -514,7 +569,7 @@ const App: React.FC = () => {
         />
       ) : (
         <>
-          <PaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} onPurchase={handlePurchase} reason={paywallReason} language={language} />
+          <PaywallModal isOpen={isPaywallOpen} onClose={() => setIsPaywallOpen(false)} onPurchase={handlePurchase} reason={paywallReason} language={language} userId={user.id} addToast={addToast} />
           <LegalModal isOpen={isLegalModalOpen} onClose={() => setIsLegalModalOpen(false)} initialTab={legalTab} language={language} />
           
           {isProcessingPayment && (

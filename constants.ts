@@ -50,7 +50,7 @@ export const TEXTS: Record<string, any> = {
       title: "VIDEO FINDER", subtitle: "VIND JE ULTIEME PASSIE", placeholder: "Typ keywords...", search_btn: "ZOEK VIDEOS"
     },
     paywall: {
-      premium_access: "PREMIUM TOEGANG", hook: "Ga dieper in je", fantasy: "Fantasie", default_reason: "Ontgrendel de volledige ervaring...", benefit1: "Onbeperkt Chatten & Roleplay", benefit2: "Ontvang & Genereer Erotische Fotos", benefit3: "Real-time Live Video Calls", choose_access: "KIES JE TOEGANG", most_popular: "MEEST GEKOZEN", vip_sub: "VIP MEMBERSHIP", per_month: "/ maand", vip_desc: "Volledige toegang, onbeperkt berichten, 500 beeld credits p/m.", start_trial: "START GRATIS TRIAL (3 DAGEN)", credits: "Credits", footer: "DISCREET • OP ELK MOMENT OPZEGBAAR • 18+ ONLY"
+      premium_access: "PREMIUM TOEGANG", hook: "Ga dieper in je", fantasy: "Fantasie", default_reason: "Ontgrendel de volledige ervaring...", benefit1: "Onbeperkt Chatten & Roleplay", benefit2: "Ontvang & Genereer Erotische Fotos", benefit3: "Real-time Live Video Calls", choose_access: "KIES JE TOEGANG", most_popular: "MEEST GEKOZEN", vip_sub: "VIP MEMBERSHIP", per_month: "/ maand", vip_desc: "Volledige toegang, onbeperkt berichten, 500 beeld credits p/m.", start_trial: "START GRATIS TRIAL (3 DAGEN)", credits: "Credits", footer: "DISCREET • OP ELK MOMENT OPZEGBAAR • 18+ ONLY", share_title: "DELEN MET VRIENDEN", share_desc: "Verdien extra credits door vrienden uit te nodigen", copy_link: "Link kopiëren", share_twitter: "Delen op X", share_whatsapp: "Delen op WhatsApp", link_copied: "Link gekopieerd!", invite_code: "Jouw uitnodigingscode"
     },
     intensity: {
       normal: "NORMAAL", high: "HOOG", extreme: "EXTREEM"
@@ -85,7 +85,7 @@ export const TEXTS: Record<string, any> = {
       title: "VIDEO FINDER", subtitle: "FIND YOUR ULTIMATE PASSION", placeholder: "Type keywords...", search_btn: "SEARCH VIDEOS"
     },
     paywall: {
-      premium_access: "PREMIUM ACCESS", hook: "Go deeper into your", fantasy: "Fantasy", default_reason: "Unlock the full experience...", benefit1: "Unlimited Chat & Roleplay", benefit2: "Receive & Generate Erotic Photos", benefit3: "Real-time Live Video Calls", choose_access: "CHOOSE YOUR ACCESS", most_popular: "MOST POPULAR", vip_sub: "VIP MEMBERSHIP", per_month: "/ month", vip_desc: "Full access, unlimited messages, 500 image credits p/m.", start_trial: "START FREE TRIAL (3 DAYS)", credits: "Credits", footer: "DISCREET • CANCEL ANYTIME • 18+ ONLY"
+      premium_access: "PREMIUM ACCESS", hook: "Go deeper into your", fantasy: "Fantasy", default_reason: "Unlock the full experience...", benefit1: "Unlimited Chat & Roleplay", benefit2: "Receive & Generate Erotic Photos", benefit3: "Real-time Live Video Calls", choose_access: "CHOOSE YOUR ACCESS", most_popular: "MOST POPULAR", vip_sub: "VIP MEMBERSHIP", per_month: "/ month", vip_desc: "Full access, unlimited messages, 500 image credits p/m.", start_trial: "START FREE TRIAL (3 DAYS)", credits: "Credits", footer: "DISCREET • CANCEL ANYTIME • 18+ ONLY", share_title: "SHARE WITH FRIENDS", share_desc: "Earn extra credits by inviting friends", copy_link: "Copy Link", share_twitter: "Share on X", share_whatsapp: "Share on WhatsApp", link_copied: "Link copied!", invite_code: "Your invite code"
     },
     intensity: {
       normal: "NORMAL", high: "HIGH", extreme: "EXTREME"
@@ -120,7 +120,7 @@ export const TEXTS: Record<string, any> = {
       title: "VIDEO FINDER", subtitle: "FINDE DEINE PASSION", placeholder: "Suchbegriffe...", search_btn: "VIDEOS SUCHEN"
     },
     paywall: {
-      premium_access: "PREMIUM ZUGANG", hook: "Geh tiefer in deine", fantasy: "Fantasie", default_reason: "Schalte das volle Erlebnis frei...", benefit1: "Unbegrenzter Chat & Rollenspiel", benefit2: "Erotische Fotos empfangen & erstellen", benefit3: "Echtzeit Video Anrufe", choose_access: "WÄHLE DEINEN ZUGANG", most_popular: "BELIEBT", vip_sub: "VIP MITGLIEDSCHAFT", per_month: "/ Monat", vip_desc: "Voller Zugang, unbegrenzte Nachrichten, 500 Bild-Credits.", start_trial: "KOSTENLOS TESTEN (3 TAGE)", credits: "Credits", footer: "DISKRET • JEDERZEIT KÜNDBAR • NUR 18+"
+      premium_access: "PREMIUM ZUGANG", hook: "Geh tiefer in deine", fantasy: "Fantasie", default_reason: "Schalte das volle Erlebnis frei...", benefit1: "Unbegrenzter Chat & Rollenspiel", benefit2: "Erotische Fotos empfangen & erstellen", benefit3: "Echtzeit Video Anrufe", choose_access: "WÄHLE DEINEN ZUGANG", most_popular: "BELIEBT", vip_sub: "VIP MITGLIEDSCHAFT", per_month: "/ Monat", vip_desc: "Voller Zugang, unbegrenzte Nachrichten, 500 Bild-Credits.", start_trial: "KOSTENLOS TESTEN (3 TAGE)", credits: "Credits", footer: "DISKRET • JEDERZEIT KÜNDBAR • NUR 18+", share_title: "MIT FREUNDEN TEILEN", share_desc: "Erhalte Extracredits durch Einladungen", copy_link: "Link kopieren", share_twitter: "Auf X teilen", share_whatsapp: "Auf WhatsApp teilen", link_copied: "Link kopiert!", invite_code: "Dein Einladungscode"
     },
     intensity: {
       normal: "NORMAL", high: "HOCH", extreme: "EXTREM"
@@ -155,7 +155,7 @@ export const TEXTS: Record<string, any> = {
       title: "CHERCHEUR VIDÉO", subtitle: "TROUVEZ VOTRE PASSION", placeholder: "Mots-clés...", search_btn: "CHERCHER VIDÉOS"
     },
     paywall: {
-      premium_access: "ACCÈS PREMIUM", hook: "Plongez dans votre", fantasy: "Fantasme", default_reason: "Débloquez l'expérience complète...", benefit1: "Chat & Roleplay illimités", benefit2: "Photos érotiques générées", benefit3: "Appels Vidéo en Temps Réel", choose_access: "CHOISISSEZ VOTRE ACCÈS", most_popular: "POPULAIRE", vip_sub: "MEMBRE VIP", per_month: "/ mois", vip_desc: "Accès complet, messages illimités, 500 crédits image.", start_trial: "ESSAI GRATUIT (3 JOURS)", credits: "Crédits", footer: "DISCRET • ANNULABLE À TOUT MOMENT • 18+ UNIQUEMENT"
+      premium_access: "ACCÈS PREMIUM", hook: "Plongez dans votre", fantasy: "Fantasme", default_reason: "Débloquez l'expérience complète...", benefit1: "Chat & Roleplay illimités", benefit2: "Photos érotiques générées", benefit3: "Appels Vidéo en Temps Réel", choose_access: "CHOISISSEZ VOTRE ACCÈS", most_popular: "POPULAIRE", vip_sub: "MEMBRE VIP", per_month: "/ mois", vip_desc: "Accès complet, messages illimités, 500 crédits image.", start_trial: "ESSAI GRATUIT (3 JOURS)", credits: "Crédits", footer: "DISCRET • ANNULABLE À TOUT MOMENT • 18+ UNIQUEMENT", share_title: "PARTAGER AVEC DES AMIS", share_desc: "Gagne des crédits supplémentaires en invitant des amis", copy_link: "Copier le lien", share_twitter: "Partager sur X", share_whatsapp: "Partager sur WhatsApp", link_copied: "Lien copié!", invite_code: "Ton code d'invitation"
     },
     intensity: {
       normal: "NORMAL", high: "ÉLEVÉ", extreme: "EXTRÊME"
@@ -190,7 +190,7 @@ export const TEXTS: Record<string, any> = {
       title: "TROVA VIDEO", subtitle: "TROVA LA TUA PASSIONE", placeholder: "Parole chiave...", search_btn: "CERCA VIDEO"
     },
     paywall: {
-      premium_access: "ACCESSO PREMIUM", hook: "Vai a fondo nella tua", fantasy: "Fantasia", default_reason: "Sblocca l'esperienza completa...", benefit1: "Chat & Roleplay illimitati", benefit2: "Ricevi & Genera Foto Erotiche", benefit3: "Videochiamate in Tempo Reale", choose_access: "SCEGLI IL TUO ACCESSO", most_popular: "POPOLARE", vip_sub: "MEMBRESÍA VIP", per_month: "/ mese", vip_desc: "Accesso completo, messaggi illimitati, 500 crediti immagine.", start_trial: "PROVA GRATIS (3 GIORNI)", credits: "Crediti", footer: "DISCRETO • ANNULLABILE SEMPRE • SOLO 18+"
+      premium_access: "ACCESSO PREMIUM", hook: "Vai a fondo nella tua", fantasy: "Fantasia", default_reason: "Sblocca l'esperienza completa...", benefit1: "Chat & Roleplay illimitati", benefit2: "Ricevi & Genera Foto Erotiche", benefit3: "Videochiamate in Tempo Reale", choose_access: "SCEGLI IL TUO ACCESSO", most_popular: "POPOLARE", vip_sub: "MEMBRESÍA VIP", per_month: "/ mese", vip_desc: "Accesso completo, messaggi illimitati, 500 crediti immagine.", start_trial: "PROVA GRATIS (3 GIORNI)", credits: "Crediti", footer: "DISCRETO • ANNULLABILE SEMPRE • SOLO 18+", share_title: "CONDIVIDI CON AMICI", share_desc: " Guadagna crediti extra invitando amici", copy_link: "Copia link", share_twitter: "Condividi su X", share_whatsapp: "Condividi su WhatsApp", link_copied: "Link copiato!", invite_code: "Il tuo codice invito"
     },
     intensity: {
       normal: "NORMALE", high: "ALTA", extreme: "ESTREMA"
@@ -225,7 +225,7 @@ export const TEXTS: Record<string, any> = {
       title: "BUSCADOR DE VIDEO", subtitle: "ENCUENTRA TU PASIÓN", placeholder: "Palabras clave...", search_btn: "BUSCAR VIDEOS"
     },
     paywall: {
-      premium_access: "ACCESO PREMIUM", hook: "Profundiza en tu", fantasy: "Fantasía", default_reason: "Desbloquea la experiencia completa...", benefit1: "Chat y Roleplay Ilimitados", benefit2: "Recibe y Genera Fotos Eróticas", benefit3: "Videollamadas en Tiempo Real", choose_access: "ELIGE TU ACCESO", most_popular: "POPULAR", vip_sub: "MEMBRESÍA VIP", per_month: "/ mes", vip_desc: "Acceso total, mensajes ilimitados, 500 créditos de imagen.", start_trial: "PRUEBA GRATIS (3 DÍAS)", credits: "Créditos", footer: "DISCRETO • CANCELA CUANDO QUIERAS • SOLO 18+"
+      premium_access: "ACCESO PREMIUM", hook: "Profundiza en tu", fantasy: "Fantasía", default_reason: "Desbloquea la experiencia completa...", benefit1: "Chat y Roleplay Ilimitados", benefit2: "Recibe y Genera Fotos Eróticas", benefit3: "Videollamadas en Tiempo Real", choose_access: "ELIGE TU ACCESO", most_popular: "POPULAR", vip_sub: "MEMBRESÍA VIP", per_month: "/ mes", vip_desc: "Acceso total, mensajes ilimitados, 500 créditos de imagen.", start_trial: "PRUEBA GRATIS (3 DÍAS)", credits: "Créditos", footer: "DISCRETO • CANCELA CUANDO QUIERAS • SOLO 18+", share_title: "COMPARTIR CON AMIGOS", share_desc: "Gana créditos extra invitando amigos", copy_link: "Copiar enlace", share_twitter: "Compartir en X", share_whatsapp: "Compartir en WhatsApp", link_copied: "Enlace copiado!", invite_code: "Tu código de invitación"
     },
     intensity: {
       normal: "NORMAL", high: "ALTA", extreme: "ESTREMA"

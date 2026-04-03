@@ -160,9 +160,10 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'stripe': ['@stripe/stripe-js', '@stripe/react-stripe-js'],
-          'supabase': ['@supabase/supabase-js'],
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-supabase': ['@supabase/supabase-js'],
+          'vendor-stripe': ['@stripe/stripe-js', '@stripe/react-stripe-js'],
+          'ui': ['lucide-react'],
         },
       },
     },

@@ -63,7 +63,10 @@ import {
   Images,
   BarChart3,
   Trophy,
-  Handshake
+  Handshake,
+  Share2,
+  Link,
+  Twitter
 } from 'lucide-react';
 
 export const Icons = {
@@ -130,7 +133,10 @@ export const Icons = {
     Images,
     BarChart3,
     Trophy,
-    Handshake
+    Handshake,
+    Share2,
+    Link,
+    Twitter
 };
 
 export default Icons;
