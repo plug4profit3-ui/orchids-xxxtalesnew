@@ -13,9 +13,10 @@ interface LiveInterfaceProps {
   onConsumeCredit: (amount: number) => boolean;
   user: UserProfile;
   allCharacters?: Character[];
+  onShowToast?: (title: string, message: string, icon?: string) => void;
 }
 
-const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, isActive, language, onConsumeCredit, user, allCharacters }) => {
+const LiveInterface: React.FC<LiveInterfaceProps> = ({ config, isActive, language, onConsumeCredit, user, allCharacters, onShowToast }) => {
   const characters = allCharacters?.length ? allCharacters.filter(c => !c.isDoll) : getCharacters(language).filter(c => !c.isDoll);
   const [connectionState, setConnectionState] = useState<'idle' | 'calling' | 'connected'>('idle');
   const [isMicOn, setIsMicOn] = useState(true);
@@ -351,7 +352,7 @@ ${selectedCharacter.personality}
       // Send initial greeting
       await sendMessage(`[SYSTEM: De verbinding is open. Begroet hem kort en flirterig in het ${targetLanguageName}. Max 2 zinnen.]`);
     } catch (e) {
-      console.error("Kon gesprek niet starten:", e);
+      console.error("Live call error:", e); onShowToast?.("Verbinding mislukt", e?.message || "Kon gesprek niet starten", "📞");
       cleanup();
     }
   };

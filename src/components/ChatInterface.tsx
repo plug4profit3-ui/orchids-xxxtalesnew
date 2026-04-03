@@ -508,7 +508,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
           if (user.id) {
             recordChatInteraction(user.id, primaryCharacter.id, Math.max(0, affectionDelta)).catch(() => {});
           }
-      } catch (error) { console.error(error); } finally { setIsTyping(false); }
+          setQuickReplies(response.suggestions || []);
+          if (!isMuted) playSpeech(modelMessage.text, modelMessage.characterId);
+          // Track affection in persistent relationship (fire-and-forget)
+          if (user.id) {
+            recordChatInteraction(user.id, primaryCharacter.id, Math.max(0, affectionDelta)).catch(() => {});
+          }
+      } catch (error: any) { 
+        console.error(error); 
+        onShowToast?.('Verbinding mislukt', error?.message || 'Probeer het opnieuw', '⚠️');
+      } finally { setIsTyping(false); }
     };
 
     const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -574,7 +583,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({
         setSession(finalSession);
         onSaveSession(finalSession);
         if (!isMuted) playSpeech(modelMessage.text, modelMessage.characterId);
-       } catch (e) { console.error(e); } finally { setIsTyping(false); }
+       } catch (e: any) { console.error(e); onShowToast?.('Verbinding mislukt', e?.message || 'Probeer het opnieuw', '⚠️'); } finally { setIsTyping(false); }
     };
     reader.readAsDataURL(file);
   };

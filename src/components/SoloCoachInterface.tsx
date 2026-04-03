@@ -9,6 +9,7 @@ import { Language, UserProfile } from '../types';
 interface SoloCoachInterfaceProps {
   language: Language;
   user: UserProfile;
+  onShowToast?: (title: string, message: string, icon?: string) => void;
 }
 
 type SessionPhase = 'intake' | 'build' | 'edging' | 'climax' | 'aftercare';
@@ -19,7 +20,7 @@ const triggerHaptic = (pattern: number | number[]) => {
   if (navigator.vibrate) navigator.vibrate(pattern);
 };
 
-const SoloCoachInterface: React.FC<SoloCoachInterfaceProps> = ({ language, user }) => {
+const SoloCoachInterface: React.FC<SoloCoachInterfaceProps> = ({ language, user, onShowToast }) => {
   const [connectionState, setConnectionState] = useState<'idle' | 'calling' | 'connected'>('idle');
 
   // Setup

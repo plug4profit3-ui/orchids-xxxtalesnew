@@ -356,10 +356,11 @@ const App = () => {
             onConsumeCredit={credits.onConsumeCredit}
             user={user}
             allCharacters={allCharacters}
+            onShowToast={showToast}
           />
         );
       case AppMode.SOLO_COACH:
-        return <SoloCoachInterface language={language} user={user} />;
+        return <SoloCoachInterface language={language} user={user} onShowToast={showToast} />;
       case AppMode.IMAGINE:
         return (
           <ImagineInterface
