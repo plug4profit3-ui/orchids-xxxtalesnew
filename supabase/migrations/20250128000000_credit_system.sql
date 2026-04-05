@@ -11,6 +11,9 @@ CREATE TABLE IF NOT EXISTS credit_packages (
     description TEXT,
     is_active BOOLEAN DEFAULT true,
     sort_order INTEGER DEFAULT 0,
+    is_micro_transaction BOOLEAN DEFAULT false,
+    is_first_purchase_discount BOOLEAN DEFAULT false,
+    discount_percentage INTEGER DEFAULT 0,
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -18,11 +21,26 @@ CREATE TABLE IF NOT EXISTS credit_packages (
 CREATE INDEX IF NOT EXISTS idx_credit_packages_active ON credit_packages(is_active);
 
 -- Insert default credit packages
+INSERT INTO credit_packages (name, credits_amount, price_eur, description, sort_order, is_micro_transaction) VALUES
+    ('Micro', 25, 199, 'Quick start - probeer het uit', 0, true),
+    ('Starter', 80, 499, 'Perfect voor beginners - ongeveer 80 berichten', 1, false),
+    ('Populair', 250, 999, 'Meest gekozen - ongeveer 250 berichten', 2, false),
+    ('Intens', 600, 1999, 'Voor de fanatieke chatter - ongeveer 600 berichten', 3, false),
+    ('Elite', 1500, 3999, 'Ultieme ervaring - ongeveer 1500 berichten', 4, false)
+ON CONFLICT DO NOTHING;
+
+-- Insert first purchase discount packages
+INSERT INTO credit_packages (name, credits_amount, price_eur, description, sort_order, is_first_purchase_discount, discount_percentage) VALUES
+    ('Starter - Eerste Koop', 80, 399, '20% korting op je eerste aankoop!', 5, true, 20),
+    ('Populair - Eerste Koop', 250, 799, '20% korting op je eerste aankoop!', 6, true, 20),
+    ('Intens - Eerste Koop', 600, 1599, '20% korting op je eerste aankoop!', 7, true, 20),
+    ('Elite - Eerste Koop', 1500, 3199, '20% korting op je eerste aankoop!', 8, true, 20)
+ON CONFLICT DO NOTHING;
+
+-- Insert bundle deal packages
 INSERT INTO credit_packages (name, credits_amount, price_eur, description, sort_order) VALUES
-    ('Starter', 80, 499, 'Perfect voor beginners - ongeveer 80 berichten', 1),
-    ('Populair', 250, 999, 'Meest gekozen - ongeveer 250 berichten', 2),
-    ('Intens', 600, 1999, 'Voor de fanatieke chatter - ongeveer 600 berichten', 3),
-    ('Elite', 1500, 3999, 'Ultieme ervaring - ongeveer 1500 berichten', 4)
+    ('Weekend Warrior', 150, 799, 'Speciaal weekendpakket - 150 credits voor €7.99', 9),
+    ('Night Owl', 300, 1299, 'Avondpakket - 300 credits voor €12.99', 10)
 ON CONFLICT DO NOTHING;
 
 -- Add expiry tracking to credit_accounts

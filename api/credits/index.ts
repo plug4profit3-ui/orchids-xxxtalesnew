@@ -202,14 +202,105 @@ async function handleUsage(req: VercelRequest, res: VercelResponse) {
 
 // POST /api/credits/packages - Get available packages (simplified - real Stripe integration elsewhere)
 async function handlePackages(req: VercelRequest, res: VercelResponse) {
-  // This would normally redirect to Stripe, but here we just return package info
+  const userId = await requireAuth(req, res);
+  if (!userId) return;
+
+  // Check if this is user's first purchase
+  const { data: purchaseHistory } = await supabaseAdmin
+    .from('credit_transactions')
+    .select('*')
+    .eq('user_id', userId)
+    .eq('type', 'purchase')
+    .limit(1);
+
+  const isFirstPurchase = !purchaseHistory || purchaseHistory.length === 0;
+
+  // Build packages based on purchase history
+  const packages = [
+    { 
+      id: 'micro', 
+      credits: 25, 
+      price: 199, 
+      name: 'Micro', 
+      description: 'Quick start - probeer het uit',
+      is_micro_transaction: true,
+      discount_percentage: 0
+    },
+    { 
+      id: isFirstPurchase ? 'starter_first' : 'starter', 
+      credits: 80, 
+      price: isFirstPurchase ? 399 : 499, 
+      name: isFirstPurchase ? 'Starter - Eerste Koop' : 'Starter', 
+      description: isFirstPurchase ? '20% korting op je eerste aankoop!' : 'Perfect voor beginners - ongeveer 80 berichten',
+      discount_percentage: isFirstPurchase ? 20 : 0,
+      is_first_purchase_discount: isFirstPurchase
+    },
+    { 
+      id: isFirstPurchase ? 'popular_first' : 'popular', 
+      credits: 250, 
+      price: isFirstPurchase ? 799 : 999, 
+      name: isFirstPurchase ? 'Populair - Eerste Koop' : 'Populair', 
+      description: isFirstPurchase ? '20% korting op je eerste aankoop!' : 'Meest gekozen - ongeveer 250 berichten',
+      discount_percentage: isFirstPurchase ? 20 : 0,
+      is_first_purchase_discount: isFirstPurchase,
+      is_popular: true
+    },
+    { 
+      id: isFirstPurchase ? 'intense_first' : 'intense', 
+      credits: 600, 
+      price: isFirstPurchase ? 1599 : 1999, 
+      name: isFirstPurchase ? 'Intens - Eerste Koop' : 'Intens', 
+      description: isFirstPurchase ? '20% korting op je eerste aankoop!' : 'Voor de fanatieke chatter - ongeveer 600 berichten',
+      discount_percentage: isFirstPurchase ? 20 : 0,
+      is_first_purchase_discount: isFirstPurchase
+    },
+    { 
+      id: isFirstPurchase ? 'elite_first' : 'elite', 
+      credits: 1500, 
+      price: isFirstPurchase ? 3199 : 3999, 
+      name: isFirstPurchase ? 'Elite - Eerste Koop' : 'Elite', 
+      description: isFirstPurchase ? '20% korting op je eerste aankoop!' : 'Ultieme ervaring - ongeveer 1500 berichten',
+      discount_percentage: isFirstPurchase ? 20 : 0,
+      is_first_purchase_discount: isFirstPurchase
+    },
+  ];
+
+  // Add bundle deals (always available)
+  const bundleDeals = [
+    {
+      id: 'weekend_warrior',
+      credits: 150,
+      price: 799,
+      name: 'Weekend Warrior',
+      description: 'Speciaal weekendpakket - 150 credits voor €7.99',
+      is_bundle: true,
+      badge: 'Limited',
+      expires_at: null
+    },
+    {
+      id: 'night_owl',
+      credits: 300,
+      price: 1299,
+      name: 'Night Owl',
+      description: 'Avondpakket - 300 credits voor €12.99',
+      is_bundle: true,
+      badge: 'Popular',
+      expires_at: null
+    }
+  ];
+
   res.status(200).json({
-    packages: [
-      { id: 'starter', credits: 80, price: 499, name: 'Starter' },
-      { id: 'popular', credits: 250, price: 999, name: 'Popular' },
-      { id: 'intense', credits: 600, price: 1999, name: 'Intense' },
-      { id: 'elite', credits: 1500, price: 3999, name: 'Elite' },
-    ]
+    packages,
+    bundle_deals: bundleDeals,
+    is_first_purchase: isFirstPurchase,
+    vip_option: {
+      id: 'vip',
+      name: 'VIP Membership',
+      description: '400-500 credits per maand + alle premium features',
+      price: 1799,
+      interval: 'month',
+      trial_days: 3
+    }
   });
 }
 
